@@ -1,1 +1,3 @@
-# Wildcat Mobile Order application repository for CSCI 430: Software Engineering
+# Wildcat Mobile Order
+
+A base shell to build upon for the Wildcat Mobile Order application.

@@ -1,33 +1,37 @@
-#Temporary Editor Files#
-*~
-\#*\#
-\#*
-.\#*
-*.swp
-
-#Build Files#
-#*.o
-
-
-#Paper/Presentation
-*.aux
-*.aux
-*.bbl
-*.blg
+# Miscellaneous
+*.class
 *.log
-*.dvi
-*.nav
-*.snm
-*.toc
-*.vrb
-*.synctex.gz
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
 
-#archives
-*.tar
-*.zip
-*.gz
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
 
-writeup/*.out
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
 
-#Practice Directories for uncommitted tinkering
-prac/
+# Flutter/Dart/Pub related
+**/doc/api/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/build/
+
+# Web related
+lib/generated_plugin_registrant.dart
+
+# Exceptions to above rules.
+!/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
