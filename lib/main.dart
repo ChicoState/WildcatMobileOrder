@@ -1,6 +1,7 @@
 // Copyright 2018 The Flutter team. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
@@ -36,15 +37,12 @@ class RandomWordsState extends State<RandomWords> {
       appBar: AppBar(
         title: Text('Wildcat Mobile Order Shell'),
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.list), onPressed: _pushSaved),
+          IconButton(icon: Icon(Icons.list), onPressed: () {}), // placeholder with no functionality
         ],
       ),
       body: _buildSuggestions(),
     );
-    //infinite scrolling changes
 
-    final wordPair = WordPair.random();
-    return Text(wordPair.asPascalCase);
   }
   Widget _buildSuggestions() {
     return ListView.builder(
@@ -64,7 +62,7 @@ class RandomWordsState extends State<RandomWords> {
     final bool alreadySaved = _saved.contains(pair);
     return ListTile(
       title: Text(
-        pair.asPascalCase,
+        pair.asLowerCase,
         style: _biggerFont,
       ),
       trailing: Icon( //Adds an icon trailing at the end of each row
@@ -84,6 +82,7 @@ class RandomWordsState extends State<RandomWords> {
     );
   }
 
+  // navigates to another page
   void _pushSaved() {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
