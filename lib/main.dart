@@ -1,23 +1,25 @@
-// Copyright 2018 The Flutter team. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 import 'package:flutter/material.dart';
-import 'package:english_words/english_words.dart';
+import 'package:flutter_prac/menu.dart';
 
 void main() => runApp(MyApp());
+
+final ThemeData td = ThemeData(
+  primaryColor: Colors.red[800],
+);
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //this pulls from the package of english_words and creates a random wordPair
     return MaterialApp(
-      title: 'Wildcat Mobile Order Shell',
-      theme: ThemeData(
-        primaryColor: Colors.red[800],
-      ),
-      home: RandomWords(),
-    );
+        title: 'Wildcat Mobile Order Shell',
+        theme: td,
+        initialRoute: '/',
+        routes: {
+          '/': (context) => HomeScreen(),
+          '/locations': (context) => LocationSelection(),
+          '/menu': (context) => MenuView(),
+        });
   }
 }
 
@@ -25,103 +27,43 @@ class MyApp extends StatelessWidget {
   These two areas are creating a "Stateful" widget that maintains
   state for the lifetime of the Widget
 */
-class RandomWordsState extends State<RandomWords> {
-  final List<WordPair> _suggestions = <WordPair>[];
-  final Set<WordPair> _saved = Set<WordPair>();
-  final TextStyle _biggerFont = const TextStyle(fontSize: 18.0);
+//class HomePageState extends State<HomePage> {
+//  final List<WordPair> _suggestions = <WordPair>[];
+//  final Set<WordPair> _saved = Set<WordPair>();
+//  final TextStyle _biggerFont = const TextStyle(fontSize: 18.0);
+//
+//  @override
+//  Widget build(BuildContext context) {
+//    return Scaffold(
+//      appBar: AppBar(
+//        title: Text('Wildcat Mobile Order Shell'),
+//        actions: <Widget>[
+//          IconButton(icon: Icon(Icons.list), onPressed: () {}),
+//          // placeholder with no functionality
+//        ],
+//      ),
+//      body: Builder(builder: (context) => HomeScreen()),
+//    );
+//  }
+//}
 
+//class HomePage extends StatefulWidget {
+//  @override
+//  HomePageState createState() => HomePageState();
+//}
+
+class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Wildcat Mobile Order Shell'),
-        actions: <Widget>[
-          IconButton(icon: Icon(Icons.list), onPressed: _pushSaved),
-        ],
+        title: Text('Home Screen'),
       ),
-      body: _buildSuggestions(),
-    );
-    //infinite scrolling changes
-
-    final wordPair = WordPair.random();
-    return Text(wordPair.asPascalCase);
-  }
-  Widget _buildSuggestions() {
-    return ListView.builder(
-      padding: const EdgeInsets.all(16.0),
-      itemBuilder: /*1*/ (context, i) {
-        if (i.isOdd) return Divider(); /*2*/
-
-        final index = i ~/ 2; /*3*/
-        if (index >= _suggestions.length) {
-          _suggestions.addAll(generateWordPairs().take(10)); /*4*/
-        }
-        return _buildRow(_suggestions[index]);
-      });
-  }
-
-  Widget _buildRow(WordPair pair) {
-    final bool alreadySaved = _saved.contains(pair);
-    return ListTile(
-      title: Text(
-        pair.asPascalCase,
-        style: _biggerFont,
-      ),
-      trailing: Icon( //Adds an icon trailing at the end of each row
-        alreadySaved ? Icons.favorite /*heart icon*/ : Icons.favorite_border,
-        color: alreadySaved ? Colors.red : null,
-      ),
-      onTap: () {
-        setState(() {
-          if (alreadySaved) {
-            _saved.remove(pair);
-          }
-          else {
-            _saved.add(pair);
-          }
-        });
-      },
-    );
-  }
-
-  void _pushSaved() {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (BuildContext context) {
-          final Iterable<ListTile> tiles = _saved.map(
-            (WordPair pair) {
-              return ListTile(
-                title: Text( 
-                  pair.asPascalCase,
-                  style: _biggerFont,
-                ),
-              );
-            },
-          );
-          final List<Widget> divided = ListTile
-          .divideTiles(
-            context: context,
-            tiles: tiles,
-          )
-          .toList();
-
-          return Scaffold(
-            appBar: AppBar(
-              title: Text('Saved Suggestions'),
-            ),
-            body: ListView(children: divided),
-          );
-        },
+      body: Center(
+        child: RaisedButton(
+            onPressed: () => Navigator.pushNamed(context, '/locations'),
+            child: Text('Select a location')),
       ),
     );
   }
 }
-
-class RandomWords extends StatefulWidget {
-  @override 
-  RandomWordsState createState() => RandomWordsState();
-}
-
-/*
-  Creating an infinite scrolling ListView
-*/
