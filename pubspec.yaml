@@ -1,5 +1,5 @@
-name: flutter_prac
-description: A new Flutter project.
+name: WildcatMobileOrder
+description: A mobile ordering solution for CSU Chico food/drink options
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -19,12 +19,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  english_words: ^3.1.5
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
+  google_sign_in: ^4.1.4
+  firebase_core: ^0.4.0+9
+  cloud_firestore:
+  firebase_auth: ^0.15.4
   cupertino_icons: ^0.1.2
-
+  provider: ^4.0.4  
+  flutter_spinkit: "^4.1.2"
 dev_dependencies:
   flutter_test:
     sdk: flutter
