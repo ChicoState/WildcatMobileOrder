@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class LocationSelection extends StatelessWidget {
   @override
@@ -36,7 +38,7 @@ class MenuView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('First Screen'),
+          title: Text('$location'),
         ),
         body: loadMenu(context, this.location));
   }
@@ -73,13 +75,47 @@ Widget _buildListItem(BuildContext context, MenuItem item) {
         border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(5.0),
       ),
-      child: ListTile(
+      child: ExpansionTile(
         title: Text(item.name),
+        initiallyExpanded: false,
         trailing: Text(item.price.toString()),
-        onTap: () => print(item),
+        children: <Widget>[
+          SizedBox(
+            height: 200,
+            child: Stack(
+              children: <Widget>[
+                Center(child: CircularProgressIndicator()),
+                Center(
+                    child: FutureBuilder(
+                        future: _loadImage(item.gsurl),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<String> image) {
+                          if (image.hasData) {
+                            return ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: FadeInImage.memoryNetwork(
+                                  placeholder: kTransparentImage,
+                                  image: image.data,
+                                ));
+                          } else {
+                            return Container();
+                          }
+                        })),
+              ],
+            ),
+          ),
+          
+        ],
+        //onTap: () => print(item),
       ),
     ),
   );
+}
+
+Future<String> _loadImage(String gs) async {
+  final ref = FirebaseStorage.instance.getReferenceFromUrl(gs);
+  dynamic url = await ref.then((doc) => doc.getDownloadURL());
+  return url.toString();
 }
 
 Stream<Menu> getMenu(String location) {
@@ -96,13 +132,17 @@ Stream<Menu> getMenu(String location) {
 // TODO: Add Category to MenuItem
 // TODO: Member functions for sorting by category
 class MenuItem {
-  final String name;
-  final double price;
+  String name;
+  String category;
+  String gsurl;
+  double price;
 
   MenuItem.fromMap(Map<String, dynamic> map)
       : assert(map['name'] != null),
         assert(map['price'] != null),
         name = map['name'],
+        category = map['category'],
+        gsurl = map['img'],
         price = map['price'];
 }
 
