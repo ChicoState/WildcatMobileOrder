@@ -8,6 +8,7 @@
 .buildlog/
 .history
 .svn/
+*.html
 
 # IntelliJ related
 *.iml
@@ -35,3 +36,7 @@ lib/generated_plugin_registrant.dart
 
 # Exceptions to above rules.
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+
+
+#Ignore the google-services.json file from each of our firebases until we can create a unified database for production
+google-services.json
