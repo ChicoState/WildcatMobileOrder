@@ -1,15 +1,6 @@
 import 'package:WildcatMobileOrder/services/auth.dart';
 import 'package:flutter/material.dart';
 
-// class Landing extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       child: Text('LandingPage');
-//     );
-//   }
-// }
-
 class Landing extends StatelessWidget {
 
   final AuthService _auth = AuthService();
@@ -28,6 +19,8 @@ class Landing extends StatelessWidget {
             onPressed: () async {
               //wait for the signout to clear
               await _auth.signOut();
+              //Added a wait for google auth sign in
+              await _auth.signOutGoogle();
             },
           )
         ],
