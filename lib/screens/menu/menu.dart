@@ -1,10 +1,9 @@
 import 'dart:async';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:WildcatMobileOrder/models/menu.dart';
-
-
 
 class MenuView extends StatelessWidget {
   final String location;
@@ -35,47 +34,38 @@ class MenuView extends StatelessWidget {
   }
 
   Widget _buildMenuListItem(BuildContext context, MenuItem item) {
-    return Padding(
-      key: ValueKey(item.name),
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(5.0),
-        ),
-        child: ExpansionTile(
-          title: Text(item.name),
-          initiallyExpanded: false,
-          trailing: Text(item.getPrice()),
-          children: <Widget>[
-            SizedBox(
-              height: 200,
-              child: Stack(
-                children: <Widget>[
-                  Center(child: CircularProgressIndicator()),
-                  Center(
-                      child: FutureBuilder(
-                          future: item.loadImage(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<String> image) {
-                            if (image.hasData) {
-                              return ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: FadeInImage.memoryNetwork(
-                                    placeholder: kTransparentImage,
-                                    image: image.data,
-                                  ));
-                            } else {
-                              return Container();
-                            }
-                          })),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    return Card(
+        elevation: 10,
+        child: InkWell(
+            onTap: () {},
+            child: ListTile(
+                isThreeLine: true,
+                leading: FractionallySizedBox(
+                  widthFactor: 0.2,
+                  heightFactor: 1.0,
+                  child: FutureBuilder(
+                      future: item.image,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<NetworkImage> image) {
+                        if (image.hasData) {
+                          return FadeInImage(
+                            fit: BoxFit.cover,
+                            placeholder: MemoryImage(kTransparentImage),
+                            image: image.data,
+                          );
+                        } else {
+                          return Container();
+                        }
+                      }),
+                ),
+                title: Row(
+                  children: <Widget>[
+                    Text(item.name),
+                    Spacer(),
+                    Text(item.getPrice()),
+                  ],
+                ),
+                subtitle: Text('placeholder subtitle'))));
   }
 
   /// Returns a Stream of the Menu data
@@ -99,4 +89,3 @@ class MenuView extends StatelessWidget {
         body: _loadMenu(context, this.location));
   }
 }
-

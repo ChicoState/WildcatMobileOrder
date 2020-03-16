@@ -10,7 +10,7 @@ class Wrapper extends StatelessWidget {
     //Accessing the user data everytime we get it will be null on logout
     final user = Provider.of<User>(context);
 
-    //return either the langing page or login page based on Auth
+    //return either the landing page or login page based on Auth
     return user != null ? Landing() : Login();
   }
 }
