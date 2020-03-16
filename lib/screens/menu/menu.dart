@@ -111,20 +111,21 @@ class ItemView extends StatelessWidget {
           children: <Widget>[
             Flexible(
               flex: 1,
-              child: FutureBuilder(
-                  future: item.image,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<NetworkImage> image) {
-                    if (image.hasData) {
-                      return FadeInImage(
-                        fit: BoxFit.cover,
-                        placeholder: MemoryImage(kTransparentImage),
-                        image: image.data,
-                      );
-                    } else {
-                      return Container();
-                    }
-                  }),
+              child: Center(
+                  child: FutureBuilder(
+                      future: item.image,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<NetworkImage> image) {
+                        if (image.hasData) {
+                          return FadeInImage(
+                            fit: BoxFit.fill,
+                            placeholder: MemoryImage(kTransparentImage),
+                            image: image.data,
+                          );
+                        } else {
+                          return Container();
+                        }
+                      })),
             ),
             Flexible(
               flex: 1,
