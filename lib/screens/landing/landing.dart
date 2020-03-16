@@ -1,7 +1,7 @@
 import 'package:WildcatMobileOrder/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:WildcatMobileOrder/menu.dart';
+import 'package:WildcatMobileOrder/screens/menu/menu.dart';
 
 class Landing extends StatelessWidget {
   final AuthService _auth = AuthService();
