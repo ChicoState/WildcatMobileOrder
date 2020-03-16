@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:WildcatMobileOrder/models/cart.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -7,8 +7,9 @@ import 'package:WildcatMobileOrder/models/menu.dart';
 
 class MenuView extends StatelessWidget {
   final String location;
+  final Cart cart;
 
-  MenuView({this.location});
+  MenuView({this.location, this.cart});
 
   /// loadMenu
   /// location is the document name under the menus collection
@@ -34,10 +35,14 @@ class MenuView extends StatelessWidget {
   }
 
   Widget _buildMenuListItem(BuildContext context, MenuItem item) {
+    final MaterialPageRoute route =
+        MaterialPageRoute(builder: (context) => ItemView(item, this.cart));
     return Card(
         elevation: 10,
         child: InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(context, route);
+            },
             child: ListTile(
                 isThreeLine: true,
                 leading: FractionallySizedBox(
@@ -87,5 +92,49 @@ class MenuView extends StatelessWidget {
           title: Text('$location'),
         ),
         body: _loadMenu(context, this.location));
+  }
+}
+
+class ItemView extends StatelessWidget {
+  final MenuItem item;
+  final Cart cart;
+
+  ItemView(this.item, this.cart);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(this.item.name),
+        ),
+        body: Column(
+          children: <Widget>[
+            Flexible(
+              flex: 1,
+              child: FutureBuilder(
+                  future: item.image,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<NetworkImage> image) {
+                    if (image.hasData) {
+                      return FadeInImage(
+                        fit: BoxFit.cover,
+                        placeholder: MemoryImage(kTransparentImage),
+                        image: image.data,
+                      );
+                    } else {
+                      return Container();
+                    }
+                  }),
+            ),
+            Flexible(
+              flex: 1,
+              child: Text('placeholder description of the item'),
+            ),
+            Flexible(
+              flex: 1,
+              child: Text(item.getPrice()),
+            ),
+          ],
+        ));
   }
 }

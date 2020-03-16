@@ -140,8 +140,12 @@ class _LandingState extends State<Landing> {
   }
 
   Widget _buildLocationCards(BuildContext context, LocationItem loc) {
+    // build the route for each card
     final MaterialPageRoute route = MaterialPageRoute(
-      builder: (context) => MenuView(location: loc.name),
+      builder: (context) => MenuView(
+        location: loc.name,
+        cart: myCart,
+      ),
     );
     return Padding(
         key: ValueKey(loc.name),
@@ -156,7 +160,7 @@ class _LandingState extends State<Landing> {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     ListTile(
-                      // icon is hard coded at the moment, look into changing this
+                        // icon is hard coded at the moment, look into changing this
                         leading: Icon(Icons.local_cafe),
                         title: Text(loc.name ?? 'error'),
                         subtitle: Text(loc.getOpenHours())),
