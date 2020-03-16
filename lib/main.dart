@@ -23,7 +23,6 @@ class MyApp extends StatelessWidget {
           routes: {
             //Inserted a wrapper to help solicit Authentication from Login Page
             '/': (context) => Wrapper(),
-            '/locations': (context) => LocationSelection(),
             '/menu': (context) => MenuView(),
           }),
     );
