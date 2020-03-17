@@ -47,23 +47,25 @@ class MenuView extends StatelessWidget {
             child: ListTile(
                 isThreeLine: true,
                 leading: FractionallySizedBox(
-                  widthFactor: 0.2,
-                  heightFactor: 1.0,
-                  child: FutureBuilder(
-                      future: item.image,
-                      builder: (BuildContext context,
-                          AsyncSnapshot<NetworkImage> image) {
-                        if (image.hasData) {
-                          return FadeInImage(
-                            fit: BoxFit.cover,
-                            placeholder: MemoryImage(kTransparentImage),
-                            image: image.data,
-                          );
-                        } else {
-                          return Container();
-                        }
-                      }),
-                ),
+                    widthFactor: 0.2,
+                    heightFactor: 1.0,
+                    child: Hero(
+                      tag: item.name,
+                      child: FutureBuilder(
+                          future: item.image,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<NetworkImage> image) {
+                            if (image.hasData) {
+                              return FadeInImage(
+                                fit: BoxFit.cover,
+                                placeholder: MemoryImage(kTransparentImage),
+                                image: image.data,
+                              );
+                            } else {
+                              return Container();
+                            }
+                          }),
+                    )),
                 title: Row(
                   children: <Widget>[
                     Text(item.name),
@@ -111,6 +113,13 @@ class _ItemViewState extends State<ItemView> {
   final Cart cart;
 
   _ItemViewState(this.item, this.cart);
+
+  @override
+  void didChangeDependencies() async {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    precacheImage(item.image, context);
+  }
 
   void _alertWrongLocation(MenuItem item, int quantity) {
     // flutter defined function
@@ -172,20 +181,23 @@ class _ItemViewState extends State<ItemView> {
               flex: 4,
               child: Container(
                   width: MediaQuery.of(context).size.width,
-                  child: FutureBuilder(
-                      future: item.image,
-                      builder: (BuildContext context,
-                          AsyncSnapshot<NetworkImage> image) {
-                        if (image.hasData) {
-                          return FadeInImage(
-                            fit: BoxFit.cover,
-                            placeholder: MemoryImage(kTransparentImage),
-                            image: image.data,
-                          );
-                        } else {
-                          return Container();
-                        }
-                      })),
+                  child: Hero(
+                    tag: item.name,
+                    child: FutureBuilder(
+                        future: item.image,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<NetworkImage> image) {
+                          if (image.hasData) {
+                            return FadeInImage(
+                              fit: BoxFit.cover,
+                              placeholder: MemoryImage(kTransparentImage),
+                              image: image.data,
+                            );
+                          } else {
+                            return Container();
+                          }
+                        }),
+                  )),
             ),
             // add spacing below image
             Flexible(
