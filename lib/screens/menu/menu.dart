@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:WildcatMobileOrder/models/menu.dart';
+import 'package:badges/badges.dart';
 
 class MenuView extends StatelessWidget {
   final String location;
@@ -95,15 +96,73 @@ class MenuView extends StatelessWidget {
   }
 }
 
-class ItemView extends StatelessWidget {
+class ItemView extends StatefulWidget {
   final MenuItem item;
   final Cart cart;
 
   ItemView(this.item, this.cart);
 
   @override
+  _ItemViewState createState() => _ItemViewState(this.item, this.cart);
+}
+
+class _ItemViewState extends State<ItemView> {
+  final MenuItem item;
+  final Cart cart;
+
+  _ItemViewState(this.item, this.cart);
+
+  void _alertWrongLocation(MenuItem item, int quantity) {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        String currentLocation = this.cart.getLocation();
+        String newLocation = item.location;
+        return AlertDialog(
+          title: Text('Adding item from different location'),
+          content: Text(
+              'Your cart currently contains items from $currentLocation. Would you like to empty your cart, and add items from $newLocation?'),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            FlatButton(
+              child: Text('Yes, start a new cart'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                setState(() {
+                  this.cart.setLocation(newLocation);
+                  this.cart.addItem(item, quantity);
+                });
+              },
+            ),
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+        floatingActionButton: FloatingActionButton(
+          child: Badge(
+            badgeContent: Text(cart.itemCount.toString()),
+            elevation: 10,
+            position: BadgePosition.topRight(right: -22, top: -22),
+            child: Icon(Icons.shopping_cart),
+            toAnimate: true,
+            animationType: BadgeAnimationType.scale,
+          ),
+          backgroundColor: Colors.red,
+          onPressed: () {},
+        ),
         appBar: AppBar(
           title: Text(this.item.name),
         ),
@@ -135,6 +194,31 @@ class ItemView extends StatelessWidget {
               flex: 1,
               child: Text(item.getPrice()),
             ),
+            Flexible(
+                flex: 1,
+                child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Ink(
+                        decoration: const ShapeDecoration(
+                          color: Colors.red,
+                          shape: CircleBorder(),
+                        ),
+                        child: IconButton(
+                          color: Colors.white,
+                          splashColor: Colors.redAccent,
+                          icon: Icon(Icons.add_shopping_cart),
+                          onPressed: () {
+                            // check if the locations match, warn if not
+                            if (this.cart.checkLocation(item.location)) {
+                              setState(() {
+                                cart.addItem(this.item, 1);
+                              });
+                            } else {
+                              // do something if checkLocation fails
+                              _alertWrongLocation(item, 1);
+                            }
+                          },
+                        ))))
           ],
         ));
   }

@@ -16,7 +16,7 @@ class Menu {
       : location = snapshot['name'],
         reference = snapshot.reference {
     items = snapshot['items'].map<MenuItem>((item) {
-      return MenuItem.fromMap(item, this.location);
+      return MenuItem.fromMap(item, location);
     }).toList();
     categories = snapshot['categories'].map<String>((category) {
       return category.toString();
@@ -39,8 +39,8 @@ class MenuItem {
   MenuItem.fromMap(Map<String, dynamic> map, String location)
       : assert(map['name'] != null),
         assert(map['price'] != null),
-        location = location,
         name = map['name'],
+        location = location,
         category = map['category'],
         gsurl = map['img'],
         price = map['price'] {
