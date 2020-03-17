@@ -168,16 +168,17 @@ class _ItemViewState extends State<ItemView> {
         ),
         body: Column(
           children: <Widget>[
-            Flexible(
-              flex: 1,
-              child: Center(
+            Expanded(
+              flex: 4,
+              child: Container(
+                  width: MediaQuery.of(context).size.width,
                   child: FutureBuilder(
                       future: item.image,
                       builder: (BuildContext context,
                           AsyncSnapshot<NetworkImage> image) {
                         if (image.hasData) {
                           return FadeInImage(
-                            fit: BoxFit.fill,
+                            fit: BoxFit.cover,
                             placeholder: MemoryImage(kTransparentImage),
                             image: image.data,
                           );
@@ -186,16 +187,21 @@ class _ItemViewState extends State<ItemView> {
                         }
                       })),
             ),
+            // add spacing below image
             Flexible(
               flex: 1,
+              child: Container(),
+            ),
+            Flexible(
+              flex: 2,
               child: Text('placeholder description of the item'),
             ),
             Flexible(
-              flex: 1,
+              flex: 3,
               child: Text(item.getPrice()),
             ),
             Flexible(
-                flex: 1,
+                flex: 3,
                 child: Align(
                     alignment: Alignment.bottomCenter,
                     child: Ink(
