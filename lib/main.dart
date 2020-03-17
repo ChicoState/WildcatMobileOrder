@@ -11,6 +11,7 @@ final ThemeData td = ThemeData(
   primaryColor: Colors.red[800],
 );
 
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,6 @@ class MyApp extends StatelessWidget {
           routes: {
             //Inserted a wrapper to help solicit Authentication from Login Page
             '/': (context) => Wrapper(),
-            '/locations': (context) => LocationSelection(),
             '/menu': (context) => MenuView(),
           }),
     );

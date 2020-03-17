@@ -1,91 +1,16 @@
 import 'dart:async';
-
+import 'package:WildcatMobileOrder/models/cart.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:transparent_image/transparent_image.dart';
-
-class LocationSelection extends StatelessWidget {
-  /// Returns a Stream of Locations, used to populate the Location selection
-  /// screen.
-  Stream<Locations> _getLocations() {
-    return Firestore.instance
-        .collection('locations')
-        .document('info')
-        .get()
-        .then((snapshot) {
-      // create Location object here
-      return Locations.fromSnapshot(snapshot);
-    }).asStream();
-  }
-
-  Widget _showLocations(BuildContext context) {
-    return StreamBuilder<Locations>(
-        stream: _getLocations(),
-        builder: (BuildContext context, locations) {
-          if (locations.hasData) {
-            Locations locList = locations.data;
-            return ListView(
-              padding: const EdgeInsets.only(top: 20.0),
-              children: locList.locations
-                  .map((loc) => _buildLocationCards(context, loc))
-                  .toList(),
-            );
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        });
-  }
-
-  Widget _buildLocationCards(BuildContext context, LocationItem loc) {
-    final MaterialPageRoute route = MaterialPageRoute(
-      builder: (context) => MenuView(location: loc.name),
-    );
-    return Padding(
-        key: ValueKey(loc.name),
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-        child: Card(
-            child: InkWell(
-                splashColor: Colors.redAccent,
-                onTap: () {
-                  Navigator.push(context, route);
-                },
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    ListTile(
-                      // icon is hard coded at the moment, look into changing this
-                        leading: Icon(Icons.local_cafe),
-                        title: Text(loc.name ?? 'error'),
-                        subtitle: Text(loc.getOpenHours())),
-                    ButtonBar(
-                      children: <Widget>[
-                        FlatButton(
-                          child: Text('Order from ${loc.name}'),
-                          onPressed: () {
-                            Navigator.push(context, route);
-                          },
-                        )
-                      ],
-                    )
-                  ],
-                ))));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('Select a location'),
-        ),
-        body: Center(child: _showLocations(context)));
-  }
-}
+import 'package:WildcatMobileOrder/models/menu.dart';
+import 'package:badges/badges.dart';
 
 class MenuView extends StatelessWidget {
   final String location;
+  final Cart cart;
 
-  MenuView({this.location});
+  MenuView({this.location, this.cart});
 
   /// loadMenu
   /// location is the document name under the menus collection
@@ -111,47 +36,42 @@ class MenuView extends StatelessWidget {
   }
 
   Widget _buildMenuListItem(BuildContext context, MenuItem item) {
-    return Padding(
-      key: ValueKey(item.name),
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(5.0),
-        ),
-        child: ExpansionTile(
-          title: Text(item.name),
-          initiallyExpanded: false,
-          trailing: Text(item.getPrice()),
-          children: <Widget>[
-            SizedBox(
-              height: 200,
-              child: Stack(
-                children: <Widget>[
-                  Center(child: CircularProgressIndicator()),
-                  Center(
-                      child: FutureBuilder(
-                          future: item.loadImage(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<String> image) {
-                            if (image.hasData) {
-                              return ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: FadeInImage.memoryNetwork(
-                                    placeholder: kTransparentImage,
-                                    image: image.data,
-                                  ));
-                            } else {
-                              return Container();
-                            }
-                          })),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    final MaterialPageRoute route =
+        MaterialPageRoute(builder: (context) => ItemView(item, this.cart));
+    return Card(
+        elevation: 10,
+        child: InkWell(
+            onTap: () {
+              Navigator.push(context, route);
+            },
+            child: ListTile(
+                isThreeLine: true,
+                leading: FractionallySizedBox(
+                  widthFactor: 0.2,
+                  heightFactor: 1.0,
+                  child: FutureBuilder(
+                      future: item.image,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<NetworkImage> image) {
+                        if (image.hasData) {
+                          return FadeInImage(
+                            fit: BoxFit.cover,
+                            placeholder: MemoryImage(kTransparentImage),
+                            image: image.data,
+                          );
+                        } else {
+                          return Container();
+                        }
+                      }),
+                ),
+                title: Row(
+                  children: <Widget>[
+                    Text(item.name),
+                    Spacer(),
+                    Text(item.getPrice()),
+                  ],
+                ),
+                subtitle: Text('placeholder subtitle'))));
   }
 
   /// Returns a Stream of the Menu data
@@ -176,81 +96,130 @@ class MenuView extends StatelessWidget {
   }
 }
 
-/// Individual items from a Menu
-// TODO: Member functions for sorting by category, only return items from a particular category
-class MenuItem {
-  String name;
-  String category;
-  String gsurl;
-  double price;
+class ItemView extends StatefulWidget {
+  final MenuItem item;
+  final Cart cart;
 
-  MenuItem.fromMap(Map<String, dynamic> map)
-      : assert(map['name'] != null),
-        assert(map['price'] != null),
-        name = map['name'],
-        category = map['category'],
-        gsurl = map['img'],
-        price = map['price'];
+  ItemView(this.item, this.cart);
 
-  /// Helper method to return a String representing the price of the MenuItem
-  String getPrice() {
-    return '\$${this.price.toStringAsFixed(2)}';
-  }
-
-  /// Parses a URL of the MenuItem image
-  Future<String> loadImage() async {
-    final ref = FirebaseStorage.instance.getReferenceFromUrl(this.gsurl);
-    dynamic url = await ref.then((doc) => doc.getDownloadURL());
-    return url.toString();
-  }
+  @override
+  _ItemViewState createState() => _ItemViewState(this.item, this.cart);
 }
 
-/// Manages a Locations Menu
-class Menu {
-  final String location;
-  List<MenuItem> items;
-  List<String> categories;
-  DocumentReference reference;
+class _ItemViewState extends State<ItemView> {
+  final MenuItem item;
+  final Cart cart;
 
-  // constructor for Menu object
-  // uses initialization list
-  Menu.fromSnapshot(DocumentSnapshot snapshot)
-      : location = snapshot['name'],
-        reference = snapshot.reference,
-        items = snapshot['items'].map<MenuItem>((item) {
-          return MenuItem.fromMap(item);
-        }).toList(),
-        categories = snapshot['categories'].map<String>((category) {
-          return category.toString();
-        }).toList();
-}
+  _ItemViewState(this.item, this.cart);
 
-/// Holds a list of all locations, and their meta data.
-class Locations {
-  List<LocationItem> locations;
-
-  Locations.fromSnapshot(DocumentSnapshot snapshot)
-      : locations = snapshot['meta'].map<LocationItem>((loc) {
-          return LocationItem.fromMap(loc);
-        }).toList();
-}
-
-/// Represents a single location
-class LocationItem {
-  final String openTime;
-  final String closeTime;
-  final String name;
-
-  LocationItem.fromMap(Map<String, dynamic> map)
-      : openTime = map['opentime'],
-        closeTime = map['closetime'],
-        name = map['name'];
-
-  String getOpenHours() {
-    return 'Opens at $openTime and closes at $closeTime';
+  void _alertWrongLocation(MenuItem item, int quantity) {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        String currentLocation = this.cart.getLocation();
+        String newLocation = item.location;
+        return AlertDialog(
+          title: Text('Adding item from different location'),
+          content: Text(
+              'Your cart currently contains items from $currentLocation. Would you like to empty your cart, and add items from $newLocation?'),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            FlatButton(
+              child: Text('Yes, start a new cart'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                setState(() {
+                  this.cart.setLocation(newLocation);
+                  this.cart.addItem(item, quantity);
+                });
+              },
+            ),
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    );
   }
 
-  String getOrderString() {
-    return 'Order from $name';
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        floatingActionButton: FloatingActionButton(
+          child: Badge(
+            badgeContent: Text(cart.itemCount.toString()),
+            elevation: 10,
+            position: BadgePosition.topRight(right: -22, top: -22),
+            child: Icon(Icons.shopping_cart),
+            toAnimate: true,
+            animationType: BadgeAnimationType.scale,
+          ),
+          backgroundColor: Colors.red,
+          onPressed: () {},
+        ),
+        appBar: AppBar(
+          title: Text(this.item.name),
+        ),
+        body: Column(
+          children: <Widget>[
+            Flexible(
+              flex: 1,
+              child: Center(
+                  child: FutureBuilder(
+                      future: item.image,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<NetworkImage> image) {
+                        if (image.hasData) {
+                          return FadeInImage(
+                            fit: BoxFit.fill,
+                            placeholder: MemoryImage(kTransparentImage),
+                            image: image.data,
+                          );
+                        } else {
+                          return Container();
+                        }
+                      })),
+            ),
+            Flexible(
+              flex: 1,
+              child: Text('placeholder description of the item'),
+            ),
+            Flexible(
+              flex: 1,
+              child: Text(item.getPrice()),
+            ),
+            Flexible(
+                flex: 1,
+                child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Ink(
+                        decoration: const ShapeDecoration(
+                          color: Colors.red,
+                          shape: CircleBorder(),
+                        ),
+                        child: IconButton(
+                          color: Colors.white,
+                          splashColor: Colors.redAccent,
+                          icon: Icon(Icons.add_shopping_cart),
+                          onPressed: () {
+                            // check if the locations match, warn if not
+                            if (this.cart.checkLocation(item.location)) {
+                              setState(() {
+                                cart.addItem(this.item, 1);
+                              });
+                            } else {
+                              // do something if checkLocation fails
+                              _alertWrongLocation(item, 1);
+                            }
+                          },
+                        ))))
+          ],
+        ));
   }
 }
