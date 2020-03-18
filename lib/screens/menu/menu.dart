@@ -104,13 +104,6 @@ class _ItemViewState extends State<ItemView> {
 
   _ItemViewState(this.item, this.cart);
 
-//  @override
-//  void didChangeDependencies() async {
-//    // TODO: implement didChangeDependencies
-//    super.didChangeDependencies();
-//    precacheImage(item.img, context);
-//  }
-
   void _alertWrongLocation(MenuItem item, int quantity) {
     // show a dialog if location mismatch
     showDialog(
