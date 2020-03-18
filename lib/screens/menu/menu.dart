@@ -22,16 +22,33 @@ class MenuView extends StatelessWidget {
 
         Menu currentMenu = menu.data;
 
-        return _buildMenuList(context, currentMenu);
+        return _buildCategoryList(context, currentMenu);
       },
     );
   }
 
-  Widget _buildMenuList(BuildContext context, Menu menu) {
-    return ListView(
+  Widget _buildCategoryList(BuildContext context, Menu menu) {
+    return ListView.builder(
+      itemCount: menu.categories.length,
+      itemBuilder: (context, i) {
+        return ExpansionTile(
+          title: Text(menu.categories[i]),
+          children: <Widget>[
+            _buildMenuList(context, menu.getCategoryItems(menu.categories[i]))
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildMenuList(BuildContext context, List<MenuItem> itemsList) {
+    return ListView.builder(
+      shrinkWrap: true,
       padding: const EdgeInsets.only(top: 20.0),
-      children:
-          menu.items.map((item) => _buildMenuListItem(context, item)).toList(),
+      itemCount: itemsList.length,
+      itemBuilder: (context, i) {
+        return _buildMenuListItem(context, itemsList[i]);
+      },
     );
   }
 

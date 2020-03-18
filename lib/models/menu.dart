@@ -19,11 +19,18 @@ class Menu {
     categories = snapshot['categories'].map<String>((category) {
       return category.toString();
     }).toList();
+    // sort menu items and categories alphabetically
+    categories.sort();
+    items.sort((a, b) => a.name.compareTo(b.name));
+  }
+
+  // returns a list of all items in a particular category
+  List<MenuItem> getCategoryItems(String category) {
+    return this.items.where((item) => item.category == category).toList();
   }
 }
 
 /// Individual items from a Menu
-// TODO: Member functions for sorting by category, only return items from a particular category
 class MenuItem {
   final String name;
   final String category;
