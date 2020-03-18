@@ -50,22 +50,12 @@ class MenuView extends StatelessWidget {
                     widthFactor: 0.2,
                     heightFactor: 1.0,
                     child: Hero(
-                      tag: item.name,
-                      child: FutureBuilder(
-                          future: item.image,
-                          builder: (BuildContext context,
-                              AsyncSnapshot<NetworkImage> image) {
-                            if (image.hasData) {
-                              return FadeInImage(
-                                fit: BoxFit.cover,
-                                placeholder: MemoryImage(kTransparentImage),
-                                image: image.data,
-                              );
-                            } else {
-                              return Container();
-                            }
-                          }),
-                    )),
+                        tag: item.name,
+                        child: FadeInImage(
+                          fit: BoxFit.cover,
+                          placeholder: MemoryImage(kTransparentImage),
+                          image: item.img,
+                        ))),
                 title: Row(
                   children: <Widget>[
                     Text(item.name),
@@ -114,15 +104,15 @@ class _ItemViewState extends State<ItemView> {
 
   _ItemViewState(this.item, this.cart);
 
-  @override
-  void didChangeDependencies() async {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
-    precacheImage(item.image, context);
-  }
+//  @override
+//  void didChangeDependencies() async {
+//    // TODO: implement didChangeDependencies
+//    super.didChangeDependencies();
+//    precacheImage(item.img, context);
+//  }
 
   void _alertWrongLocation(MenuItem item, int quantity) {
-    // flutter defined function
+    // show a dialog if location mismatch
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -183,20 +173,11 @@ class _ItemViewState extends State<ItemView> {
                   width: MediaQuery.of(context).size.width,
                   child: Hero(
                     tag: item.name,
-                    child: FutureBuilder(
-                        future: item.image,
-                        builder: (BuildContext context,
-                            AsyncSnapshot<NetworkImage> image) {
-                          if (image.hasData) {
-                            return FadeInImage(
-                              fit: BoxFit.cover,
-                              placeholder: MemoryImage(kTransparentImage),
-                              image: image.data,
-                            );
-                          } else {
-                            return Container();
-                          }
-                        }),
+                    child: FadeInImage(
+                      fit: BoxFit.cover,
+                      placeholder: MemoryImage(kTransparentImage),
+                      image: item.img,
+                    ),
                   )),
             ),
             // add spacing below image
