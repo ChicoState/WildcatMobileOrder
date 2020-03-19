@@ -1,10 +1,12 @@
 import 'package:WildcatMobileOrder/services/auth.dart';
+
 // import 'package:WildcatMobileOrder/shared/constants.dart';
 import 'package:WildcatMobileOrder/shared/loading.dart';
 import 'package:flutter/material.dart';
 
 class SignIn extends StatefulWidget {
   final Function toggleView;
+
   //Constructor for SignIn widget instantiating the toggleView value
   SignIn({this.toggleView});
 
@@ -16,6 +18,7 @@ class _SignInState extends State<SignIn> {
   //Instance of authservice class
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
+
   //Whether or not loading is taking place
   bool loading = false;
 
@@ -102,7 +105,7 @@ class _SignInState extends State<SignIn> {
                       //     }),
                       SizedBox(height: 50),
                       Image(
-                          image: AssetImage("graphics/WildcatMO.png"),
+                        image: AssetImage("graphics/WildcatMO.png"),
                       ),
                       OutlineButton(
                         //* Outlined button for google sign in option

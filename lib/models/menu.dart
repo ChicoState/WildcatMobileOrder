@@ -1,6 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'dart:io';
 import 'package:flutter/material.dart';
 
 /// Manages a Locations Menu
@@ -21,20 +19,24 @@ class Menu {
     categories = snapshot['categories'].map<String>((category) {
       return category.toString();
     }).toList();
+    // sort menu items and categories alphabetically
+    categories.sort();
+    items.sort((a, b) => a.name.compareTo(b.name));
+  }
+
+  // returns a list of all items in a particular category
+  List<MenuItem> getCategoryItems(String category) {
+    return this.items.where((item) => item.category == category).toList();
   }
 }
 
 /// Individual items from a Menu
-// TODO: Member functions for sorting by category, only return items from a particular category
 class MenuItem {
   final String name;
   final String category;
-  final String gsurl;
   double price;
   final String location;
-  Future<NetworkImage> image;
-
-  //Future<CachedNetworkImage> image;
+  final NetworkImage img;
 
   MenuItem.fromMap(Map<String, dynamic> map, String location)
       : assert(map['name'] != null),
@@ -42,28 +44,11 @@ class MenuItem {
         name = map['name'],
         location = location,
         category = map['category'],
-        gsurl = map['img'],
-        price = map['price'] {
-    // load image
-    image = getImage();
-  }
+        price = map['price'],
+        img = NetworkImage(map['imgurl']);
 
   /// Helper method to return a String representing the price of the MenuItem
   String getPrice() {
     return '\$${this.price.toStringAsFixed(2)}';
-  }
-
-  /// Parses a URL of the MenuItem image
-  Future<String> loadImage() async {
-    final ref = FirebaseStorage.instance.getReferenceFromUrl(this.gsurl);
-    dynamic url = await ref.then((doc) => doc.getDownloadURL());
-    return url.toString();
-  }
-
-  Future<NetworkImage> getImage() async {
-    final ref = FirebaseStorage.instance.getReferenceFromUrl(this.gsurl);
-    dynamic url = await ref.then((doc) => doc.getDownloadURL());
-    return NetworkImage(url);
-    //return NetworkImage(url);
   }
 }

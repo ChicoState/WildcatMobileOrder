@@ -22,16 +22,33 @@ class MenuView extends StatelessWidget {
 
         Menu currentMenu = menu.data;
 
-        return _buildMenuList(context, currentMenu);
+        return _buildCategoryList(context, currentMenu);
       },
     );
   }
 
-  Widget _buildMenuList(BuildContext context, Menu menu) {
-    return ListView(
+  Widget _buildCategoryList(BuildContext context, Menu menu) {
+    return ListView.builder(
+      itemCount: menu.categories.length,
+      itemBuilder: (context, i) {
+        return ExpansionTile(
+          title: Text(menu.categories[i]),
+          children: <Widget>[
+            _buildMenuList(context, menu.getCategoryItems(menu.categories[i]))
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildMenuList(BuildContext context, List<MenuItem> itemsList) {
+    return ListView.builder(
+      shrinkWrap: true,
       padding: const EdgeInsets.only(top: 20.0),
-      children:
-          menu.items.map((item) => _buildMenuListItem(context, item)).toList(),
+      itemCount: itemsList.length,
+      itemBuilder: (context, i) {
+        return _buildMenuListItem(context, itemsList[i]);
+      },
     );
   }
 
@@ -47,23 +64,15 @@ class MenuView extends StatelessWidget {
             child: ListTile(
                 isThreeLine: true,
                 leading: FractionallySizedBox(
-                  widthFactor: 0.2,
-                  heightFactor: 1.0,
-                  child: FutureBuilder(
-                      future: item.image,
-                      builder: (BuildContext context,
-                          AsyncSnapshot<NetworkImage> image) {
-                        if (image.hasData) {
-                          return FadeInImage(
-                            fit: BoxFit.cover,
-                            placeholder: MemoryImage(kTransparentImage),
-                            image: image.data,
-                          );
-                        } else {
-                          return Container();
-                        }
-                      }),
-                ),
+                    widthFactor: 0.2,
+                    heightFactor: 1.0,
+                    child: Hero(
+                        tag: item.name,
+                        child: FadeInImage(
+                          fit: BoxFit.cover,
+                          placeholder: MemoryImage(kTransparentImage),
+                          image: item.img,
+                        ))),
                 title: Row(
                   children: <Widget>[
                     Text(item.name),
@@ -113,7 +122,7 @@ class _ItemViewState extends State<ItemView> {
   _ItemViewState(this.item, this.cart);
 
   void _alertWrongLocation(MenuItem item, int quantity) {
-    // flutter defined function
+    // show a dialog if location mismatch
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -168,34 +177,34 @@ class _ItemViewState extends State<ItemView> {
         ),
         body: Column(
           children: <Widget>[
+            Expanded(
+              flex: 4,
+              child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Hero(
+                    tag: item.name,
+                    child: FadeInImage(
+                      fit: BoxFit.cover,
+                      placeholder: MemoryImage(kTransparentImage),
+                      image: item.img,
+                    ),
+                  )),
+            ),
+            // add spacing below image
             Flexible(
               flex: 1,
-              child: Center(
-                  child: FutureBuilder(
-                      future: item.image,
-                      builder: (BuildContext context,
-                          AsyncSnapshot<NetworkImage> image) {
-                        if (image.hasData) {
-                          return FadeInImage(
-                            fit: BoxFit.fill,
-                            placeholder: MemoryImage(kTransparentImage),
-                            image: image.data,
-                          );
-                        } else {
-                          return Container();
-                        }
-                      })),
+              child: Container(),
             ),
             Flexible(
-              flex: 1,
+              flex: 2,
               child: Text('placeholder description of the item'),
             ),
             Flexible(
-              flex: 1,
+              flex: 3,
               child: Text(item.getPrice()),
             ),
             Flexible(
-                flex: 1,
+                flex: 3,
                 child: Align(
                     alignment: Alignment.bottomCenter,
                     child: Ink(

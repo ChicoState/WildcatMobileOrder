@@ -11,7 +11,6 @@ final ThemeData td = ThemeData(
   primaryColor: Colors.red[800],
 );
 
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -29,20 +28,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-// class HomeScreen extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Home Screen'),
-//       ),
-//       body: Center(
-//         child: RaisedButton(
-//             onPressed: () => Navigator.pushNamed(context, '/locations'),
-//             child: Text('Select a location')),
-//       ),
-//     );
-//   }
-// }
 
