@@ -28,33 +28,34 @@ class MenuView extends StatelessWidget {
   }
 
   Widget _buildCategoryList(BuildContext context, Menu menu) {
-    return ListView.builder(
-      itemCount: menu.categories.length,
-      itemBuilder: (context, i) {
+    return ListView(
+      //shrinkWrap: true,
+      children: menu.categories.map((category) {
         return ExpansionTile(
-          title: Text(menu.categories[i]),
+          title: Text(category),
           children: <Widget>[
-            _buildMenuList(context, menu.getCategoryItems(menu.categories[i]))
+            _buildMenuList(context, menu.getCategoryItems(category)),
           ],
         );
-      },
+      }).toList(),
     );
   }
 
   Widget _buildMenuList(BuildContext context, List<MenuItem> itemsList) {
-    return ListView.builder(
+    return ListView(
       shrinkWrap: true,
-      padding: const EdgeInsets.only(top: 20.0),
-      itemCount: itemsList.length,
-      itemBuilder: (context, i) {
-        return _buildMenuListItem(context, itemsList[i]);
-      },
+      children: itemsList.map((item) {
+        return _buildMenuListItem(context, item);
+      }).toList(),
     );
   }
 
   Widget _buildMenuListItem(BuildContext context, MenuItem item) {
     final MaterialPageRoute route =
         MaterialPageRoute(builder: (context) => ItemView(item, this.cart));
+    // try to resolve image here
+    var configuration = createLocalImageConfiguration(context);
+    item.img.resolve(configuration);
     return Card(
         elevation: 10,
         child: InkWell(
