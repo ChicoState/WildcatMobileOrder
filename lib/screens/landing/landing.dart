@@ -1,4 +1,5 @@
 import 'package:WildcatMobileOrder/services/auth.dart';
+import 'package:WildcatMobileOrder/shared/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:WildcatMobileOrder/screens/menu/menu.dart';
@@ -40,7 +41,7 @@ class _LandingState extends State<Landing> {
                   .toList(),
             );
           } else {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: Loading());
           }
         });
   }
