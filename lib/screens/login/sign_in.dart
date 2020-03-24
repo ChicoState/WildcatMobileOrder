@@ -27,9 +27,14 @@ class _SignInState extends State<SignIn> {
             appBar: AppBar(
               backgroundColor: Colors.red[900],
               elevation: 0.0,
-              title: Text('Sign/Register in to Wildcat MO'),
-              actions: <Widget>[
-              ],
+              title: Center(
+                child: Text(
+                  'Wildcat Mobile Order',
+                  style: TextStyle(
+                    fontSize: 24,
+                  ),
+                ),
+              ),
             ),
             body: Container(
               padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
@@ -40,55 +45,64 @@ class _SignInState extends State<SignIn> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.max,
                     children: <Widget>[
-                      SizedBox(height: 50),
-                      Image(
-                        image: AssetImage("graphics/WildcatMO.png"),
+                      Flexible(
+                        flex: 24,
+                        child: Image(
+                          image: AssetImage("graphics/WildcatMO.png"),
+                        ),
                       ),
-                      OutlineButton(
-                        //* Outlined button for google sign in option
-                        splashColor: Colors.white,
-                        onPressed: () async {
-                          _auth.signInWithGoogle().whenComplete(() async {
-                            setState(() => loading = true);
-                            dynamic result = await _auth.signInWithGoogle();
-                            if (result == null) {
-                              error = 'invalid Google login';
-                              loading = false;
-                            }
-                          });
-                        },
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(40)),
-                        highlightElevation: 0,
-                        borderSide: BorderSide(color: Colors.white),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Image(
-                                  image: AssetImage("graphics/google_logo.png"),
-                                  height: 35.0),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: Text('Sign in with CSU Chico Gmail',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.white,
-                                    )),
-                              ),
-                            ],
+                      Flexible(
+                        flex: 2,
+                        child: OutlineButton(
+                          //* Outlined button for google sign in option
+                          splashColor: Colors.white,
+                          onPressed: () async {
+                            _auth.signInWithGoogle().whenComplete(() async {
+                              setState(() => loading = true);
+                              dynamic result = await _auth.signInWithGoogle();
+                              if (result == null) {
+                                error = 'invalid Google login';
+                                loading = false;
+                              }
+                            });
+                          },
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40)),
+                          highlightElevation: 0,
+                          borderSide: BorderSide(color: Colors.white),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Image(
+                                    image:
+                                        AssetImage("graphics/CSUCHICO-Seal-Color.png"),
+                                    height: 35.0),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: Text('CSU Chico Gmail',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.white,
+                                      )),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 15.0,
-                      ),
-                      Text(
-                        error,
-                        style: TextStyle(color: Colors.red, fontSize: 14.0),
+                      // SizedBox(
+                      //   height: 15.0,
+                      // ),
+                      Flexible(
+                        flex: 1,
+                        child: Text(
+                          error,
+                          style: TextStyle(color: Colors.red, fontSize: 14.0),
+                        ),
                       ),
                     ],
                   ),
