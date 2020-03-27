@@ -1,9 +1,9 @@
 import 'package:WildcatMobileOrder/services/auth.dart';
 import 'package:WildcatMobileOrder/wrapper.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:WildcatMobileOrder/screens/menu/menu.dart';
 import 'package:provider/provider.dart';
-import 'models/user.dart';
 
 void main() => runApp(MyApp());
 
@@ -14,7 +14,7 @@ final ThemeData td = ThemeData(
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<User>.value(
+    return StreamProvider<FirebaseUser>.value(
       value: AuthService().user,
       child: MaterialApp(
           title: 'Wildcat Mobile Order Shell',

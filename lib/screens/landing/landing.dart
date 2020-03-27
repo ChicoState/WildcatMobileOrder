@@ -98,7 +98,6 @@ class _LandingState extends State<Landing> {
               label: Text('logout'),
               onPressed: () async {
                 //wait for the signout to clear
-                await _auth.signOut();
                 //Added a wait for google auth sign in
                 await _auth.signOutGoogle();
               },
