@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:WildcatMobileOrder/screens/landing/landing.dart';
 
-Drawer hamMenu(BuildContext context/*, MaterialPageRoute routes*/) {
+Drawer hamMenu(BuildContext context) {
   //final user = Provider.of<FirebaseUser>(context);
 
   return Drawer(
@@ -10,23 +11,25 @@ Drawer hamMenu(BuildContext context/*, MaterialPageRoute routes*/) {
       padding: EdgeInsets.zero,
       children: <Widget>[
         DrawerHeader(
-          child: Text("Header"),
+          child: Text('Header'),
           decoration: BoxDecoration(
             color: Colors.redAccent,
           ),
         ),
         ListTile(
-          title: Text('Home'),
+          title: Text('Shops'),
           onTap: () {
             Navigator.pop(context);
-            //Navigator.push(context, route);
+            Navigator.push(context, 
+              MaterialPageRoute(builder: (context) => Landing()));
           },
         ),
         ListTile(
           title: Text('Cart'),
           onTap: () {
             Navigator.pop(context);
-            //Navigator.push(context, );
+            /*Navigator.push(context, 
+              MaterialPageRoute(builder: (context) => Cart()));*/
           },
         )
       ],

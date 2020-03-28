@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:WildcatMobileOrder/screens/menu/menu.dart';
 import 'package:WildcatMobileOrder/models/location.dart';
 import 'package:WildcatMobileOrder/models/cart.dart';
+import 'package:WildcatMobileOrder/shared/drawer.dart';
 
 class Landing extends StatefulWidget {
   @override
@@ -84,6 +85,7 @@ class _LandingState extends State<Landing> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.grey[800],
+        drawer: hamMenu(context),
         appBar: AppBar(
           title: Text('Select a location'),
           elevation: 0.0,
