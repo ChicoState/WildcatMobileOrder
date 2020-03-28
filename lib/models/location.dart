@@ -6,8 +6,8 @@ class Locations {
 
   Locations.fromSnapshot(DocumentSnapshot snapshot)
       : locations = snapshot['meta'].map<LocationItem>((loc) {
-    return LocationItem.fromMap(loc);
-  }).toList();
+          return LocationItem.fromMap(loc);
+        }).toList();
 }
 
 /// Represents a single location

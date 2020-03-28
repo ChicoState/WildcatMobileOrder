@@ -17,23 +17,30 @@ class _LandingState extends State<Landing> {
 
   /// Returns a Stream of Locations, used to populate the Location selection
   /// screen.
-  Stream<Locations> _getLocations() {
+//  Stream<Locations> _getLocations() {
+//    return Firestore.instance
+//        .collection('locations')
+//        .document('info')
+//        .get()
+//        .then((snapshot) {
+//      // create Location object here
+//      return Locations.fromSnapshot(snapshot);
+//    }).asStream();
+//  }
+
+  Stream<DocumentSnapshot> _getLocations() {
     return Firestore.instance
         .collection('locations')
         .document('info')
-        .get()
-        .then((snapshot) {
-      // create Location object here
-      return Locations.fromSnapshot(snapshot);
-    }).asStream();
+        .snapshots();
   }
 
   Widget _showLocations(BuildContext context) {
-    return StreamBuilder<Locations>(
+    return StreamBuilder<DocumentSnapshot>(
         stream: _getLocations(),
         builder: (BuildContext context, locations) {
           if (locations.hasData) {
-            Locations locList = locations.data;
+            Locations locList = Locations.fromSnapshot(locations.data);
             return ListView(
               padding: const EdgeInsets.only(top: 20.0),
               children: locList.locations
