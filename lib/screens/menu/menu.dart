@@ -6,11 +6,25 @@ import 'package:transparent_image/transparent_image.dart';
 import 'package:WildcatMobileOrder/models/menu.dart';
 import 'package:badges/badges.dart';
 
-class MenuView extends StatelessWidget {
+FloatingActionButton cartButton(BuildContext context, Cart cart) {
+  return FloatingActionButton(
+    child: Badge(
+      badgeContent: Text(cart.itemCount.toString()),
+      elevation: 10,
+      position: BadgePosition.topRight(right: -22, top: -22),
+      child: Icon(Icons.shopping_cart),
+    ),
+    backgroundColor: Colors.red,
+    onPressed: () {},
+  );
+}
+
+class MenuView extends StatefulWidget {
   final String location;
   final Cart cart;
 
   MenuView({this.location, this.cart});
+
 
   /// Returns a Stream of the Menu data
   Stream<DocumentSnapshot> getMenu(String location) {
@@ -19,6 +33,7 @@ class MenuView extends StatelessWidget {
         .document(location)
         .snapshots();
   }
+
 
   /// loadMenu
   /// location is the document name under the menus collection
@@ -36,64 +51,70 @@ class MenuView extends StatelessWidget {
   }
 
   Widget _buildCategoryList(BuildContext context, Menu menu) {
-    return ListView.builder(
-      itemCount: menu.categories.length,
-      itemBuilder: (context, i) {
+    return ListView(
+      //shrinkWrap: true,
+      children: menu.categories.map((category) {
         return ExpansionTile(
-          title: Text(menu.categories[i]),
+          title: Text(category),
           children: <Widget>[
-            _buildMenuList(context, menu.getCategoryItems(menu.categories[i]))
+            _buildMenuList(context, menu.getCategoryItems(category)),
           ],
         );
-      },
+      }).toList(),
     );
   }
 
   Widget _buildMenuList(BuildContext context, List<MenuItem> itemsList) {
-    return ListView.builder(
+    return ListView(
+      //itemExtent: 100,
       shrinkWrap: true,
-      padding: const EdgeInsets.only(top: 20.0),
-      itemCount: itemsList.length,
-      itemBuilder: (context, i) {
-        return _buildMenuListItem(context, itemsList[i]);
-      },
+      children: itemsList.map((item) {
+        return _buildMenuListItem(context, item);
+      }).toList(),
     );
   }
 
   Widget _buildMenuListItem(BuildContext context, MenuItem item) {
     final MaterialPageRoute route =
         MaterialPageRoute(builder: (context) => ItemView(item, this.cart));
-    return Card(
-        elevation: 10,
-        child: InkWell(
-            onTap: () {
-              Navigator.push(context, route);
-            },
-            child: ListTile(
-                isThreeLine: true,
-                leading: FractionallySizedBox(
-                    widthFactor: 0.2,
-                    heightFactor: 1.0,
-                    child: Hero(
-                        tag: item.name,
-                        child: FadeInImage(
-                          fit: BoxFit.cover,
-                          placeholder: MemoryImage(kTransparentImage),
-                          image: item.img,
-                        ))),
-                title: Row(
-                  children: <Widget>[
-                    Text(item.name),
-                    Spacer(),
-                    Text(item.getPrice()),
-                  ],
-                ),
-                subtitle: Text('placeholder subtitle'))));
+    // try to resolve image here
+    var configuration = createLocalImageConfiguration(context);
+    item.img.resolve(configuration);
+    return Container(
+        //height: 400,
+        child: Card(
+            elevation: 10,
+            child: InkWell(
+                onTap: () {
+                  Navigator.push(context, route);
+                },
+                child: ListTile(
+                    dense: false,
+                    isThreeLine: true,
+                    leading: FractionallySizedBox(
+                        widthFactor: 0.2,
+                        heightFactor: 1.0,
+                        child: Hero(
+                            tag: item.name,
+                            child: FadeInImage(
+                              fit: BoxFit.cover,
+                              placeholder: MemoryImage(kTransparentImage),
+                              image: item.img,
+                            ))),
+                    title: Row(
+                      children: <Widget>[
+                        Text(item.name),
+                        Spacer(),
+                        Text(item.getPrice()),
+                      ],
+                    ),
+                    subtitle: Text('placeholder subtitle')))));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        floatingActionButton: cartButton(context, cart),
         appBar: AppBar(
           title: Text('$location'),
         ),
@@ -116,7 +137,7 @@ class _ItemViewState extends State<ItemView> {
   final Cart cart;
 
   _ItemViewState(this.item, this.cart);
-
+  
   void _alertWrongLocation(MenuItem item, int quantity) {
     // show a dialog if location mismatch
     showDialog(
@@ -156,18 +177,7 @@ class _ItemViewState extends State<ItemView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: FloatingActionButton(
-          child: Badge(
-            badgeContent: Text(cart.itemCount.toString()),
-            elevation: 10,
-            position: BadgePosition.topRight(right: -22, top: -22),
-            child: Icon(Icons.shopping_cart),
-            toAnimate: true,
-            animationType: BadgeAnimationType.scale,
-          ),
-          backgroundColor: Colors.red,
-          onPressed: () {},
-        ),
+        floatingActionButton: cartButton(context, cart),
         appBar: AppBar(
           title: Text(this.item.name),
         ),
