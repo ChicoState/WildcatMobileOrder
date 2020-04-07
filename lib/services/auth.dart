@@ -8,16 +8,10 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
 
-  //Create a user object based on FirebaseUser
-  User _userFromFirebaseUser(FirebaseUser user) {
-    return user != null ? User(uid: user.uid) : null;
-  }
-
-  //auth change user stream
-  //Sets up a stream so that every time a user signs in or out we can track and alter
-  Stream<User> get user {
-    return _auth.onAuthStateChanged.map(_userFromFirebaseUser);
-    //^^This maps the given back "FirebaseUser" to our simplified user object
+  // auth change user stream
+  // Sets up a stream so that every time a user signs in or out we can track and alter
+  Stream<FirebaseUser> get user {
+    return _auth.onAuthStateChanged;
   }
 
   //*Practice with Anon sign in for functionality skell
@@ -25,44 +19,7 @@ class AuthService {
     try {
       AuthResult result = await _auth.signInAnonymously();
       FirebaseUser user = result.user;
-      return _userFromFirebaseUser(user);
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
-  }
-
-  //sign out
-  Future signOut() async {
-    try {
-      return await _auth.signOut();
-    } catch (e) {
-      //If error in signing out catch the error and print it to console
-      print(e.toString());
-      return null;
-    }
-  }
-
-  //* Email sign in
-  Future signInWithEmailAndPassword(String email, String password) async {
-    try {
-      AuthResult result = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
-      FirebaseUser user = result.user;
-      return _userFromFirebaseUser(user);
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
-  }
-
-  //* Email registration
-  Future registerWithEmailAndPassword(String email, String password) async {
-    try {
-      AuthResult result = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      FirebaseUser user = result.user;
-      return _userFromFirebaseUser(user);
+      return user;
     } catch (e) {
       print(e.toString());
       return null;
@@ -76,7 +33,7 @@ class AuthService {
       //! Throws an exception that cannot be caught waiting for fix. Documentation: https://github.com/flutter/flutter/issues/26705
       final GoogleSignInAccount googleSignInAccount =
           await googleSignIn.signIn();
-      //Waits on authentication
+      // Waits on authentication
       final GoogleSignInAuthentication googleSignInAuthentication =
           await googleSignInAccount.authentication;
       final AuthCredential credential = GoogleAuthProvider.getCredential(
@@ -99,9 +56,10 @@ class AuthService {
     }
   }
 
-  void signOutGoogle() async {
+  Future<void> signOutGoogle() async {
     await googleSignIn.signOut();
-
+    // do we need to sign out of Firebase instance?
+    await _auth.signOut();
     print("User Sign Out");
   }
 }

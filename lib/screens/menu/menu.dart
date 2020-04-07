@@ -25,25 +25,25 @@ class MenuView extends StatefulWidget {
 
   MenuView({this.location, this.cart});
 
-  @override
-  _MenuViewState createState() => _MenuViewState(this.location, this.cart);
-}
 
-class _MenuViewState extends State<MenuView> {
-  final String location;
-  final Cart cart;
+  /// Returns a Stream of the Menu data
+  Stream<DocumentSnapshot> getMenu(String location) {
+    return Firestore.instance
+        .collection('menus')
+        .document(location)
+        .snapshots();
+  }
 
-  _MenuViewState(this.location, this.cart);
 
   /// loadMenu
   /// location is the document name under the menus collection
   Widget _loadMenu(BuildContext context, String location) {
-    return StreamBuilder<Menu>(
+    return StreamBuilder<DocumentSnapshot>(
       stream: getMenu(location),
       builder: (context, menu) {
         if (!menu.hasData) return LinearProgressIndicator();
 
-        Menu currentMenu = menu.data;
+        Menu currentMenu = Menu.fromSnapshot(menu.data);
 
         return _buildCategoryList(context, currentMenu);
       },
@@ -111,18 +111,6 @@ class _MenuViewState extends State<MenuView> {
                     subtitle: Text('placeholder subtitle')))));
   }
 
-  /// Returns a Stream of the Menu data
-  Stream<Menu> getMenu(String location) {
-    return Firestore.instance
-        .collection('menus')
-        .document(location)
-        .get()
-        .then((snapshot) {
-      // create Menu object here
-      return Menu.fromSnapshot(snapshot);
-    }).asStream();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -149,7 +137,7 @@ class _ItemViewState extends State<ItemView> {
   final Cart cart;
 
   _ItemViewState(this.item, this.cart);
-
+  
   void _alertWrongLocation(MenuItem item, int quantity) {
     // show a dialog if location mismatch
     showDialog(

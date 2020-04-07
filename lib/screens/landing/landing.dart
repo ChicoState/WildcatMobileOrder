@@ -1,4 +1,5 @@
 import 'package:WildcatMobileOrder/services/auth.dart';
+import 'package:WildcatMobileOrder/shared/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:WildcatMobileOrder/screens/menu/menu.dart';
@@ -16,23 +17,30 @@ class _LandingState extends State<Landing> {
 
   /// Returns a Stream of Locations, used to populate the Location selection
   /// screen.
-  Stream<Locations> _getLocations() {
+//  Stream<Locations> _getLocations() {
+//    return Firestore.instance
+//        .collection('locations')
+//        .document('info')
+//        .get()
+//        .then((snapshot) {
+//      // create Location object here
+//      return Locations.fromSnapshot(snapshot);
+//    }).asStream();
+//  }
+
+  Stream<DocumentSnapshot> _getLocations() {
     return Firestore.instance
         .collection('locations')
         .document('info')
-        .get()
-        .then((snapshot) {
-      // create Location object here
-      return Locations.fromSnapshot(snapshot);
-    }).asStream();
+        .snapshots();
   }
 
   Widget _showLocations(BuildContext context) {
-    return StreamBuilder<Locations>(
+    return StreamBuilder<DocumentSnapshot>(
         stream: _getLocations(),
         builder: (BuildContext context, locations) {
           if (locations.hasData) {
-            Locations locList = locations.data;
+            Locations locList = Locations.fromSnapshot(locations.data);
             return ListView(
               padding: const EdgeInsets.only(top: 20.0),
               children: locList.locations
@@ -40,7 +48,7 @@ class _LandingState extends State<Landing> {
                   .toList(),
             );
           } else {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: Loading());
           }
         });
   }
@@ -97,7 +105,6 @@ class _LandingState extends State<Landing> {
               label: Text('logout'),
               onPressed: () async {
                 //wait for the signout to clear
-                await _auth.signOut();
                 //Added a wait for google auth sign in
                 await _auth.signOutGoogle();
               },
