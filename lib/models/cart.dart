@@ -32,6 +32,10 @@ class Cart {
     return true;
   }
 
+  int getItemQuantity(MenuItem item) {
+    return items[item];
+  }
+
 
   // allows an item to be added to the cart
   bool addItem(MenuItem item, int quantity) {
@@ -63,6 +67,9 @@ class Cart {
     // calculate difference in item count, and update
     this.itemCount += this.items[item] - newQuantity;
     this.items[item] = newQuantity;
+    if (newQuantity == 0) {
+      items.remove(item);
+    }
   }
 
   // calculates an items price (price * quantity)

@@ -5,8 +5,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:WildcatMobileOrder/models/menu.dart';
 import 'package:badges/badges.dart';
+import 'package:WildcatMobileOrder/screens/cart/cart.dart';
 
 FloatingActionButton cartButton(BuildContext context, Cart cart) {
+  final MaterialPageRoute route =
+      MaterialPageRoute(builder: (context) => CartView(cart));
   return FloatingActionButton(
     child: Badge(
       badgeContent: Text(cart.itemCount.toString()),
@@ -15,16 +18,17 @@ FloatingActionButton cartButton(BuildContext context, Cart cart) {
       child: Icon(Icons.shopping_cart),
     ),
     backgroundColor: Colors.red,
-    onPressed: () {},
+    onPressed: () {
+      Navigator.push(context, route);
+    },
   );
 }
 
-class MenuView extends StatefulWidget {
+class MenuView extends StatelessWidget {
   final String location;
   final Cart cart;
 
   MenuView({this.location, this.cart});
-
 
   /// Returns a Stream of the Menu data
   Stream<DocumentSnapshot> getMenu(String location) {
@@ -33,7 +37,6 @@ class MenuView extends StatefulWidget {
         .document(location)
         .snapshots();
   }
-
 
   /// loadMenu
   /// location is the document name under the menus collection
@@ -81,7 +84,6 @@ class MenuView extends StatefulWidget {
     var configuration = createLocalImageConfiguration(context);
     item.img.resolve(configuration);
     return Container(
-        //height: 400,
         child: Card(
             elevation: 10,
             child: InkWell(
@@ -137,7 +139,7 @@ class _ItemViewState extends State<ItemView> {
   final Cart cart;
 
   _ItemViewState(this.item, this.cart);
-  
+
   void _alertWrongLocation(MenuItem item, int quantity) {
     // show a dialog if location mismatch
     showDialog(
