@@ -9,7 +9,7 @@ import 'package:WildcatMobileOrder/screens/cart/cart.dart';
 
 FloatingActionButton cartButton(BuildContext context, Cart cart) {
   final MaterialPageRoute route =
-      MaterialPageRoute(builder: (context) => CartView(cart));
+      MaterialPageRoute(builder: (context) => MyCartView(cart));
   return FloatingActionButton(
     child: Badge(
       badgeContent: Text(cart.itemCount.toString()),

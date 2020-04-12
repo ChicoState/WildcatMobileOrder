@@ -1,20 +1,21 @@
 import 'package:WildcatMobileOrder/models/menu.dart';
+import 'package:intl/intl.dart';
 
 class Cart {
-  // map of MenuItem and a quantity
-  Map<MenuItem, int> items;
+  List<CartItem> itemList;
   String location = '';
   int itemCount = 0;
+  final currencyFormat = NumberFormat.simpleCurrency();
 
   Cart() {
     itemCount = 0;
     location = '';
-    items = Map<MenuItem, int>();
+    itemList = List<CartItem>();
   }
 
   void setLocation(String newLocation) {
     this.location = newLocation;
-    items.clear();
+    itemList.clear();
     itemCount = 0;
   }
 
@@ -32,57 +33,106 @@ class Cart {
     return true;
   }
 
-  int getItemQuantity(MenuItem item) {
-    return items[item];
-  }
-
-
   // allows an item to be added to the cart
   bool addItem(MenuItem item, int quantity) {
     // if location differs from current cart, return false and don't add item
     if (!checkLocation(item.location)) {
       return false;
     }
-    if (this.itemCount == 0) {
+    if (this.itemList.length == 0) {
       this.location = item.location;
     }
-    // if item already exists in map, just increment quantity
-    if (this.items[item] != null) {
-      this.items[item] += quantity;
-      // if item doesn't exist, add entry
+    if (this.itemList.contains(item)) {
+      int idx =
+          itemList.indexWhere((menuItem) => menuItem.item.name == item.name);
+      itemList[idx].addOne();
     } else {
-      this.items[item] = quantity;
+      itemList.add(CartItem.fromMenuItem(item, 1));
     }
-    this.items.forEach((k, v) {
-      print(k.name);
-      print(v.toString());
-      print(k.location);
+    int newCount = 0;
+    itemList.forEach((item) {
+      newCount += item.quantity;
     });
-    this.itemCount += quantity;
+    this.itemCount = newCount;
     return true;
   }
 
   // changes the quantity selected
-  void editQuantity(MenuItem item, int newQuantity) {
-    // calculate difference in item count, and update
-    this.itemCount += this.items[item] - newQuantity;
-    this.items[item] = newQuantity;
+  void editQuantity(CartItem item, int newQuantity) {
+    int idx =
+        itemList.indexWhere((cartItem) => cartItem.item.name == item.item.name);
     if (newQuantity == 0) {
-      items.remove(item);
+      itemList.removeAt(idx);
+    } else if (newQuantity > 0) {
+      itemList[idx].quantity = newQuantity;
+    } else {
+      return;
+    }
+    int newCount = 0;
+    itemList.forEach((item) {
+      newCount += item.quantity;
+    });
+    this.itemCount = newCount;
+  }
+
+  void addOne(int idx) {
+    itemList[idx].addOne();
+  }
+
+  void removeOne(int idx) {
+    itemList[idx].removeOne();
+    if (itemList[idx].quantity == 0) {
+      itemList.removeAt(idx);
     }
   }
 
-  // calculates an items price (price * quantity)
-  double calcItemPrice(MenuItem item) {
-    return item.price * this.items[item];
+  String getSubtotalPriceString() {
+    return currencyFormat.format(this.calcCartSubtotal());
   }
 
   // calculates subtotal of entire cart
   double calcCartSubtotal() {
-    double subtotal;
-    this.items.forEach((k, v) {
-      subtotal += calcItemPrice(k);
+    double subtotal = 0;
+    this.itemList.forEach((cartItem) {
+      subtotal += cartItem.getItemPrice();
     });
     return subtotal;
+  }
+}
+
+class CartItem {
+  MenuItem item;
+  int quantity;
+  final currencyFormat = NumberFormat.simpleCurrency();
+
+  CartItem.fromMenuItem(this.item, this.quantity);
+
+  @override
+  bool operator ==(dynamic other) {
+    if (item.name == other.name && item.location == other.location) {
+      return true;
+    }
+    return false;
+  }
+
+  @override
+  int get hashCode => this.item.hashCode;
+
+  void addOne() {
+    quantity++;
+  }
+
+  void removeOne() {
+    if (quantity > 0) {
+      quantity--;
+    }
+  }
+
+  double getItemPrice() {
+    return item.price * quantity;
+  }
+
+  String getItemPriceString() {
+    return currencyFormat.format(this.getItemPrice());
   }
 }
