@@ -21,7 +21,6 @@ Drawer hamMenu(BuildContext context) {
           title: Text('Shops'),
           onTap: () {
             Navigator.pop(context);
-            //if(!Landing page)
             Navigator.push(context, 
               MaterialPageRoute(builder: (context) => Landing()));
           },
