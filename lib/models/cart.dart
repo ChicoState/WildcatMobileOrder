@@ -3,15 +3,14 @@ import 'package:intl/intl.dart';
 
 class Cart {
   List<CartItem> itemList;
-  String location = '';
+  String location;
   int itemCount = 0;
   final currencyFormat = NumberFormat.simpleCurrency();
 
-  Cart() {
-    itemCount = 0;
-    location = '';
-    itemList = List<CartItem>();
-  }
+  Cart()
+      : itemCount = 0,
+        location = '',
+        itemList = List<CartItem>();
 
   void setLocation(String newLocation) {
     this.location = newLocation;
@@ -83,6 +82,9 @@ class Cart {
     itemList[idx].removeOne();
     if (itemList[idx].quantity == 0) {
       itemList.removeAt(idx);
+      if (itemList.length == 0) {
+        this.location = '';
+      }
     }
   }
 

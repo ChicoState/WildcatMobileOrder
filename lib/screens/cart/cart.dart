@@ -80,8 +80,15 @@ class _MyCartViewState extends State<MyCartView> {
   @override
   Widget build(BuildContext context) {
     final inheritedCart = context.dependOnInheritedWidgetOfExactType<InheritedCart>().cart;
+    final String location = inheritedCart.getLocation();
+    String cartTitle;
+    if (location == '') {
+      cartTitle = 'Empty Cart';
+    } else {
+      cartTitle = 'Cart for $location';
+    }
     return Scaffold(
-        appBar: AppBar(title: Text('Cart for ${inheritedCart.getLocation()}')),
+        appBar: AppBar(title: Text(cartTitle)),
         body: _buildCartList(context));
   }
 }

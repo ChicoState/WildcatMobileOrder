@@ -230,7 +230,7 @@ class _ItemViewState extends State<ItemView> {
                           icon: Icon(Icons.add_shopping_cart),
                           onPressed: () {
                             // check if the locations match, warn if not
-                            if (cart.checkLocation(item.location)) {
+                            if (cart.checkLocation(item.location) && cart.location != '') {
                               setState(() {
                                 cart.addItem(this.item, 1);
                               });
