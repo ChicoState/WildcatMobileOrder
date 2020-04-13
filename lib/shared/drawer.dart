@@ -1,3 +1,4 @@
+import 'package:WildcatMobileOrder/screens/cart/cart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,6 +21,7 @@ Drawer hamMenu(BuildContext context) {
           title: Text('Shops'),
           onTap: () {
             Navigator.pop(context);
+            //if(!Landing page)
             Navigator.push(context, 
               MaterialPageRoute(builder: (context) => Landing()));
           },
@@ -28,8 +30,8 @@ Drawer hamMenu(BuildContext context) {
           title: Text('Cart'),
           onTap: () {
             Navigator.pop(context);
-            /*Navigator.push(context, 
-              MaterialPageRoute(builder: (context) => Cart()));*/
+            Navigator.push(context, 
+              MaterialPageRoute(builder: (context) => MyCartView()));
           },
         )
       ],
