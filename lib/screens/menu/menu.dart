@@ -8,17 +8,18 @@ import 'package:badges/badges.dart';
 import 'package:WildcatMobileOrder/screens/cart/cart.dart';
 import 'package:WildcatMobileOrder/main.dart';
 
-Widget cartButton(BuildContext context, Cart cart) {
+Widget cartButton(BuildContext context) {
   final inheritedCart = context.dependOnInheritedWidgetOfExactType<InheritedCart>().cart;
   final MaterialPageRoute route =
       MaterialPageRoute(builder: (context) => MyCartView());
   return FloatingActionButton(
-    child: Badge(
-      badgeContent: Text(inheritedCart.itemCount.toString()),
-      elevation: 10,
-      position: BadgePosition.topRight(right: -22, top: -22),
-      child: Icon(Icons.shopping_cart),
-    ),
+    child: Icon(Icons.shopping_cart),
+//    child: Badge(
+//      badgeContent: Text(inheritedCart.itemCount.toString()),
+//      elevation: 10,
+//      position: BadgePosition.topRight(right: -22, top: -22),
+//      child: Icon(Icons.shopping_cart),
+//    ),
     backgroundColor: Colors.red,
     onPressed: () {
       Navigator.push(context, route);
@@ -117,9 +118,8 @@ class MenuView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Cart cart = context.dependOnInheritedWidgetOfExactType<InheritedCart>().cart;
     return Scaffold(
-        floatingActionButton: cartButton(context, cart),
+        floatingActionButton: cartButton(context),
         appBar: AppBar(
           title: Text('$location'),
         ),
@@ -183,7 +183,7 @@ class _ItemViewState extends State<ItemView> {
   Widget build(BuildContext context) {
     final Cart cart = context.dependOnInheritedWidgetOfExactType<InheritedCart>().cart;
     return Scaffold(
-        floatingActionButton: cartButton(context, cart),
+        floatingActionButton: cartButton(context),
         appBar: AppBar(
           title: Text(this.item.name),
         ),
@@ -209,7 +209,7 @@ class _ItemViewState extends State<ItemView> {
             ),
             Flexible(
               flex: 2,
-              child: Text('placeholder description of the item'),
+              child: Text(item.description),
             ),
             Flexible(
               flex: 3,
