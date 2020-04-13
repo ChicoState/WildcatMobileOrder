@@ -1,23 +1,22 @@
 import 'package:WildcatMobileOrder/models/cart.dart';
 import 'package:flutter/material.dart';
-import 'package:WildcatMobileOrder/models/menu.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:WildcatMobileOrder/main.dart';
 
 class MyCartView extends StatefulWidget {
-  final Cart cart;
 
-  MyCartView(this.cart);
+  MyCartView();
 
   @override
-  _MyCartViewState createState() => _MyCartViewState(cart);
+  _MyCartViewState createState() => _MyCartViewState();
 }
 
 class _MyCartViewState extends State<MyCartView> {
-  final Cart cart;
 
-  _MyCartViewState(this.cart);
+  _MyCartViewState();
 
   Widget _buildCartItem(BuildContext context, CartItem item, int idx) {
+    final inheritedCart = context.dependOnInheritedWidgetOfExactType<InheritedCart>().cart;
     return Card(
       child: ListTile(
         isThreeLine: true,
@@ -32,9 +31,9 @@ class _MyCartViewState extends State<MyCartView> {
         title: Text(item.item.name),
         subtitle: Row(
           children: <Widget>[
-            Text('x ${cart.itemList[idx].quantity.toString()}'),
+            Text('x ${inheritedCart.itemList[idx].quantity.toString()}'),
             Spacer(),
-            Text(cart.itemList[idx].getItemPriceString())
+            Text(inheritedCart.itemList[idx].getItemPriceString())
           ],
         ),
         trailing: ButtonBar(
@@ -46,7 +45,7 @@ class _MyCartViewState extends State<MyCartView> {
               tooltip: 'Add one ${item.item.name}',
               onPressed: () {
                 setState(() {
-                  cart.addOne(idx);
+                  inheritedCart.addOne(idx);
                 });
               },
             ),
@@ -55,7 +54,7 @@ class _MyCartViewState extends State<MyCartView> {
               tooltip: 'Remove one ${item.item.name}',
               onPressed: () {
                 setState(() {
-                  cart.removeOne(idx);
+                  inheritedCart.removeOne(idx);
                 });
               },
             )
@@ -66,9 +65,10 @@ class _MyCartViewState extends State<MyCartView> {
   }
 
   Widget _buildCartList(BuildContext context) {
+    final inheritedCart = context.dependOnInheritedWidgetOfExactType<InheritedCart>().cart;
     return ListView(
       shrinkWrap: true,
-      children: cart.itemList
+      children: inheritedCart.itemList
           .asMap()
           .map((idx, element) =>
               MapEntry(idx, _buildCartItem(context, element, idx)))
@@ -79,8 +79,9 @@ class _MyCartViewState extends State<MyCartView> {
 
   @override
   Widget build(BuildContext context) {
+    final inheritedCart = context.dependOnInheritedWidgetOfExactType<InheritedCart>().cart;
     return Scaffold(
-        appBar: AppBar(title: Text('Cart for ${cart.getLocation()}')),
+        appBar: AppBar(title: Text('Cart for ${inheritedCart.getLocation()}')),
         body: _buildCartList(context));
   }
 }

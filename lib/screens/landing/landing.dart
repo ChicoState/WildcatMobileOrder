@@ -17,17 +17,6 @@ class _LandingState extends State<Landing> {
 
   /// Returns a Stream of Locations, used to populate the Location selection
   /// screen.
-//  Stream<Locations> _getLocations() {
-//    return Firestore.instance
-//        .collection('locations')
-//        .document('info')
-//        .get()
-//        .then((snapshot) {
-//      // create Location object here
-//      return Locations.fromSnapshot(snapshot);
-//    }).asStream();
-//  }
-
   Stream<DocumentSnapshot> _getLocations() {
     return Firestore.instance
         .collection('locations')
@@ -58,7 +47,6 @@ class _LandingState extends State<Landing> {
     final MaterialPageRoute route = MaterialPageRoute(
       builder: (context) => MenuView(
         location: loc.name,
-        cart: myCart,
       ),
     );
     return Padding(
