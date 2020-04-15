@@ -213,7 +213,7 @@ class _ItemViewState extends State<ItemView> {
             ),
             Flexible(
               flex: 3,
-              child: Text(item.getPrice()),
+              child: Text('\$${item.price.toStringAsFixed(2)}'),
             ),
             Flexible(
                 flex: 3,
