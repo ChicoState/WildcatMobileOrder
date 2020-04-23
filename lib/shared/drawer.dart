@@ -24,6 +24,13 @@ Drawer drawer(BuildContext context) {
                 context, MaterialPageRoute(builder: (context) => Landing()));
           },
         ),
+        ListTile(
+          title: Text('Log out'),
+          onTap: () {
+            Navigator.pop(context);
+            BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
+          },
+        ),
       ],
     );
   }
