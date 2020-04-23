@@ -1,4 +1,5 @@
 import 'package:WildcatMobileOrder/repositories/repositories.dart';
+import 'package:WildcatMobileOrder/shared/drawer.dart';
 import 'package:WildcatMobileOrder/shared/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:WildcatMobileOrder/screens/screens.dart';
@@ -67,6 +68,7 @@ class Landing extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.grey[800],
+        drawer: drawer(context),
         appBar: AppBar(
           title: Text('Select a location'),
           elevation: 0.0,
