@@ -39,6 +39,7 @@ class MenuItem {
   final String location;
   final NetworkImage img;
   final String description;
+  final String identifier;
 
   MenuItem.fromMap(Map<String, dynamic> map, String location)
       : assert(map['name'] != null),
@@ -48,10 +49,6 @@ class MenuItem {
         category = map['category'],
         price = map['price'],
         description = map['description'],
+        identifier = '${map['location']}-${map['name']}',
         img = NetworkImage(map['imgurl']);
-
-  /// Helper method to return a String representing the price of the MenuItem
-  String getPrice() {
-    return '\$${this.price.toStringAsFixed(2)}';
-  }
 }
