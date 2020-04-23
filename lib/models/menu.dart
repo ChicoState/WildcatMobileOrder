@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+
 /// Manages a Locations Menu
 class Menu {
   final String location;
@@ -34,9 +35,10 @@ class Menu {
 class MenuItem {
   final String name;
   final String category;
-  double price;
+  final double price;
   final String location;
   final NetworkImage img;
+  final String description;
 
   MenuItem.fromMap(Map<String, dynamic> map, String location)
       : assert(map['name'] != null),
@@ -45,6 +47,7 @@ class MenuItem {
         location = location,
         category = map['category'],
         price = map['price'],
+        description = map['description'],
         img = NetworkImage(map['imgurl']);
 
   /// Helper method to return a String representing the price of the MenuItem

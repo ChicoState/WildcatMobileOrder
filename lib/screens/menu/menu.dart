@@ -5,22 +5,51 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:WildcatMobileOrder/models/menu.dart';
 import 'package:badges/badges.dart';
+import 'package:WildcatMobileOrder/screens/cart/cart.dart';
+import 'package:WildcatMobileOrder/main.dart';
+
+Widget cartButton(BuildContext context) {
+  final inheritedCart = context.dependOnInheritedWidgetOfExactType<InheritedCart>().cart;
+  final MaterialPageRoute route =
+      MaterialPageRoute(builder: (context) => MyCartView());
+  return FloatingActionButton(
+    child: Icon(Icons.shopping_cart),
+//    child: Badge(
+//      badgeContent: Text(inheritedCart.itemCount.toString()),
+//      elevation: 10,
+//      position: BadgePosition.topRight(right: -22, top: -22),
+//      child: Icon(Icons.shopping_cart),
+//    ),
+    backgroundColor: Colors.red,
+    onPressed: () {
+      Navigator.push(context, route);
+    },
+  );
+}
 
 class MenuView extends StatelessWidget {
   final String location;
-  final Cart cart;
 
-  MenuView({this.location, this.cart});
+
+  MenuView({this.location});
+
+  /// Returns a Stream of the Menu data
+  Stream<DocumentSnapshot> getMenu(String location) {
+    return Firestore.instance
+        .collection('menus')
+        .document(location)
+        .snapshots();
+  }
 
   /// loadMenu
   /// location is the document name under the menus collection
   Widget _loadMenu(BuildContext context, String location) {
-    return StreamBuilder<Menu>(
+    return StreamBuilder<DocumentSnapshot>(
       stream: getMenu(location),
       builder: (context, menu) {
         if (!menu.hasData) return LinearProgressIndicator();
 
-        Menu currentMenu = menu.data;
+        Menu currentMenu = Menu.fromSnapshot(menu.data);
 
         return _buildCategoryList(context, currentMenu);
       },
@@ -28,76 +57,69 @@ class MenuView extends StatelessWidget {
   }
 
   Widget _buildCategoryList(BuildContext context, Menu menu) {
-    return ListView.builder(
-      itemCount: menu.categories.length,
-      itemBuilder: (context, i) {
+    return ListView(
+      //shrinkWrap: true,
+      children: menu.categories.map((category) {
         return ExpansionTile(
-          title: Text(menu.categories[i]),
+          title: Text(category),
           children: <Widget>[
-            _buildMenuList(context, menu.getCategoryItems(menu.categories[i]))
+            _buildMenuList(context, menu.getCategoryItems(category)),
           ],
         );
-      },
+      }).toList(),
     );
   }
 
   Widget _buildMenuList(BuildContext context, List<MenuItem> itemsList) {
-    return ListView.builder(
+    return ListView(
+      //itemExtent: 100,
       shrinkWrap: true,
-      padding: const EdgeInsets.only(top: 20.0),
-      itemCount: itemsList.length,
-      itemBuilder: (context, i) {
-        return _buildMenuListItem(context, itemsList[i]);
-      },
+      children: itemsList.map((item) {
+        return _buildMenuListItem(context, item);
+      }).toList(),
     );
   }
 
   Widget _buildMenuListItem(BuildContext context, MenuItem item) {
     final MaterialPageRoute route =
-        MaterialPageRoute(builder: (context) => ItemView(item, this.cart));
-    return Card(
-        elevation: 10,
-        child: InkWell(
-            onTap: () {
-              Navigator.push(context, route);
-            },
-            child: ListTile(
-                isThreeLine: true,
-                leading: FractionallySizedBox(
-                    widthFactor: 0.2,
-                    heightFactor: 1.0,
-                    child: Hero(
-                        tag: item.name,
-                        child: FadeInImage(
-                          fit: BoxFit.cover,
-                          placeholder: MemoryImage(kTransparentImage),
-                          image: item.img,
-                        ))),
-                title: Row(
-                  children: <Widget>[
-                    Text(item.name),
-                    Spacer(),
-                    Text(item.getPrice()),
-                  ],
-                ),
-                subtitle: Text('placeholder subtitle'))));
-  }
-
-  /// Returns a Stream of the Menu data
-  Stream<Menu> getMenu(String location) {
-    return Firestore.instance
-        .collection('menus')
-        .document(location)
-        .get()
-        .then((snapshot) {
-      // create Menu object here
-      return Menu.fromSnapshot(snapshot);
-    }).asStream();
+        MaterialPageRoute(builder: (context) => ItemView(item));
+    // try to resolve image here
+    var configuration = createLocalImageConfiguration(context);
+    item.img.resolve(configuration);
+    return Container(
+        child: Card(
+            elevation: 10,
+            child: InkWell(
+                onTap: () {
+                  Navigator.push(context, route);
+                },
+                child: ListTile(
+                    dense: false,
+                    isThreeLine: true,
+                    leading: FractionallySizedBox(
+                        widthFactor: 0.2,
+                        heightFactor: 1.0,
+                        child: Hero(
+                            tag: item.name,
+                            child: FadeInImage(
+                              fit: BoxFit.cover,
+                              placeholder: MemoryImage(kTransparentImage),
+                              image: item.img,
+                            ))),
+                    title: Row(
+                      children: <Widget>[
+                        Text(item.name),
+                        Spacer(),
+                        Text(item.getPrice()),
+                      ],
+                    ),
+                    subtitle: Text('placeholder subtitle')))));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        floatingActionButton: cartButton(context),
         appBar: AppBar(
           title: Text('$location'),
         ),
@@ -107,27 +129,27 @@ class MenuView extends StatelessWidget {
 
 class ItemView extends StatefulWidget {
   final MenuItem item;
-  final Cart cart;
+  //final Cart cart;
 
-  ItemView(this.item, this.cart);
+  ItemView(this.item);
 
   @override
-  _ItemViewState createState() => _ItemViewState(this.item, this.cart);
+  _ItemViewState createState() => _ItemViewState(this.item);
 }
 
 class _ItemViewState extends State<ItemView> {
   final MenuItem item;
-  final Cart cart;
+  //final Cart cart;
 
-  _ItemViewState(this.item, this.cart);
+  _ItemViewState(this.item);
 
-  void _alertWrongLocation(MenuItem item, int quantity) {
+  void _alertWrongLocation(MenuItem item, int quantity, Cart cart) {
     // show a dialog if location mismatch
     showDialog(
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
-        String currentLocation = this.cart.getLocation();
+        String currentLocation = cart.getLocation();
         String newLocation = item.location;
         return AlertDialog(
           title: Text('Adding item from different location'),
@@ -140,8 +162,8 @@ class _ItemViewState extends State<ItemView> {
               onPressed: () {
                 Navigator.of(context).pop();
                 setState(() {
-                  this.cart.setLocation(newLocation);
-                  this.cart.addItem(item, quantity);
+                  cart.setLocation(newLocation);
+                  cart.addItem(item, quantity);
                 });
               },
             ),
@@ -159,19 +181,9 @@ class _ItemViewState extends State<ItemView> {
 
   @override
   Widget build(BuildContext context) {
+    final Cart cart = context.dependOnInheritedWidgetOfExactType<InheritedCart>().cart;
     return Scaffold(
-        floatingActionButton: FloatingActionButton(
-          child: Badge(
-            badgeContent: Text(cart.itemCount.toString()),
-            elevation: 10,
-            position: BadgePosition.topRight(right: -22, top: -22),
-            child: Icon(Icons.shopping_cart),
-            toAnimate: true,
-            animationType: BadgeAnimationType.scale,
-          ),
-          backgroundColor: Colors.red,
-          onPressed: () {},
-        ),
+        floatingActionButton: cartButton(context),
         appBar: AppBar(
           title: Text(this.item.name),
         ),
@@ -197,7 +209,7 @@ class _ItemViewState extends State<ItemView> {
             ),
             Flexible(
               flex: 2,
-              child: Text('placeholder description of the item'),
+              child: Text(item.description),
             ),
             Flexible(
               flex: 3,
@@ -218,13 +230,13 @@ class _ItemViewState extends State<ItemView> {
                           icon: Icon(Icons.add_shopping_cart),
                           onPressed: () {
                             // check if the locations match, warn if not
-                            if (this.cart.checkLocation(item.location)) {
+                            if (cart.checkLocation(item.location) && cart.location != '') {
                               setState(() {
                                 cart.addItem(this.item, 1);
                               });
                             } else {
                               // do something if checkLocation fails
-                              _alertWrongLocation(item, 1);
+                              _alertWrongLocation(item, 1, cart);
                             }
                           },
                         ))))
