@@ -62,10 +62,17 @@ class _LandingState extends State<Landing> {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     ListTile(
+                      isThreeLine: true,
                         // icon is hard coded at the moment, look into changing this
                         leading: Icon(Icons.local_cafe),
-                        title: Text(loc.name ?? 'error'),
-                        subtitle: Text(loc.getOpenHours())),
+                        title: Row(
+                          children: [
+                            Text(loc.name ?? 'error'),
+                            Text(loc.isOpen()),
+                          ],
+                        ),
+                        subtitle: Text(loc.getOpenHours()),
+                        ),
                     ButtonBar(
                       children: <Widget>[
                         FlatButton(
