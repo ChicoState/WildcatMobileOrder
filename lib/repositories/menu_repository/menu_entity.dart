@@ -2,25 +2,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 
-/// Manages a Locations Menu
-class Menu {
+class MenuEntity {
   final String location;
-  List<MenuItem> items;
-  List<String> categories;
-  DocumentReference reference;
+  final String closeTime;
+  final String openTime;
+  final List<String> categories;
+  final List<MenuItem> items;
 
-  // constructor for Menu object
-  // uses initialization list
-  Menu.fromSnapshot(DocumentSnapshot snapshot)
-      : location = snapshot['name'],
-        reference = snapshot.reference {
-    items = snapshot['items'].map<MenuItem>((item) {
-      return MenuItem.fromMap(item, location);
-    }).toList();
-    categories = snapshot['categories'].map<String>((category) {
-      return category.toString();
-    }).toList();
-    // sort menu items and categories alphabetically
+  MenuEntity.fromSnapshot(DocumentSnapshot snapshot)
+    : location = snapshot.data['name'],
+      items = snapshot.data['items'].map<MenuItem>((item) {
+        return MenuItem.fromMap(item, snapshot.data['name']);
+      }).toList(),
+      categories = snapshot.data['categories'].map<String>((cat) {
+        return cat.toString();
+      }).toList(),
+      openTime = snapshot.data['opentime'],
+      closeTime = snapshot.data['closetime'] {
     categories.sort();
     items.sort((a, b) => a.name.compareTo(b.name));
   }
@@ -29,9 +27,12 @@ class Menu {
   List<MenuItem> getCategoryItems(String category) {
     return this.items.where((item) => item.category == category).toList();
   }
+
+  MenuItem getItemById(String id) {
+    return this.items.firstWhere((item) => item.identifier == id);
+  }
 }
 
-/// Individual items from a Menu
 class MenuItem {
   final String name;
   final String category;
