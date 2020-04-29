@@ -1,4 +1,5 @@
 import 'package:WildcatMobileOrder/repositories/repositories.dart';
+import 'package:transparent_image/transparent_image.dart';
 import 'package:WildcatMobileOrder/shared/drawer.dart';
 import 'package:WildcatMobileOrder/shared/loading.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,7 @@ class Landing extends StatelessWidget {
         key: ValueKey(menuEntity.location),
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: Card(
+            color: Colors.grey[400],
             child: InkWell(
                 splashColor: Colors.redAccent,
                 onTap: () {
@@ -45,14 +47,28 @@ class Landing extends StatelessWidget {
                   children: <Widget>[
                     ListTile(
                       // icon is hard coded at the moment, look into changing this
-                      leading: Icon(Icons.local_cafe),
-                      title: Text(menuEntity.location ?? 'error'),
+                      // leading: Icon(Icons.local_cafe),
+                      leading: new FadeInImage(
+                        placeholder: MemoryImage(kTransparentImage),
+                        image: AssetImage("graphics/creekside.jpg"),
+                      ),
+                      title: Text(
+                        menuEntity.location ?? 'error',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                      isThreeLine: true,
                       subtitle: Text(
-                          'Opens at ${menuEntity.openTime} and closes at ${menuEntity.closeTime}'),
+                        'Mon-Thur: ${menuEntity.openTime} - ${menuEntity.closeTime}\n'
+                        'Friday: ${menuEntity.openTime} - ${menuEntity.fcloseTime}',
+                      ),
                     ),
                     ButtonBar(
                       children: <Widget>[
                         FlatButton(
+                          color: Colors.red[900],
                           child: Text('Order from ${menuEntity.location}'),
                           onPressed: () {
                             Navigator.push(context, route);
@@ -70,6 +86,7 @@ class Landing extends StatelessWidget {
         backgroundColor: Colors.grey[800],
         drawer: drawer(context),
         appBar: AppBar(
+          backgroundColor: Colors.red[900],
           title: Text('Select a location'),
           elevation: 0.0,
           actions: <Widget>[
