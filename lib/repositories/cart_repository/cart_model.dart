@@ -3,13 +3,15 @@ import 'package:WildcatMobileOrder/repositories/menu_repository/menu_entity.dart
 class Cart {
   final List<CartItem> items;
   final String location;
+  final String user;
 
-  Cart(this.items, this.location);
+  Cart(this.items, this.location, this.user);
 
-  Cart copyWith({List<CartItem> items, String location}) {
+  Cart copyWith({List<CartItem> items, String location, String user}) {
     return Cart(
       items ?? this.items,
       location ?? this.location,
+      user ?? this.user,
     );
   }
 

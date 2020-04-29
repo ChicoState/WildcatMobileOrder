@@ -54,9 +54,8 @@ class CartView extends StatelessWidget {
   }
 
   // builds the ListView that contains all the cart items
-  Widget _buildCartList(BuildContext context, CartLoadSuccess state) {
-    final MenuEntity menu =
-        state.menus.firstWhere((i) => i.location == state.cart.location);
+  Widget _buildCartList(
+      BuildContext context, CartLoaded state, MenuEntity menu) {
     return ListView.builder(
       shrinkWrap: true,
       itemCount: state.cart.items.length,
@@ -78,22 +77,30 @@ class CartView extends StatelessWidget {
     );
   }
 
+  Widget _buildCartPage(BuildContext context, List<MenuEntity> menus) {
+    BlocBuilder<CartBloc, CartState>(
+      builder: (context, state) {
+        if (state is CartLoaded) {
+          final MenuEntity menu =
+              menus.firstWhere((i) => i.location == state.cart.location);
+          return state.cart.items.length == 0
+              ? _emptyCart(context)
+              : _buildCartList(context, state, menu);
+        }
+        return CircularProgressIndicator();
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Shopping Cart'),
       ),
-      body: BlocBuilder<CartBloc, CartState>(
+      body: BlocBuilder<MenuBloc, MenuState>(
         builder: (context, state) {
-          if (state is CartLoadSuccess) {
-            final MenuEntity menu = state.menus
-                .firstWhere((i) => i.location == state.cart.location);
-            return state.cart.items.length == 0
-                ? _emptyCart(context)
-                : _buildCartList(context, state);
-          }
-          return CircularProgressIndicator();
+          if (state is MenusLoaded) {}
         },
       ),
     );

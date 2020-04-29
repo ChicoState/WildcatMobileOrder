@@ -1,5 +1,4 @@
 import 'package:WildcatMobileOrder/repositories/cart_repository/cart_model.dart';
-import 'package:WildcatMobileOrder/repositories/menu_repository/menu_entity.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class CartState extends Equatable {
@@ -17,15 +16,14 @@ class InitialCartState extends CartState {
 
 class CartLoading extends CartState {}
 
-class CartLoadSuccess extends CartState {
+class CartLoaded extends CartState {
   final Cart cart;
-  final List<MenuEntity> menus;
 
-  const CartLoadSuccess({this.cart, this.menus});
-
-  @override
-  List<Object> get props => [this.cart, this.menus];
+  const CartLoaded({this.cart});
 
   @override
-  String toString() => 'CartLoadSuccess { cart: $cart, menus: $menus }';
+  List<Object> get props => [this.cart];
+
+  @override
+  String toString() => 'Cart Loaded { cart: $cart}';
 }

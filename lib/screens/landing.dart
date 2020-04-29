@@ -7,6 +7,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:WildcatMobileOrder/blocs/blocs.dart';
 
 class Landing extends StatelessWidget {
+  final String user;
+
+  Landing(this.user);
+
   Widget _showLocations(BuildContext context) {
     return BlocBuilder<MenuBloc, MenuState>(builder: (context, state) {
       if (state is MenusLoading) {
@@ -66,23 +70,24 @@ class Landing extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    BlocProvider.of<CartBloc>(context).add(LoadCart(user));
     return Scaffold(
-        backgroundColor: Colors.grey[800],
-        drawer: drawer(context),
-        appBar: AppBar(
-          title: Text('Select a location'),
-          elevation: 0.0,
-          actions: <Widget>[
-            FlatButton.icon(
-              icon: Icon(Icons.person),
-              label: Text('logout'),
-              onPressed: () async {
-                BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
-              },
-            )
-          ],
-        ),
-        body: Center(child: _showLocations(context)));
+      backgroundColor: Colors.grey[800],
+      drawer: drawer(context),
+      appBar: AppBar(
+        title: Text('Select a location'),
+        elevation: 0.0,
+        actions: <Widget>[
+          FlatButton.icon(
+            icon: Icon(Icons.person),
+            label: Text('logout'),
+            onPressed: () async {
+              BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
+            },
+          )
+        ],
+      ),
+       body: Center(child: _showLocations(context)));
   }
 }
 
