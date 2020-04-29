@@ -1,7 +1,105 @@
-//import 'package:WildcatMobileOrder/models/cart.dart';
-//import 'package:flutter/material.dart';
-//import 'package:transparent_image/transparent_image.dart';
-//import 'package:WildcatMobileOrder/main.dart';
+import 'package:WildcatMobileOrder/blocs/blocs.dart';
+import 'package:WildcatMobileOrder/repositories/repositories.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:transparent_image/transparent_image.dart';
+
+class CartView extends StatelessWidget {
+  // builds the individual cart items
+  Widget _buildCartItem(
+      BuildContext context, CartItem item, int idx, MenuEntity menu) {
+    final MenuItem currentItem = menu.items
+        .firstWhere((i) => i.identifier == item.identifier, orElse: null);
+    return Card(
+      child: ListTile(
+        isThreeLine: true,
+        leading: FractionallySizedBox(
+            widthFactor: 0.2,
+            heightFactor: 1.0,
+            child: FadeInImage(
+              fit: BoxFit.cover,
+              placeholder: MemoryImage(kTransparentImage),
+              image: currentItem.img,
+            )),
+        title: Text(currentItem.name),
+        subtitle: Row(
+          children: <Widget>[
+            Text('x ${item.quantity}'),
+            Spacer(),
+            Text('\$priceplaceholder'),
+          ],
+        ),
+        trailing: ButtonBar(
+          mainAxisSize: MainAxisSize.min,
+          alignment: MainAxisAlignment.center,
+          children: <Widget>[
+            IconButton(
+              icon: Icon(Icons.add),
+              tooltip: 'Add one ${currentItem.name}',
+              onPressed: () {
+                print('add an item from the cart');
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.remove),
+              tooltip: 'Remove one ${currentItem.name}',
+              onPressed: () {
+                print('remove an item from the cart');
+              },
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  // builds the ListView that contains all the cart items
+  Widget _buildCartList(BuildContext context, CartLoadSuccess state) {
+    final MenuEntity menu =
+        state.menus.firstWhere((i) => i.location == state.cart.location);
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: state.cart.items.length,
+      itemBuilder: (context, idx) {
+        return _buildCartItem(context, state.cart.items[idx], idx, menu);
+      },
+    );
+  }
+
+  // displays an empty cart
+  Widget _emptyCart(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Icon(Icons.shopping_cart),
+        Text('Your cart is empty.')
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Shopping Cart'),
+      ),
+      body: BlocBuilder<CartBloc, CartState>(
+        builder: (context, state) {
+          if (state is CartLoadSuccess) {
+            final MenuEntity menu = state.menus
+                .firstWhere((i) => i.location == state.cart.location);
+            return state.cart.items.length == 0
+                ? _emptyCart(context)
+                : _buildCartList(context, state);
+          }
+          return CircularProgressIndicator();
+        },
+      ),
+    );
+  }
+}
+
 //
 //class MyCartView extends StatefulWidget {
 //
@@ -15,54 +113,56 @@
 //
 //  _MyCartViewState();
 //
-//  Widget _buildCartItem(BuildContext context, CartItem item, int idx) {
-//    final inheritedCart = context.dependOnInheritedWidgetOfExactType<InheritedCart>().cart;
-//    return Card(
-//      child: ListTile(
-//        isThreeLine: true,
-//        leading: FractionallySizedBox(
-//            widthFactor: 0.2,
-//            heightFactor: 1.0,
-//            child: FadeInImage(
-//              fit: BoxFit.cover,
-//              placeholder: MemoryImage(kTransparentImage),
-//              image: item.item.img,
-//            )),
-//        title: Text(item.item.name),
-//        subtitle: Row(
-//          children: <Widget>[
-//            Text('x ${inheritedCart.itemList[idx].quantity.toString()}'),
-//            Spacer(),
-//            Text(inheritedCart.itemList[idx].getItemPriceString())
-//          ],
-//        ),
-//        trailing: ButtonBar(
-//          mainAxisSize: MainAxisSize.min,
-//          alignment: MainAxisAlignment.center,
-//          children: <Widget>[
-//            IconButton(
-//              icon: Icon(Icons.add),
-//              tooltip: 'Add one ${item.item.name}',
-//              onPressed: () {
-//                setState(() {
-//                  inheritedCart.addOne(idx);
-//                });
-//              },
-//            ),
-//            IconButton(
-//              icon: Icon(Icons.remove),
-//              tooltip: 'Remove one ${item.item.name}',
-//              onPressed: () {
-//                setState(() {
-//                  inheritedCart.removeOne(idx);
-//                });
-//              },
-//            )
-//          ],
-//        ),
+//Widget _buildCartItem2(BuildContext context, CartItem item, int idx) {
+//  final inheritedCart = context
+//      .dependOnInheritedWidgetOfExactType<InheritedCart>()
+//      .cart;
+//  return Card(
+//    child: ListTile(
+//      isThreeLine: true,
+//      leading: FractionallySizedBox(
+//          widthFactor: 0.2,
+//          heightFactor: 1.0,
+//          child: FadeInImage(
+//            fit: BoxFit.cover,
+//            placeholder: MemoryImage(kTransparentImage),
+//            image: item.item.img,
+//          )),
+//      title: Text(item.item.name),
+//      subtitle: Row(
+//        children: <Widget>[
+//          Text('x ${inheritedCart.itemList[idx].quantity.toString()}'),
+//          Spacer(),
+//          Text(inheritedCart.itemList[idx].getItemPriceString())
+//        ],
 //      ),
-//    );
-//  }
+//      trailing: ButtonBar(
+//        mainAxisSize: MainAxisSize.min,
+//        alignment: MainAxisAlignment.center,
+//        children: <Widget>[
+//          IconButton(
+//            icon: Icon(Icons.add),
+//            tooltip: 'Add one ${item.item.name}',
+//            onPressed: () {
+//              setState(() {
+//                inheritedCart.addOne(idx);
+//              });
+//            },
+//          ),
+//          IconButton(
+//            icon: Icon(Icons.remove),
+//            tooltip: 'Remove one ${item.item.name}',
+//            onPressed: () {
+//              setState(() {
+//                inheritedCart.removeOne(idx);
+//              });
+//            },
+//          )
+//        ],
+//      ),
+//    ),
+//  );
+//}
 //
 //  Widget _buildCartList(BuildContext context) {
 //    final inheritedCart = context.dependOnInheritedWidgetOfExactType<InheritedCart>().cart;

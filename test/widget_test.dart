@@ -5,6 +5,7 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'package:WildcatMobileOrder/repositories/repositories.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:WildcatMobileOrder/main.dart';
@@ -12,7 +13,8 @@ import 'package:WildcatMobileOrder/main.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
+    final UserRepository userRepository = UserRepository();
+    await tester.pumpWidget(MyApp(userRepository));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
