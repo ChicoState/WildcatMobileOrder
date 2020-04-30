@@ -6,6 +6,7 @@ class MenuEntity {
   final String closeTime;
   final String fcloseTime;
   final String openTime;
+  final NetworkImage img;
   final List<String> categories;
   final List<MenuItem> items;
 
@@ -19,7 +20,8 @@ class MenuEntity {
         }).toList(),
         openTime = snapshot.data['opentime'],
         closeTime = snapshot.data['closetime'],
-        fcloseTime = snapshot.data['fcloseTime'] {
+        fcloseTime = snapshot.data['fcloseTime'],
+        img = snapshot.data['imgurl'] {
     categories.sort();
     items.sort((a, b) => a.name.compareTo(b.name));
   }
