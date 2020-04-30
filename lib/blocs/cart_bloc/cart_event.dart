@@ -26,6 +26,5 @@ class CartUpdated extends CartEvent {
   List<Object> get props => [this.cart];
 
   @override
-  String toString() =>
-      'CartUpdated { cart: $cart }';
+  String toString() => 'CartUpdated { cart: $cart }';
 }

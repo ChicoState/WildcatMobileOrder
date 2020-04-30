@@ -72,22 +72,22 @@ class Landing extends StatelessWidget {
   Widget build(BuildContext context) {
     BlocProvider.of<CartBloc>(context).add(LoadCart(user));
     return Scaffold(
-      backgroundColor: Colors.grey[800],
-      drawer: drawer(context),
-      appBar: AppBar(
-        title: Text('Select a location'),
-        elevation: 0.0,
-        actions: <Widget>[
-          FlatButton.icon(
-            icon: Icon(Icons.person),
-            label: Text('logout'),
-            onPressed: () async {
-              BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
-            },
-          )
-        ],
-      ),
-       body: Center(child: _showLocations(context)));
+        backgroundColor: Colors.grey[800],
+        drawer: drawer(context),
+        appBar: AppBar(
+          title: Text('Select a location'),
+          elevation: 0.0,
+          actions: <Widget>[
+            FlatButton.icon(
+              icon: Icon(Icons.person),
+              label: Text('logout'),
+              onPressed: () async {
+                BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
+              },
+            )
+          ],
+        ),
+        body: Center(child: _showLocations(context)));
   }
 }
 

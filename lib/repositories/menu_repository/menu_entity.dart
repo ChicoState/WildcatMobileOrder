@@ -1,6 +1,6 @@
+import 'package:WildcatMobileOrder/repositories/cart_repository/cart_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
 
 class MenuEntity {
   final String location;
@@ -10,17 +10,25 @@ class MenuEntity {
   final List<MenuItem> items;
 
   MenuEntity.fromSnapshot(DocumentSnapshot snapshot)
-    : location = snapshot.data['name'],
-      items = snapshot.data['items'].map<MenuItem>((item) {
-        return MenuItem.fromMap(item, snapshot.data['name']);
-      }).toList(),
-      categories = snapshot.data['categories'].map<String>((cat) {
-        return cat.toString();
-      }).toList(),
-      openTime = snapshot.data['opentime'],
-      closeTime = snapshot.data['closetime'] {
+      : location = snapshot.data['name'],
+        items = snapshot.data['items'].map<MenuItem>((item) {
+          return MenuItem.fromMap(item, snapshot.data['name']);
+        }).toList(),
+        categories = snapshot.data['categories'].map<String>((cat) {
+          return cat.toString();
+        }).toList(),
+        openTime = snapshot.data['opentime'],
+        closeTime = snapshot.data['closetime'] {
     categories.sort();
     items.sort((a, b) => a.name.compareTo(b.name));
+  }
+
+  double calculateCartPrice(Cart cart) {
+    double price = 0;
+    cart.items.forEach((i) {
+      price += getItemById(i.identifier).price * i.quantity;
+    });
+    return price;
   }
 
   // returns a list of all items in a particular category
@@ -29,7 +37,7 @@ class MenuEntity {
   }
 
   MenuItem getItemById(String id) {
-    return this.items.firstWhere((item) => item.identifier == id);
+    return this.items.firstWhere((item) => item.identifier == id, orElse: null);
   }
 }
 
