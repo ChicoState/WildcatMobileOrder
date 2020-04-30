@@ -18,7 +18,7 @@ Widget cartButton(BuildContext context) {
 //    ),
     backgroundColor: Colors.red,
     onPressed: () {
-      //Navigator.push(context, route);
+      // Navigator.push(context, route);
       print('cart button push');
     },
   );
@@ -27,36 +27,38 @@ Widget cartButton(BuildContext context) {
 class MenuView extends StatelessWidget {
   final String location;
 
-
   MenuView({this.location});
 
   /// loadMenu
   /// location is the document name under the menus collection
   Widget _loadMenu(BuildContext context, String location) {
-    return BlocBuilder<MenuBloc, MenuState>(
-        builder: (context, state) {
-          if (state is MenusLoaded) {
-            MenuEntity currentMenu = state.menus.firstWhere((menu) =>
-            menu.location == location);
-            return _buildCategoryList(context, currentMenu);
-          }
-          return CircularProgressIndicator();
-        }
-    );
+    return BlocBuilder<MenuBloc, MenuState>(builder: (context, state) {
+      if (state is MenusLoaded) {
+        MenuEntity currentMenu =
+            state.menus.firstWhere((menu) => menu.location == location);
+        return _buildCategoryList(context, currentMenu);
+      }
+      return CircularProgressIndicator();
+    });
   }
 
   Widget _buildCategoryList(BuildContext context, MenuEntity menu) {
-    return ListView(
-      //shrinkWrap: true,
-      children: menu.categories.map((category) {
-        return ExpansionTile(
-          title: Text(category),
-          children: <Widget>[
-            _buildMenuList(context, menu.getCategoryItems(category)),
-          ],
-        );
-      }).toList(),
-    );
+    return Container(
+        color: Colors.grey[700],
+        child: ListView(
+          //shrinkWrap: true,
+          children: menu.categories.map((category) {
+            return ExpansionTile(
+              title: Text(
+                category,
+                style: TextStyle(color: Colors.white),
+              ),
+              children: <Widget>[
+                _buildMenuList(context, menu.getCategoryItems(category)),
+              ],
+            );
+          }).toList(),
+        ));
   }
 
   Widget _buildMenuList(BuildContext context, List<MenuItem> itemsList) {
@@ -70,40 +72,54 @@ class MenuView extends StatelessWidget {
   }
 
   Widget _buildMenuListItem(BuildContext context, MenuItem item) {
-    final MaterialPageRoute route =
-    MaterialPageRoute(
+    final MaterialPageRoute route = MaterialPageRoute(
         builder: (context) => ItemView2(item.location, item.identifier));
     // try to resolve image here
     var configuration = createLocalImageConfiguration(context);
     item.img.resolve(configuration);
-    return Container(
-        child: Card(
-            elevation: 10,
-            child: InkWell(
-                onTap: () {
-                  Navigator.push(context, route);
-                },
-                child: ListTile(
-                    dense: false,
-                    isThreeLine: true,
-                    leading: FractionallySizedBox(
-                        widthFactor: 0.2,
-                        heightFactor: 1.0,
-                        child: Hero(
-                            tag: item.name,
-                            child: FadeInImage(
-                              fit: BoxFit.cover,
-                              placeholder: MemoryImage(kTransparentImage),
-                              image: item.img,
-                            ))),
-                    title: Row(
-                      children: <Widget>[
-                        Text(item.name),
-                        Spacer(),
-                        //Text(item.getPrice()),
-                      ],
+    return Card(
+        color: Colors.black,
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+        elevation: 10,
+        child: InkWell(
+            onTap: () {
+              Navigator.push(context, route);
+            },
+            child: ListTile(
+                dense: false,
+                isThreeLine: true,
+                leading: FractionallySizedBox(
+                    widthFactor: 0.2,
+                    heightFactor: 1.0,
+                    child: Hero(
+                        tag: item.name,
+                        child: FadeInImage(
+                          fit: BoxFit.cover,
+                          placeholder: MemoryImage(kTransparentImage),
+                          image: item.img,
+                        ))),
+                title: Row(
+                  children: <Widget>[
+                    Text(
+                      item.name,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
                     ),
-                    subtitle: Text(item.description)))));
+                    Spacer(),
+                    Text(
+                      '\$' + item.price.toStringAsFixed(2),
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+                subtitle: Text(
+                  item.description,
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ))));
   }
 
   @override
@@ -112,6 +128,7 @@ class MenuView extends StatelessWidget {
         floatingActionButton: cartButton(context),
         appBar: AppBar(
           title: Text('$location'),
+          backgroundColor: Colors.red[900],
         ),
         body: _loadMenu(context, this.location));
   }
@@ -125,25 +142,25 @@ class ItemView2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MenuBloc, MenuState>(
-        builder: (context, state) {
-          if (state is MenusLoaded) {
-            MenuItem item = state.menus.firstWhere((m) =>
-            m.location == location).getItemById(id);
-            return Scaffold(
-                floatingActionButton: cartButton(context),
-                appBar: AppBar(
-                  title: Text(item.name),
-                ),
-                body: Column(
+    return BlocBuilder<MenuBloc, MenuState>(builder: (context, state) {
+      if (state is MenusLoaded) {
+        MenuItem item = state.menus
+            .firstWhere((m) => m.location == location)
+            .getItemById(id);
+        return Scaffold(
+            floatingActionButton: cartButton(context),
+            appBar: AppBar(
+              title: Text(item.name),
+              backgroundColor: Colors.red[900],
+            ),
+            body: Container(
+                color: Colors.grey[700],
+                child: Column(
                   children: <Widget>[
                     Expanded(
                       flex: 4,
                       child: Container(
-                          width: MediaQuery
-                              .of(context)
-                              .size
-                              .width,
+                          width: MediaQuery.of(context).size.width,
                           child: Hero(
                             tag: item.name,
                             child: FadeInImage(
@@ -160,34 +177,53 @@ class ItemView2 extends StatelessWidget {
                     ),
                     Flexible(
                       flex: 2,
-                      child: Text(item.description),
+                      child: Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.white,
+                          ),
+                        ),
+                        child: RichText(
+                          text: TextSpan(
+                            children: <TextSpan>[
+                              TextSpan(
+                                  text: item.description,
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.white)),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
-                    Flexible(
-                      flex: 3,
-                      child: Text('\$${item.price.toStringAsFixed(2)}'),
+                    Container(
+                      alignment: Alignment.bottomCenter,
+                      child: Text(
+                        '\n\$${item.price.toStringAsFixed(2)}',
+                        style: TextStyle(fontSize: 23, color: Colors.white),
+                      ),
                     ),
                     Flexible(
                         flex: 3,
                         child: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Ink(
+                            alignment: Alignment.center,
+                            child: Container(
                                 decoration: const ShapeDecoration(
-                                  color: Colors.red,
+                                  color: Colors.black,
                                   shape: CircleBorder(),
                                 ),
                                 child: IconButton(
                                   color: Colors.white,
-                                  splashColor: Colors.redAccent,
+                                  splashColor: Colors.red[900],
                                   icon: Icon(Icons.add_shopping_cart),
                                   onPressed: () {
                                     print('add ${item.name} to cart');
                                   },
                                 ))))
                   ],
-                ));
-          }
-          return CircularProgressIndicator();
-        }
-    );
+                )));
+      }
+      return CircularProgressIndicator();
+    });
   }
 }

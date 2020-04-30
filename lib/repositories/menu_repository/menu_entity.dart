@@ -21,7 +21,7 @@ class MenuEntity {
         openTime = snapshot.data['opentime'],
         closeTime = snapshot.data['closetime'],
         fcloseTime = snapshot.data['fcloseTime'],
-        img = snapshot.data['imgurl'] {
+        img = NetworkImage(snapshot.data['imgurl']) {
     categories.sort();
     items.sort((a, b) => a.name.compareTo(b.name));
   }
