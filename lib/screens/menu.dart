@@ -30,14 +30,6 @@ class MenuView extends StatelessWidget {
 
   MenuView({this.location});
 
-  /// Returns a Stream of the Menu data
-  Stream<DocumentSnapshot> getMenu(String location) {
-    return Firestore.instance
-        .collection('menus')
-        .document(location)
-        .snapshots();
-  }
-
   /// loadMenu
   /// location is the document name under the menus collection
   Widget _loadMenu(BuildContext context, String location) {

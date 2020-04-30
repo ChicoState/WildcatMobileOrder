@@ -21,7 +21,7 @@ Drawer drawer(BuildContext context) {
           onTap: () {
             Navigator.pop(context);
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => Landing()));
+                context, MaterialPageRoute(builder: (context) => Landing(user.email)));
           },
         ),
         ListTile(

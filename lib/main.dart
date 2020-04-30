@@ -7,7 +7,6 @@ import 'package:WildcatMobileOrder/repositories/repositories.dart';
 import 'package:bloc/bloc.dart';
 import 'package:WildcatMobileOrder/screens/screens.dart';
 
-
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   BlocSupervisor.delegate = SimpleBlocDelegate();
@@ -21,7 +20,9 @@ void main() {
               AuthenticationBloc(userRepository: _userRepository)
                 ..add(AppStarted())),
       BlocProvider(
-        create: (context) => MenuBloc(menuRepository: _menuRepository)
+          create: (context) => MenuBloc(menuRepository: _menuRepository)),
+      BlocProvider(
+        create: (context) => CartBloc(),
       ),
     ],
     child: MyApp(_userRepository),
@@ -48,7 +49,9 @@ class MyApp extends StatelessWidget {
       if (state is Authenticated) {
         // start to load menus
         BlocProvider.of<MenuBloc>(context).add(LoadMenus());
-        return Landing();
+        BlocProvider.of<CartBloc>(context).setUser(state.getEmail());
+        BlocProvider.of<CartBloc>(context).add(LoadCart(state.getEmail()));
+        return Landing(state.getEmail());
       }
       return Loading();
     }));
