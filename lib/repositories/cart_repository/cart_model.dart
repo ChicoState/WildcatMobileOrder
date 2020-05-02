@@ -7,6 +7,10 @@ class Cart {
 
   Cart(this.items, this.location, this.user);
 
+  @override
+  String toString() =>
+      '{ user: $user, location: $location, itemCount: ${items.length}';
+
   Cart copyWith({List<CartItem> items, String location, String user}) {
     return Cart(
       items ?? this.items,
@@ -19,16 +23,35 @@ class Cart {
     return items.length == 0 ? true : false;
   }
 
+  Cart deleteItem(MenuItem item) {
+    List<CartItem> currentItems = this.items;
+    int idx = currentItems.indexWhere((i) => i.identifier == item.identifier);
+    if (idx != -1) {
+      currentItems.removeAt(idx);
+    }
+    return copyWith(items: currentItems);
+  }
+
+  Cart removeItem(MenuItem item) {
+    List<CartItem> currentItems = this.items;
+    int idx = currentItems.indexWhere((i) => i.identifier == item.identifier);
+    if (idx != -1) {
+      currentItems[idx] = currentItems[idx].decrementQuantity();
+    }
+    return copyWith(items: currentItems);
+  }
+
   Cart addItem(MenuItem item) {
     List<CartItem> currentItems = this.items;
     int idx = currentItems.indexWhere((i) => i.identifier == item.identifier);
     if (idx != -1) {
-      currentItems[idx] =
-          currentItems[idx].copyWith(quantity: currentItems[idx].quantity + 1);
+      currentItems[idx] = currentItems[idx].incrementQuantity();
     } else {
-      currentItems.add(CartItem(1, item.identifier));
+      currentItems.add(CartItem.fromMenuItem(item));
     }
-    return this.copyWith(items: currentItems);
+    Cart newCart = copyWith(items: currentItems, location: item.location);
+    print(newCart.items.length);
+    return newCart;
   }
 }
 
@@ -37,6 +60,20 @@ class CartItem {
   final String identifier;
 
   CartItem(this.quantity, this.identifier);
+
+  // used to create a new item and initialize quantity to 1
+  CartItem.fromMenuItem(MenuItem item)
+      : quantity = 1,
+        identifier = item.identifier;
+
+  CartItem incrementQuantity() {
+    print('incrementing qty to ${this.quantity + 1} of ${this.identifier}');
+    return CartItem(this.quantity + 1, this.identifier);
+  }
+
+  CartItem decrementQuantity() {
+    return CartItem(this.quantity - 1, this.identifier);
+  }
 
   CartItem copyWith({int quantity, String identifier}) {
     return CartItem(

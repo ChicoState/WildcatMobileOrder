@@ -1,3 +1,4 @@
+import 'package:WildcatMobileOrder/repositories/cart_repository/cart_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -26,13 +27,21 @@ class MenuEntity {
     items.sort((a, b) => a.name.compareTo(b.name));
   }
 
+  double calculateCartPrice(Cart cart){
+    double price = 0;
+    cart.items.forEach((i) {
+      price += getItemById(i.identifier).price * i.quantity;
+    });
+    return price;
+  }
+
   // returns a list of all items in a particular category
   List<MenuItem> getCategoryItems(String category) {
     return this.items.where((item) => item.category == category).toList();
   }
 
   MenuItem getItemById(String id) {
-    return this.items.firstWhere((item) => item.identifier == id);
+    return this.items.firstWhere((item) => item.identifier == id, orElse: null);
   }
 }
 

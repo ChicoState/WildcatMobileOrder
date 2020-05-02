@@ -1,28 +1,10 @@
-import 'dart:async';
 import 'package:WildcatMobileOrder/blocs/blocs.dart';
+import 'package:WildcatMobileOrder/shared/cart_button.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:WildcatMobileOrder/repositories/repositories.dart';
-import 'package:badges/badges.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-Widget cartButton(BuildContext context) {
-  return FloatingActionButton(
-    child: Icon(Icons.shopping_cart),
-//    child: Badge(
-//      badgeContent: Text(inheritedCart.itemCount.toString()),
-//      elevation: 10,
-//      position: BadgePosition.topRight(right: -22, top: -22),
-//      child: Icon(Icons.shopping_cart),
-//    ),
-    backgroundColor: Colors.red,
-    onPressed: () {
-      // Navigator.push(context, route);
-      print('cart button push');
-    },
-  );
-}
+import 'screens.dart';
 
 class MenuView extends StatelessWidget {
   final String location;
@@ -32,10 +14,11 @@ class MenuView extends StatelessWidget {
   /// loadMenu
   /// location is the document name under the menus collection
   Widget _loadMenu(BuildContext context, String location) {
-    return BlocBuilder<MenuBloc, MenuState>(builder: (context, state) {
+    return BlocBuilder<MenuBloc, MenuState>(
+      builder: (context, state) {
       if (state is MenusLoaded) {
-        MenuEntity currentMenu =
-            state.menus.firstWhere((menu) => menu.location == location);
+        MenuEntity currentMenu = state.menus.firstWhere((menu) => 
+        menu.location == location);
         return _buildCategoryList(context, currentMenu);
       }
       return CircularProgressIndicator();
@@ -73,8 +56,8 @@ class MenuView extends StatelessWidget {
 
   Widget _buildMenuListItem(BuildContext context, MenuItem item) {
     final MaterialPageRoute route = MaterialPageRoute(
-        builder: (context) => ItemView2(item.location, item.identifier));
-    // try to resolve image here
+        builder: (context) => ItemView(item.location, item.identifier));
+    // try to resolve image early
     var configuration = createLocalImageConfiguration(context);
     item.img.resolve(configuration);
     return Card(
@@ -125,105 +108,11 @@ class MenuView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: cartButton(context),
+        floatingActionButton: cartButton(),
         appBar: AppBar(
           title: Text('$location'),
           backgroundColor: Colors.red[900],
         ),
         body: _loadMenu(context, this.location));
-  }
-}
-
-class ItemView2 extends StatelessWidget {
-  final String location;
-  final String id;
-
-  ItemView2(this.location, this.id);
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<MenuBloc, MenuState>(builder: (context, state) {
-      if (state is MenusLoaded) {
-        MenuItem item = state.menus
-            .firstWhere((m) => m.location == location)
-            .getItemById(id);
-        return Scaffold(
-            floatingActionButton: cartButton(context),
-            appBar: AppBar(
-              title: Text(item.name),
-              backgroundColor: Colors.red[900],
-            ),
-            body: Container(
-                color: Colors.grey[700],
-                child: Column(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 4,
-                      child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          child: Hero(
-                            tag: item.name,
-                            child: FadeInImage(
-                              fit: BoxFit.cover,
-                              placeholder: MemoryImage(kTransparentImage),
-                              image: item.img,
-                            ),
-                          )),
-                    ),
-                    // add spacing below image
-                    Flexible(
-                      flex: 1,
-                      child: Container(),
-                    ),
-                    Flexible(
-                      flex: 2,
-                      child: Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.white,
-                          ),
-                        ),
-                        child: RichText(
-                          text: TextSpan(
-                            children: <TextSpan>[
-                              TextSpan(
-                                  text: item.description,
-                                  style: TextStyle(
-                                      fontSize: 20, color: Colors.white)),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      alignment: Alignment.bottomCenter,
-                      child: Text(
-                        '\n\$${item.price.toStringAsFixed(2)}',
-                        style: TextStyle(fontSize: 23, color: Colors.white),
-                      ),
-                    ),
-                    Flexible(
-                        flex: 3,
-                        child: Align(
-                            alignment: Alignment.center,
-                            child: Container(
-                                decoration: const ShapeDecoration(
-                                  color: Colors.black,
-                                  shape: CircleBorder(),
-                                ),
-                                child: IconButton(
-                                  color: Colors.white,
-                                  splashColor: Colors.red[900],
-                                  icon: Icon(Icons.add_shopping_cart),
-                                  onPressed: () {
-                                    print('add ${item.name} to cart');
-                                  },
-                                ))))
-                  ],
-                )));
-      }
-      return CircularProgressIndicator();
-    });
   }
 }
