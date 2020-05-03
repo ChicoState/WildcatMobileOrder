@@ -1,48 +1,58 @@
-import 'package:WildcatMobileOrder/services/auth.dart';
-import 'package:WildcatMobileOrder/wrapper.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:WildcatMobileOrder/shared/loading.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:WildcatMobileOrder/screens/menu/menu.dart';
-import 'package:provider/provider.dart';
-import 'package:WildcatMobileOrder/models/cart.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:WildcatMobileOrder/blocs/blocs.dart';
+import 'package:WildcatMobileOrder/repositories/repositories.dart';
+import 'package:bloc/bloc.dart';
+import 'package:WildcatMobileOrder/screens/screens.dart';
 
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  BlocSupervisor.delegate = SimpleBlocDelegate();
+  final UserRepository _userRepository = UserRepository();
+  final MenuRepository _menuRepository = MenuRepository(Firestore.instance);
 
-
-void main() => runApp(MyApp());
+  runApp(MultiBlocProvider(
+    providers: [
+      BlocProvider(
+          create: (context) =>
+              AuthenticationBloc(userRepository: _userRepository)
+                ..add(AppStarted())),
+      BlocProvider(
+          create: (context) => MenuBloc(menuRepository: _menuRepository)),
+      BlocProvider(
+        create: (context) => CartBloc(),
+      ),
+    ],
+    child: MyApp(_userRepository),
+  ));
+}
 
 final ThemeData td = ThemeData(
   primaryColor: Colors.red[800],
 );
 
-class InheritedCart extends InheritedWidget {
-  InheritedCart({
-    Key key,
-    @required Widget child,
-    this.cart,
-  }) : super(key: key, child: child);
-  final Cart cart;
-
-  @override
-  bool updateShouldNotify(InheritedCart oldCart) =>
-      cart.itemCount != oldCart.cart.itemCount;
-}
-
 class MyApp extends StatelessWidget {
+  final UserRepository userRepository;
+
+  MyApp(this.userRepository);
+
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<FirebaseUser>.value(
-      value: AuthService().user,
-      child: InheritedCart(
-        cart: new Cart(),
-          child: MaterialApp(
-              title: 'Wildcat Mobile Order Shell',
-              theme: td,
-              initialRoute: '/',
-              routes: {
-            //Inserted a wrapper to help solicit Authentication from Login Page
-            '/': (context) => Wrapper(),
-            '/menu': (context) => MenuView(),
-          })),
-    );
+    return MaterialApp(home:
+        BlocBuilder<AuthenticationBloc, AuthenticationState>(
+            builder: (context, state) {
+      if (state is Unauthenticated) {
+        return Login2(userRepository: userRepository);
+      }
+      if (state is Authenticated) {
+        // start to load menus
+        BlocProvider.of<MenuBloc>(context).add(LoadMenus());
+        BlocProvider.of<CartBloc>(context).setUser(state.getEmail());
+        return Landing(state.getEmail());
+      }
+      return Loading();
+    }));
   }
 }
