@@ -71,8 +71,12 @@ class CartItem {
     return CartItem(this.quantity + 1, this.identifier);
   }
 
+  //Added the case of a cart decrementing into negative quantities
   CartItem decrementQuantity() {
-    return CartItem(this.quantity - 1, this.identifier);
+    if(this.quantity == 0)
+      return CartItem(this.quantity, this.identifier);
+    else
+      return CartItem(this.quantity - 1, this.identifier);
   }
 
   CartItem copyWith({int quantity, String identifier}) {

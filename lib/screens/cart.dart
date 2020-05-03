@@ -12,6 +12,7 @@ class CartView extends StatelessWidget {
   Widget _buildCartList(
       BuildContext context, CartLoaded state, MenuEntity menu) {
     return Container(
+      color: Colors.grey[800],
       child: ListView.builder(
         shrinkWrap: false,
         itemCount: state.cart.items.length,
@@ -24,14 +25,17 @@ class CartView extends StatelessWidget {
 
   // displays an empty cart
   Widget _emptyCart(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Icon(Icons.shopping_cart, size: 40),
-          Text('Your cart is empty.')
-        ],
+    return Container(
+      color: Colors.grey[800],
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Icon(Icons.shopping_cart, size: 40),
+            Text('Your cart is empty.')
+          ],
+        ),
       ),
     );
   }
@@ -44,23 +48,52 @@ class CartView extends StatelessWidget {
               menus.indexWhere((i) => i.location == state.cart.location);
           return state.cart.items.length == 0
               ? _emptyCart(context)
-              : Column(
+              : Container(
+                color: Colors.black,
+                child: Column(
                   children: <Widget>[
                     Flexible(
                       flex: 5,
                       child: _buildCartList(context, state, menus[idx]),
                     ),
                     Flexible(
+                      flex: 1,
                       child: Card(
+                        color: Colors.grey[400],
                         elevation: 10,
                         borderOnForeground: false,
                         child: Row(
                           children: <Widget>[
                             Column(
                               children: <Widget>[
-                                Text(
-                                    'Sub: ${menus[idx].calculateCartPrice(state.cart).toStringAsFixed(2)}'),
-                                Text('Total: with tax??'),
+                                RichText(
+                                  text: TextSpan(children: <TextSpan>[
+                                    TextSpan(
+                                      text:
+                                          'Total: ${menus[idx].calculateCartPrice(state.cart).toStringAsFixed(2)}',
+                                      style: TextStyle(
+                                          fontSize: 18, color: Colors.black),
+                                    ),
+                                    TextSpan(
+                                      text:
+                                          '\nLocation: ${menus[idx].location}',
+                                      style: TextStyle(
+                                          fontSize: 18, color: Colors.black),
+                                    ),
+                                  ]),
+                                ),
+                                Expanded(
+                                  child: Align(
+                                      alignment: Alignment.bottomCenter,
+                                      child: FlatButton(
+                                        color: Colors.red[900],
+                                        child: Text(
+                                            'Order from ${menus[idx].location}'),
+                                        onPressed: () {
+                                          // Navigator.push(context, route);
+                                        },
+                                      )),
+                                )
                               ],
                             )
                           ],
@@ -68,7 +101,8 @@ class CartView extends StatelessWidget {
                       ),
                     )
                   ],
-                );
+                )
+              );
 //          return Scaffold(
 //            appBar: AppBar(
 //              title: Row(
@@ -91,6 +125,7 @@ class CartView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.red[900],
         title: Text('Shopping Cart'),
       ),
       body: BlocBuilder<MenuBloc, MenuState>(

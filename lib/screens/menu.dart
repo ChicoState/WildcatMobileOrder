@@ -27,7 +27,7 @@ class MenuView extends StatelessWidget {
 
   Widget _buildCategoryList(BuildContext context, MenuEntity menu) {
     return Container(
-        color: Colors.grey[700],
+        color: Colors.grey[800],
         child: ListView(
           //shrinkWrap: true,
           children: menu.categories.map((category) {
@@ -108,7 +108,7 @@ class MenuView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: cartButton(),
+        floatingActionButton: CartButton(),
         appBar: AppBar(
           title: Text('$location'),
           backgroundColor: Colors.red[900],

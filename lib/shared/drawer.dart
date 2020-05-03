@@ -6,33 +6,70 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 Drawer drawer(BuildContext context) {
   Widget loggedInDrawer(FirebaseUser user) {
-    return ListView(
-      padding: EdgeInsets.zero,
-      children: <Widget>[
-        UserAccountsDrawerHeader(
-          accountEmail: Text(user.email),
-          accountName: Text(user.displayName),
-          currentAccountPicture: CircleAvatar(
-            backgroundImage: NetworkImage(user.photoUrl),
-          ),
-        ),
-        ListTile(
-          title: Text('Locations'),
-          onTap: () {
-            Navigator.pop(context);
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => Landing(user.email)));
-          },
-        ),
-        ListTile(
-          title: Text('Log out'),
-          onTap: () {
-            Navigator.pop(context);
-            BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
-          },
-        ),
-      ],
-    );
+    return Container(
+        color: Colors.grey[850],
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            UserAccountsDrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.red[900],
+              ),
+              accountEmail: Text(
+                user.email,
+                style: TextStyle(
+                  fontSize: 15,
+                ),
+              ),
+              accountName: Text(
+                user.displayName,
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+              currentAccountPicture: CircleAvatar(
+                backgroundImage: NetworkImage(user.photoUrl),
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(color: Colors.white),
+                ),
+              ),
+              child: ListTile(
+                title: Text(
+                  'Locations',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Landing(user.email)));
+                },
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(color: Colors.white),
+                ),
+              ),
+              child: ListTile(
+                title: Text(
+                  'Sign out',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
+                },
+              ),
+            ),
+          ],
+        ));
   }
 
   Widget defaultDrawer() {
