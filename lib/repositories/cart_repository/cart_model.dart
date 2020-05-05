@@ -65,7 +65,7 @@ class Cart {
         }).toList()),
         'user': user,
         'location': location,
-        'orderid' : Uuid().v4().toString(),
+        'orderid': Uuid().v4().toString(),
         'price': price,
         'ordertime': Timestamp.now(),
       };
@@ -82,7 +82,6 @@ class CartItem {
   final int quantity;
   final String identifier;
   final String name;
-
 
   CartItem(this.quantity, this.identifier, this.name);
 

@@ -14,9 +14,8 @@ class CartFooter extends StatelessWidget {
     double price = menu.calculateCartPrice(cart);
     DocumentReference order = await cartRepo.addOrder(cart, price);
     print(order.documentID);
-    Navigator.pushReplacement(context, MaterialPageRoute(
-      builder: (context) => OrderConfirmation(order)
-    ));
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (context) => OrderConfirmation(order)));
   }
 
   CartFooter(this.cart, this.menu);

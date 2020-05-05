@@ -9,5 +9,4 @@ class CartRepository {
         .collection('orders')
         .add(currentCart.toDocument(price));
   }
-
 }

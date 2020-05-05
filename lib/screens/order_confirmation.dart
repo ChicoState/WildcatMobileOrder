@@ -2,6 +2,8 @@ import 'package:WildcatMobileOrder/widgets/loading.dart';
 import 'package:WildcatMobileOrder/widgets/order_footer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:WildcatMobileOrder/blocs/blocs.dart';
 
 class OrderConfirmation extends StatelessWidget {
   final DocumentReference order;
@@ -46,6 +48,7 @@ class OrderConfirmation extends StatelessWidget {
             future: order.get(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
+                BlocProvider.of<CartBloc>(context).add(CartSubmitted());
                 return _buildOrder(context, snapshot.data);
               }
               return Loading();
