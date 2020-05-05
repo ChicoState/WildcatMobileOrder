@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:WildcatMobileOrder/blocs/blocs.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:WildcatMobileOrder/shared/cart_button.dart';
+import 'package:WildcatMobileOrder/widgets/widgets.dart';
 
 class ItemView extends StatelessWidget {
   final String location;
@@ -109,7 +109,7 @@ class ItemView extends StatelessWidget {
               ],
             ));
       }
-      return CircularProgressIndicator();
+      return Loading();
     });
   }
 }
