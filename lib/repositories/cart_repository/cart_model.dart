@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:WildcatMobileOrder/repositories/menu_repository/menu_entity.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Cart {
   final List<CartItem> items;
@@ -53,6 +56,23 @@ class Cart {
     print(newCart.items.length);
     return newCart;
   }
+
+  /// Serializes Cart object into Firestore compatible document
+  /// Pass in a price value so order history has cart price
+  Map<String, dynamic> toDocument() => {
+    'items': FieldValue.arrayUnion(items.map((item) {
+      return item.toJson();
+    }).toList()),
+    'user': user,
+    'location': location,
+  };
+
+  /// Serializes Cart object into Json string for persistence
+  Map<String, dynamic> toJson() => {
+    'items': jsonEncode(items),
+    'user': user,
+    'location': location,
+  };
 }
 
 class CartItem {
@@ -66,6 +86,15 @@ class CartItem {
       : quantity = 1,
         identifier = item.identifier;
 
+  Map<String, dynamic> toJson() => {
+    'identifier': identifier,
+    'qty': quantity,
+  };
+
+  CartItem.fromJson(Map<String, dynamic> json)
+    : identifier = json['identifier'],
+      quantity = json['qty'];
+
   CartItem incrementQuantity() {
     print('incrementing qty to ${this.quantity + 1} of ${this.identifier}');
     return CartItem(this.quantity + 1, this.identifier);
@@ -73,6 +102,12 @@ class CartItem {
 
   CartItem decrementQuantity() {
     return CartItem(this.quantity - 1, this.identifier);
+  //Added the case of a cart decrementing into negative quantities
+  CartItem decrementQuantity() {
+    if(this.quantity == 0)
+      return CartItem(this.quantity, this.identifier);
+    else
+      return CartItem(this.quantity - 1, this.identifier);
   }
 
   CartItem copyWith({int quantity, String identifier}) {

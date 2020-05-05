@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
         BlocBuilder<AuthenticationBloc, AuthenticationState>(
             builder: (context, state) {
       if (state is Unauthenticated) {
-        return Login2(userRepository: userRepository);
+        return LoginPage(userRepository: userRepository);
       }
       if (state is Authenticated) {
         // start to load menus

@@ -3,10 +3,10 @@ import 'package:WildcatMobileOrder/repositories/repositories.dart';
 import 'package:WildcatMobileOrder/blocs/blocs.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class Login2 extends StatelessWidget {
+class LoginPage extends StatelessWidget {
   final UserRepository _userRepository;
 
-  Login2({Key key, @required UserRepository userRepository})
+  LoginPage({Key key, @required UserRepository userRepository})
       : assert(userRepository != null),
         _userRepository = userRepository,
         super(key: key);

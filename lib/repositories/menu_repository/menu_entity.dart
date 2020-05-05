@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 class MenuEntity {
   final String location;
   final String closeTime;
+  final String fcloseTime;
   final String openTime;
+  final NetworkImage img;
   final List<String> categories;
   final List<MenuItem> items;
 
@@ -18,7 +20,9 @@ class MenuEntity {
           return cat.toString();
         }).toList(),
         openTime = snapshot.data['opentime'],
-        closeTime = snapshot.data['closetime'] {
+        closeTime = snapshot.data['closetime'],
+        fcloseTime = snapshot.data['fcloseTime'],
+        img = NetworkImage(snapshot.data['imgurl']) {
     categories.sort();
     items.sort((a, b) => a.name.compareTo(b.name));
   }
