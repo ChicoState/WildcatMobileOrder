@@ -83,7 +83,6 @@ class Landing extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    BlocProvider.of<CartBloc>(context).add(LoadCart(user));
     return Scaffold(
         backgroundColor: Colors.grey[800],
         drawer: drawer(context),

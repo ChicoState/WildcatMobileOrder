@@ -117,9 +117,9 @@ class CartTile extends StatelessWidget {
                     ),
                   ),
                 ),
-                Spacer(flex: 2),
-                Flexible(
-                  flex: 2,
+                Spacer(),
+                Expanded(
+                  //flex: 1,
                   child: ButtonBar(
                     mainAxisSize: MainAxisSize.max,
                     children: <Widget>[
