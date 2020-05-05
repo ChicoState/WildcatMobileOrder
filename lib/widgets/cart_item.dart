@@ -14,6 +14,13 @@ class CartTile extends StatelessWidget {
 
   final SlidableController controller = SlidableController();
 
+  void dismissItem(BuildContext context, MenuItem item) {
+    Cart updatedCart = (BlocProvider.of<CartBloc>(context).state as CartLoaded)
+        .cart
+        .deleteItem(item);
+    BlocProvider.of<CartBloc>(context).add(CartUpdated(cart: updatedCart));
+  }
+
   @override
   Widget build(BuildContext context) {
     final MenuItem menuItem = menu.items
@@ -159,138 +166,6 @@ class CartTile extends StatelessWidget {
                   ),
                 )
               ],
-            ))
-//      ListTile(
-//          isThreeLine: true,
-//          leading: FractionallySizedBox(
-//              widthFactor: 0.2,
-//              heightFactor: 1.0,
-//              child: FadeInImage(
-//                fit: BoxFit.cover,
-//                placeholder: MemoryImage(kTransparentImage),
-//                image: menuItem.img,
-//              )),
-//          title: Text(menuItem.name),
-//          subtitle: Row(
-//            children: <Widget>[
-//              Text('\$${menuItem.price.toStringAsFixed(2)} x ${item
-//                  .quantity}\n\$${(menuItem.price * item.quantity)
-//                  .toStringAsFixed(2)}'),
-//            ],
-//          ),
-//          trailing: Column(
-//            children: <Widget>[
-//              IconButton(
-//                iconSize: 12.0,
-//                icon: Icon(Icons.add),
-//                onPressed: () {
-//                  Cart updatedCart =
-//                  (BlocProvider
-//                      .of<CartBloc>(context)
-//                      .state as CartLoaded)
-//                      .cart
-//                      .addItem(menuItem);
-//                  BlocProvider.of<CartBloc>(context)
-//                      .add(CartUpdated(cart: updatedCart));
-//                },
-//              ),
-//              IconButton(
-//                iconSize: 12.0,
-//                icon: Icon(Icons.remove),
-//                onPressed: () {
-//                  Cart updatedCart =
-//                  (BlocProvider
-//                      .of<CartBloc>(context)
-//                      .state as CartLoaded)
-//                      .cart
-//                      .removeItem(menuItem);
-//                  if (updatedCart.items
-//                      .firstWhere((i) => i.identifier == menuItem.identifier)
-//                      .quantity ==
-//                      0) {
-//                    controller.activeState.dismiss();
-//                  } else {
-//                    BlocProvider.of<CartBloc>(context)
-//                        .add(CartUpdated(cart: updatedCart));
-//                  }
-//                },
-//              )
-//            ],
-//          )
-//
-//      ),
-        );
+            )));
   }
 }
-
-//Widget customCart(BuildContext context, MenuItem menuItem) {
-//  return Card(
-//      child: Row(
-//        children: <Widget>[
-//          Flexible(
-//            flex: 1,
-//            child: FadeInImage(
-//              fit: BoxFit.cover,
-//              placeholder: MemoryImage(kTransparentImage),
-//              image: menuItem.img,
-//            ),
-//
-//          ),
-//          Flexible(
-//            flex: 2,
-//            child: Column(
-//              mainAxisSize: MainAxisSize.min,
-//              children: <Widget>[
-//                Text(menuItem.name),
-//                Text('\$${menuItem.price.toStringAsFixed(2)} x ${item
-//                    .quantity}\n\$${(menuItem.price * item.quantity)
-//                    .toStringAsFixed(2)}')
-//              ],
-//            ),
-//          ),
-//          Flexible(
-//            flex: 2,
-//            child: ButtonBar(
-//              mainAxisSize: MainAxisSize.min,
-//              children: <Widget>[
-//                IconButton(
-//                    icon: Icon(Icons.add),
-//                    onPressed: () {
-//                      Cart updatedCart =
-//                      (BlocProvider
-//                          .of<CartBloc>(context)
-//                          .state as CartLoaded)
-//                          .cart
-//                          .addItem(menuItem);
-//                      BlocProvider.of<CartBloc>(context)
-//                          .add(CartUpdated(cart: updatedCart));
-//                    }
-//                ),
-//                IconButton(
-//                    icon: Icon(Icons.remove),
-//                    onPressed: () {
-//                      Cart updatedCart =
-//                      (BlocProvider
-//                          .of<CartBloc>(context)
-//                          .state as CartLoaded)
-//                          .cart
-//                          .removeItem(menuItem);
-//                      if (updatedCart.items
-//                          .firstWhere((i) =>
-//                      i.identifier == menuItem.identifier)
-//                          .quantity ==
-//                          0) {
-//                        controller.activeState.dismiss();
-//                      } else {
-//                        BlocProvider.of<CartBloc>(context)
-//                            .add(CartUpdated(cart: updatedCart));
-//                      }
-//                    }
-//                )
-//              ],
-//            ),
-//          )
-//        ],
-//      )
-//  )
-//}
