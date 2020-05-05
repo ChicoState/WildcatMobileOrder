@@ -4,10 +4,10 @@ import 'cart_model.dart';
 class CartRepository {
   const CartRepository();
 
-  Future<String> addOrder(Cart currentCart) async {
-    DocumentReference order = await Firestore.instance
+  Future<DocumentReference> addOrder(Cart currentCart, double price) async {
+    return await Firestore.instance
         .collection('orders')
-        .add(currentCart.toDocument());
-    return order.documentID;
+        .add(currentCart.toDocument(price));
   }
+
 }

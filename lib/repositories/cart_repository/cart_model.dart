@@ -59,14 +59,15 @@ class Cart {
 
   /// Serializes Cart object into Firestore compatible document
   /// Pass in a price value so order history has cart price
-  Map<String, dynamic> toDocument() => {
+  Map<String, dynamic> toDocument(double price) => {
         'items': FieldValue.arrayUnion(items.map((item) {
           return item.toJson();
         }).toList()),
         'user': user,
         'location': location,
         'orderid' : Uuid().v4().toString(),
-
+        'price': price,
+        'ordertime': Timestamp.now(),
       };
 
   /// Serializes Cart object into Json string for persistence
