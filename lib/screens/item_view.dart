@@ -83,7 +83,7 @@ class ItemView extends StatelessWidget {
                                     splashColor: Colors.redAccent,
                                     icon: Icon(Icons.add_shopping_cart),
                                     onPressed: () {
-                                      print('add ${item.name} to cart');
+                                      print('add ${item.identifier} to cart');
                                       BlocProvider.of<CartBloc>(context).add(
                                           CartUpdated(
                                               cart: (BlocProvider.of<CartBloc>(

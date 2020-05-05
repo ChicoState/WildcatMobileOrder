@@ -62,6 +62,6 @@ class MenuItem {
         category = map['category'],
         price = map['price'],
         description = map['description'],
-        identifier = '${map['location']}-${map['name']}',
+        identifier = '$location-${map['name']}',
         img = NetworkImage(map['imgurl']);
 }

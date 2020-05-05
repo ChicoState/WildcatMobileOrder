@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:WildcatMobileOrder/repositories/menu_repository/menu_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:uuid/uuid.dart';
 
 class Cart {
   final List<CartItem> items;
@@ -64,6 +65,8 @@ class Cart {
         }).toList()),
         'user': user,
         'location': location,
+        'orderid' : Uuid().v4().toString(),
+
       };
 
   /// Serializes Cart object into Json string for persistence
