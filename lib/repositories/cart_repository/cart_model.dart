@@ -99,9 +99,7 @@ class CartItem {
     print('incrementing qty to ${this.quantity + 1} of ${this.identifier}');
     return CartItem(this.quantity + 1, this.identifier);
   }
-
-  CartItem decrementQuantity() {
-    return CartItem(this.quantity - 1, this.identifier);
+  
   //Added the case of a cart decrementing into negative quantities
   CartItem decrementQuantity() {
     if(this.quantity == 0)
