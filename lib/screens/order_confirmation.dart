@@ -1,4 +1,5 @@
 import 'package:WildcatMobileOrder/widgets/loading.dart';
+import 'package:WildcatMobileOrder/widgets/order_footer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -27,42 +28,11 @@ class OrderConfirmation extends StatelessWidget {
             },
           ),
         ),
-        Flexible(
-          flex: 4,
-//          child: ListTile(
-//            isThreeLine: true,
-//            title: Text('Order from ${snapshot['location']}'),
-//            subtitle: Text(orderInformation(orderTime, snapshot['orderid'])),
-//            trailing: Text('\$${snapshot['price'].toStringAsFixed(2)}'),
-//          ),
-        child: _orderSummary(context, snapshot)
-        )
+        Expanded(
+          child: SizedBox(),
+        ),
+        OrderFooter(snapshot),
       ],
-    );
-  }
-
-  Widget _orderSummary(BuildContext context, DocumentSnapshot snapshot) {
-    int itemCount = 0;
-    snapshot.data['items'].forEach((item) {
-      itemCount += item['qty'];
-    });
-    DateTime orderTime = snapshot['ordertime'].toDate();
-    return Card(
-      child: Column(
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text('Order from ${snapshot['location']}'),
-              Text('\$${snapshot['price'].toStringAsFixed(2)}'),
-            ],
-          ),
-          Divider(),
-          Text('$itemCount items'),
-          Text('Order placed on ${orderTime.toString()}'),
-          Text('Order ID: ${snapshot.documentID}'),
-        ],
-      ),
     );
   }
 

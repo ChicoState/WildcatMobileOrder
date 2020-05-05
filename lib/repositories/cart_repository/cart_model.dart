@@ -81,40 +81,46 @@ class Cart {
 class CartItem {
   final int quantity;
   final String identifier;
+  final String name;
 
-  CartItem(this.quantity, this.identifier);
+
+  CartItem(this.quantity, this.identifier, this.name);
 
   // used to create a new item and initialize quantity to 1
   CartItem.fromMenuItem(MenuItem item)
       : quantity = 1,
-        identifier = item.identifier;
+        identifier = item.identifier,
+        name = item.name;
 
   Map<String, dynamic> toJson() => {
         'identifier': identifier,
         'qty': quantity,
+        'name': name,
       };
 
   CartItem.fromJson(Map<String, dynamic> json)
       : identifier = json['identifier'],
-        quantity = json['qty'];
+        quantity = json['qty'],
+        name = json['name'];
 
   CartItem incrementQuantity() {
     print('incrementing qty to ${this.quantity + 1} of ${this.identifier}');
-    return CartItem(this.quantity + 1, this.identifier);
+    return CartItem(this.quantity + 1, this.identifier, this.name);
   }
 
   //Added the case of a cart decrementing into negative quantities
   CartItem decrementQuantity() {
     if (this.quantity == 0)
-      return CartItem(this.quantity, this.identifier);
+      return CartItem(this.quantity, this.identifier, this.name);
     else
-      return CartItem(this.quantity - 1, this.identifier);
+      return CartItem(this.quantity - 1, this.identifier, this.name);
   }
 
-  CartItem copyWith({int quantity, String identifier}) {
+  CartItem copyWith({int quantity, String identifier, String name}) {
     return CartItem(
       quantity ?? this.quantity,
       identifier ?? this.identifier,
+      name ?? this.name,
     );
   }
 }
