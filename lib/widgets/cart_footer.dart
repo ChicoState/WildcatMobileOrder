@@ -10,8 +10,7 @@ class CartFooter extends StatelessWidget {
   final CartRepository cartRepo = CartRepository();
 
   void makeOrder(Cart currentCart) async { 
-  String order = await
-  cartRepo.addOrder(currentCart);
+  String order = await cartRepo.addOrder(currentCart);
   print(order);
   
 }
