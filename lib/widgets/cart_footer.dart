@@ -1,11 +1,20 @@
 import 'package:WildcatMobileOrder/repositories/cart_repository/cart_model.dart';
 import 'package:WildcatMobileOrder/repositories/menu_repository/menu_entity.dart';
 import 'package:flutter/material.dart';
-
+import 'package:WildcatMobileOrder/repositories/cart_repository/cart_repository.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CartFooter extends StatelessWidget {
   final Cart cart;
   final MenuEntity menu;
+  final CartRepository cartRepo = CartRepository();
+
+  void makeOrder(Cart currentCart) async { 
+  String order = await
+  cartRepo.addOrder(currentCart);
+  print(order);
+  
+}
 
   CartFooter(this.cart, this.menu);
 
@@ -43,7 +52,7 @@ class CartFooter extends StatelessWidget {
                       child: Text(
                           'Order from ${menu.location}'),
                       onPressed: () {
-                        // Navigator.push(context, route);
+                        makeOrder(cart);
                       },
                     )),
               )

@@ -4,6 +4,7 @@ import 'package:WildcatMobileOrder/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+
 class CartView extends StatelessWidget {
   // builds the ListView that contains all the cart items
   Widget _buildCartList(
