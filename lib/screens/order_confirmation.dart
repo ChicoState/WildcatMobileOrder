@@ -1,5 +1,6 @@
 import 'package:WildcatMobileOrder/widgets/loading.dart';
 import 'package:WildcatMobileOrder/widgets/order_footer.dart';
+import 'package:WildcatMobileOrder/widgets/order_summary.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,7 +17,6 @@ class OrderConfirmation extends StatelessWidget {
   }
 
   Widget _buildOrder(BuildContext context, DocumentSnapshot snapshot) {
-    DateTime orderTime = snapshot['ordertime'].toDate();
     return Column(
       children: <Widget>[
         Flexible(
@@ -25,20 +25,13 @@ class OrderConfirmation extends StatelessWidget {
             'graphics/Success_Check.flr',
             animation: "check",
             alignment: Alignment.center,
-            fit: BoxFit.fill,
+            fit: BoxFit.cover,
           ),
         ),
+        Divider(),
         Flexible(
           flex: 5,
-          child: ListView.separated(
-            separatorBuilder: (BuildContext context, int index) => Divider(),
-            itemCount: snapshot['items'].length,
-            itemBuilder: (context, idx) {
-              String id = snapshot['items'][idx]['identifier'];
-              int qty = snapshot['items'][idx]['qty'];
-              return Text('$id - x $qty');
-            },
-          ),
+          child: OrderSummary(snapshot),
         ),
         Expanded(
           child: SizedBox(),
