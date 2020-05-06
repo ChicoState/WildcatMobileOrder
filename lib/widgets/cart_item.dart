@@ -2,7 +2,6 @@ import 'package:WildcatMobileOrder/blocs/blocs.dart';
 import 'package:WildcatMobileOrder/repositories/repositories.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class CartTile extends StatelessWidget {
@@ -12,10 +11,10 @@ class CartTile extends StatelessWidget {
 
   CartTile(this.item, this.idx, this.menu);
 
-  final SlidableController controller = SlidableController();
-
   void dismissItem(BuildContext context, MenuItem item) {
-    Cart updatedCart = (BlocProvider.of<CartBloc>(context).state as CartLoaded)
+    Cart updatedCart = (BlocProvider
+        .of<CartBloc>(context)
+        .state as CartLoaded)
         .cart
         .deleteItem(item);
     BlocProvider.of<CartBloc>(context).add(CartUpdated(cart: updatedCart));
@@ -57,7 +56,9 @@ class CartTile extends StatelessWidget {
                         ),
                         TextSpan(
                           text:
-                              '\n\$${menuItem.price.toStringAsFixed(2)} x ${item.quantity}\n\$${(menuItem.price * item.quantity).toStringAsFixed(2)}',
+                          '\n\$${menuItem.price.toStringAsFixed(2)} x ${item
+                              .quantity}\n\$${(menuItem.price * item.quantity)
+                              .toStringAsFixed(2)}',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 20,
@@ -78,8 +79,9 @@ class CartTile extends StatelessWidget {
                         icon: Icon(Icons.add),
                         color: Colors.white,
                         onPressed: () {
-                          Cart updatedCart = (BlocProvider.of<CartBloc>(context)
-                                  .state as CartLoaded)
+                          Cart updatedCart = (BlocProvider
+                              .of<CartBloc>(context)
+                              .state as CartLoaded)
                               .cart
                               .addItem(menuItem);
                           BlocProvider.of<CartBloc>(context)
@@ -89,20 +91,14 @@ class CartTile extends StatelessWidget {
                         icon: Icon(Icons.remove),
                         color: Colors.white,
                         onPressed: () {
-                          Cart updatedCart = (BlocProvider.of<CartBloc>(context)
-                                  .state as CartLoaded)
+                          Cart updatedCart = (BlocProvider
+                              .of<CartBloc>(context)
+                              .state as CartLoaded)
                               .cart
                               .removeItem(menuItem);
-                          if (updatedCart.items
-                                  .firstWhere((i) =>
-                                      i.identifier == menuItem.identifier)
-                                  .quantity ==
-                              0) {
-                            controller.activeState.dismiss();
-                          } else {
-                            BlocProvider.of<CartBloc>(context)
-                                .add(CartUpdated(cart: updatedCart));
-                          }
+
+                          BlocProvider.of<CartBloc>(context)
+                              .add(CartUpdated(cart: updatedCart));
                         })
                   ],
                 ),

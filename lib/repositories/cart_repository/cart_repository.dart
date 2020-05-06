@@ -9,4 +9,8 @@ class CartRepository {
         .collection('orders')
         .add(currentCart.toDocument(price));
   }
+
+  Future<QuerySnapshot> getOrderHistory(String user) async {
+    return Firestore.instance.collectionGroup('orders').where('user', isEqualTo: user).getDocuments();
+  }
 }
