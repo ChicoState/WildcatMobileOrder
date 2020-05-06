@@ -58,7 +58,7 @@ class OrderConfirmation extends StatelessWidget {
             future: order.get(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                BlocProvider.of<CartBloc>(context).add(CartSubmitted());
+                BlocProvider.of<CartBloc>(context).add(CartReset());
                 return _buildOrder(context, snapshot.data);
               }
               return Loading();

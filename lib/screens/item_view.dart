@@ -1,3 +1,4 @@
+import 'package:WildcatMobileOrder/repositories/cart_repository/cart_model.dart';
 import 'package:WildcatMobileOrder/repositories/menu_repository/menu_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -9,7 +10,21 @@ class ItemView extends StatelessWidget {
   final String location;
   final String id;
 
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   ItemView(this.location, this.id);
+
+  void addItem(BuildContext context, MenuItem item) {
+    if (BlocProvider.of<CartBloc>(context).state is CartLoaded) {
+      Cart cart = (BlocProvider.of<CartBloc>(context).state as CartLoaded).cart;
+      if (cart.checkItemAdd(item)) {
+        BlocProvider.of<CartBloc>(context)
+            .add(CartUpdated(cart: cart.addItem(item)));
+      } else {
+        showDialog(context: context, child: ResetCartDialog(location, scaffoldKey));
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +34,7 @@ class ItemView extends StatelessWidget {
             .firstWhere((m) => m.location == location)
             .getItemById(id);
         return Scaffold(
+            key: scaffoldKey,
             floatingActionButton: CartButton(),
             backgroundColor: Colors.grey[800],
             appBar: AppBar(
@@ -84,13 +100,7 @@ class ItemView extends StatelessWidget {
                                     icon: Icon(Icons.add_shopping_cart),
                                     onPressed: () {
                                       print('add ${item.identifier} to cart');
-                                      BlocProvider.of<CartBloc>(context).add(
-                                          CartUpdated(
-                                              cart: (BlocProvider.of<CartBloc>(
-                                                          context)
-                                                      .state as CartLoaded)
-                                                  .cart
-                                                  .addItem(item)));
+                                      addItem(context, item);
                                     },
                                   ))),
                         ),

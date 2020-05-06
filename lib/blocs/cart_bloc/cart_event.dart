@@ -32,8 +32,8 @@ class CartUpdated extends CartEvent {
   String toString() => 'CartUpdated { cart: $cart }';
 }
 
-class CartSubmitted extends CartEvent {
-  const CartSubmitted();
+class CartReset extends CartEvent {
+  const CartReset();
 
   @override
   String toString() => 'CartSubmitted';

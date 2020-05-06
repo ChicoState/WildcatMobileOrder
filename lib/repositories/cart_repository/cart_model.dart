@@ -32,6 +32,9 @@ class Cart {
     if (idx != -1) {
       currentItems.removeAt(idx);
     }
+    if (currentItems.length == 0) {
+      return copyWith(items: currentItems, location: '');
+    }
     return copyWith(items: currentItems);
   }
 
@@ -55,6 +58,11 @@ class Cart {
     Cart newCart = copyWith(items: currentItems, location: item.location);
     print(newCart.items.length);
     return newCart;
+  }
+
+  /// Helper function to check if a menu item
+  bool checkItemAdd(MenuItem item) {
+    return this.location == '' ? true : this.location == item.location;
   }
 
   /// Serializes Cart object into Firestore compatible document
