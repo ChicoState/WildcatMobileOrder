@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:WildcatMobileOrder/blocs/blocs.dart';
+import 'package:flare_flutter/flare_actor.dart';
 
 class OrderConfirmation extends StatelessWidget {
   final DocumentReference order;
@@ -18,6 +19,15 @@ class OrderConfirmation extends StatelessWidget {
     DateTime orderTime = snapshot['ordertime'].toDate();
     return Column(
       children: <Widget>[
+        Flexible(
+          flex: 3,
+          child: FlareActor(
+            'graphics/Success_Check.flr',
+            animation: "check",
+            alignment: Alignment.center,
+            fit: BoxFit.fill,
+          ),
+        ),
         Flexible(
           flex: 5,
           child: ListView.separated(
