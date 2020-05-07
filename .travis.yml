@@ -7,7 +7,6 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - libstdc++6
-      - fonts-droid
 git:
   depth: 3
 cache:
