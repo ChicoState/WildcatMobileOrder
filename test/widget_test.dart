@@ -6,26 +6,25 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:WildcatMobileOrder/repositories/repositories.dart';
+import 'package:WildcatMobileOrder/screens/landing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:WildcatMobileOrder/main.dart';
-
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    final UserRepository userRepository = UserRepository();
-    await tester.pumpWidget(MyApp(userRepository));
+  // Define a test. The TestWidgets function also provides a WidgetTester
+  // to work with. The WidgetTester allows building and interacting
+  // with widgets in the test environment.
+  testWidgets('MyWidget has a title and message', (WidgetTester tester) async {
+    // Create the widget by telling the tester to build it.
+    await tester.pumpWidget(Landing('naespino@mail.csuchico.edu'));
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Create the Finders.
+    final titleFinder = find.text('naespino@mail.csuchico.edu');
+    // final messageFinder = find.text('M');
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Use the `findsOneWidget` matcher provided by flutter_test to
+    // verify that the Text widgets appear exactly once in the widget tree.
+    expect(titleFinder, findsOneWidget);
+    // expect(messageFinder, findsOneWidget);
   });
 }
