@@ -18,8 +18,8 @@ before_script:
 # safelist
 branches:
   only:
-  - master
-  - testBench
+    - master
+    - testBench
 
 # script:
   # - ./flutter/bin/flutter test --coverage test/*
