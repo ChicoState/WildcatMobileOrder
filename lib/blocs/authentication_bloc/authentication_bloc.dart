@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:WildcatMobileOrder/repositories/repositories.dart';
-import 'bloc.dart';
 
+import '../../repositories/repositories.dart';
+import 'bloc.dart';
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
@@ -18,8 +18,8 @@ class AuthenticationBloc
 
   @override
   Stream<AuthenticationState> mapEventToState(
-      AuthenticationEvent event,
-      ) async* {
+    AuthenticationEvent event,
+  ) async* {
     if (event is AppStarted) {
       yield* _mapAppStartedToState();
     } else if (event is LoggedIn) {
@@ -38,7 +38,7 @@ class AuthenticationBloc
       } else {
         yield Unauthenticated();
       }
-    } catch (_) {
+    } on Exception catch (_) {
       yield Unauthenticated();
     }
   }

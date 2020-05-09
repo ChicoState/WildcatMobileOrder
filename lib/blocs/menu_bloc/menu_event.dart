@@ -1,5 +1,5 @@
-import 'package:WildcatMobileOrder/repositories/repositories.dart';
 import 'package:equatable/equatable.dart';
+import '../../repositories/repositories.dart';
 
 abstract class MenuEvent extends Equatable {
   const MenuEvent();

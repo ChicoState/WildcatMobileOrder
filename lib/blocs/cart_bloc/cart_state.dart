@@ -1,5 +1,5 @@
-import 'package:WildcatMobileOrder/repositories/cart_repository/cart_model.dart';
 import 'package:equatable/equatable.dart';
+import '../../repositories/cart_repository/cart_model.dart';
 
 abstract class CartState extends Equatable {
   const CartState();
@@ -21,7 +21,7 @@ class CartLoaded extends CartState {
   const CartLoaded({this.cart});
 
   @override
-  List<Object> get props => [this.cart];
+  List<Object> get props => [cart];
 
   @override
   String toString() => 'Cart Loaded { cart: $cart}';

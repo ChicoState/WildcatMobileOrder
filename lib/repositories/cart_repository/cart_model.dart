@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:WildcatMobileOrder/repositories/menu_repository/menu_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
+import '../menu_repository/menu_entity.dart';
 
 class Cart {
   final List<CartItem> items;
@@ -16,51 +16,47 @@ class Cart {
       '{ user: $user, location: $location, itemCount: ${items.length}';
 
   Cart copyWith(
-      {List<CartItem> items, String location, String user, int count}) {
-    return Cart(
-      items ?? this.items,
-      location ?? this.location,
-      user ?? this.user,
-      count ?? this.count,
-    );
-  }
+          {List<CartItem> items, String location, String user, int count}) =>
+      Cart(
+        items ?? this.items,
+        location ?? this.location,
+        user ?? this.user,
+        count ?? this.count,
+      );
 
-  bool isEmpty() {
-    return items.length == 0 ? true : false;
-  }
+  bool isEmpty() => items.length == 0 ? true : false;
 
   Cart deleteItem(MenuItem item) {
-    List<CartItem> currentItems = this.items;
-    int idx = currentItems.indexWhere((i) => i.identifier == item.identifier);
+    var currentItems = items;
+    var idx = currentItems.indexWhere((i) => i.identifier == item.identifier);
     if (idx != -1) {
-      int quantity = currentItems[idx].quantity;
+      var quantity = currentItems[idx].quantity;
       currentItems.removeAt(idx);
       if (currentItems.length == 0) {
         return copyWith(items: currentItems, location: '', count: 0);
       }
-      return copyWith(items: currentItems, count: this.count - quantity);
+      return copyWith(items: currentItems, count: count - quantity);
     }
     return copyWith();
   }
 
   Cart removeItem(MenuItem item) {
-    List<CartItem> currentItems = this.items;
-    int idx = currentItems.indexWhere((i) => i.identifier == item.identifier);
+    var currentItems = items;
+    var idx = currentItems.indexWhere((i) => i.identifier == item.identifier);
     if (idx != -1) {
       currentItems[idx] = currentItems[idx].decrementQuantity();
-      if (this.count == 1) {
-        return copyWith(
-            items: currentItems, count: this.count - 1, location: '');
+      if (count == 1) {
+        return copyWith(items: currentItems, count: count - 1, location: '');
       }
-      return copyWith(items: currentItems, count: this.count - 1);
+      return copyWith(items: currentItems, count: count - 1);
     }
     return copyWith();
   }
 
   Cart addItem(MenuItem item) {
-    List<CartItem> currentItems = this.items;
-    int idx = currentItems.indexWhere((i) => i.identifier == item.identifier);
-    int newCount = count + 1;
+    var currentItems = items;
+    var idx = currentItems.indexWhere((i) => i.identifier == item.identifier);
+    var newCount = count + 1;
     if (idx != -1) {
       currentItems[idx] = currentItems[idx].incrementQuantity();
     } else {
@@ -71,16 +67,14 @@ class Cart {
   }
 
   /// Helper function to check if a menu item
-  bool checkItemAdd(MenuItem item) {
-    return this.location == '' ? true : this.location == item.location;
-  }
+  bool checkItemAdd(MenuItem item) =>
+      location == '' ? true : location == item.location;
 
   /// Serializes Cart object into Firestore compatible document
   /// Pass in a price value so order history has cart price
-  Map<String, dynamic> toDocument(double price) => {
-        'items': FieldValue.arrayUnion(items.map((item) {
-          return item.toJson();
-        }).toList()),
+  Map<String, dynamic> toDocument(double price) => <String, dynamic>{
+        'items':
+            FieldValue.arrayUnion(items.map((item) => item.toJson()).toList()),
         'user': user,
         'location': location,
         'orderid': Uuid().v4().toString(),
@@ -89,7 +83,7 @@ class Cart {
       };
 
   /// Serializes Cart object into Json string for persistence
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => <String, dynamic>{
         'items': jsonEncode(items),
         'user': user,
         'location': location,
@@ -109,7 +103,7 @@ class CartItem {
         identifier = item.identifier,
         name = item.name;
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => <String, dynamic>{
         'identifier': identifier,
         'qty': quantity,
         'name': name,
@@ -120,23 +114,20 @@ class CartItem {
         quantity = json['qty'],
         name = json['name'];
 
-  CartItem incrementQuantity() {
-    return CartItem(this.quantity + 1, this.identifier, this.name);
-  }
+  CartItem incrementQuantity() => CartItem(quantity + 1, identifier, name);
 
   //Added the case of a cart decrementing into negative quantities
   CartItem decrementQuantity() {
-    if (this.quantity == 0)
-      return CartItem(this.quantity, this.identifier, this.name);
-    else
-      return CartItem(this.quantity - 1, this.identifier, this.name);
+    if (quantity == 0) {
+      return CartItem(quantity, identifier, name);
+    } else {
+      return CartItem(quantity - 1, identifier, name);
+    }
   }
 
-  CartItem copyWith({int quantity, String identifier, String name}) {
-    return CartItem(
-      quantity ?? this.quantity,
-      identifier ?? this.identifier,
-      name ?? this.name,
-    );
-  }
+  CartItem copyWith({int quantity, String identifier, String name}) => CartItem(
+        quantity ?? this.quantity,
+        identifier ?? this.identifier,
+        name ?? this.name,
+      );
 }

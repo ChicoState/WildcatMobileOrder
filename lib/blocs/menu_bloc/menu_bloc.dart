@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:WildcatMobileOrder/repositories/repositories.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
+import '../../repositories/repositories.dart';
 import './bloc.dart';
 
 class MenuBloc extends Bloc<MenuEvent, MenuState> {
@@ -10,9 +10,8 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
   StreamSubscription _menuSubscription;
 
   MenuBloc({@required MenuRepository menuRepository})
-    : assert(menuRepository != null),
-      _menuRepository = menuRepository;
-
+      : assert(menuRepository != null),
+        _menuRepository = menuRepository;
 
   @override
   MenuState get initialState => MenusLoading();
@@ -22,8 +21,8 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
     if (event is LoadMenus) {
       _menuSubscription?.cancel();
       _menuSubscription = _menuRepository.getMenus().listen(
-          (menus) => add(MenusUpdated(menus)),
-      );
+            (menus) => add(MenusUpdated(menus)),
+          );
     } else if (event is MenusUpdated) {
       yield MenusLoaded(event.menus);
     }

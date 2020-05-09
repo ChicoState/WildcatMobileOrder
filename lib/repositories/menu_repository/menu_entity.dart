@@ -1,6 +1,7 @@
-import 'package:WildcatMobileOrder/repositories/cart_repository/cart_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import '../cart_repository/cart_model.dart';
+
 
 class MenuEntity {
   final String location;
@@ -13,12 +14,12 @@ class MenuEntity {
 
   MenuEntity.fromSnapshot(DocumentSnapshot snapshot)
       : location = snapshot.data['name'],
-        items = snapshot.data['items'].map<MenuItem>((item) {
-          return MenuItem.fromMap(item, snapshot.data['name']);
-        }).toList(),
-        categories = snapshot.data['categories'].map<String>((cat) {
-          return cat.toString();
-        }).toList(),
+        items = snapshot.data['items'].map<MenuItem>((dynamic item) =>
+            MenuItem.fromMap(item, snapshot.data['name'])
+        ).toList(),
+        categories = snapshot.data['categories'].map<String>((dynamic cat) =>
+            cat.toString()
+        ).toList(),
         openTime = snapshot.data['opentime'],
         closeTime = snapshot.data['closetime'],
         fcloseTime = snapshot.data['fcloseTime'],
@@ -28,21 +29,19 @@ class MenuEntity {
   }
 
   double calculateCartPrice(Cart cart) {
-    double price = 0;
-    cart.items.forEach((i) {
-      price += getItemById(i.identifier).price * i.quantity;
-    });
+    var price = 0.0;
+    for (var item in cart.items) {
+      price += getItemById(item.identifier).price * item.quantity;
+    }
     return price;
   }
 
   // returns a list of all items in a particular category
-  List<MenuItem> getCategoryItems(String category) {
-    return this.items.where((item) => item.category == category).toList();
-  }
+  List<MenuItem> getCategoryItems(String category) =>
+      items.where((item) => item.category == category).toList();
 
-  MenuItem getItemById(String id) {
-    return this.items.firstWhere((item) => item.identifier == id, orElse: null);
-  }
+  MenuItem getItemById(String id) =>
+      items.firstWhere((item) => item.identifier == id, orElse: null);
 }
 
 class MenuItem {
@@ -54,11 +53,10 @@ class MenuItem {
   final String description;
   final String identifier;
 
-  MenuItem.fromMap(Map<String, dynamic> map, String location)
+  MenuItem.fromMap(Map<String, dynamic> map, this.location)
       : assert(map['name'] != null),
         assert(map['price'] != null),
         name = map['name'],
-        location = location,
         category = map['category'],
         price = map['price'],
         description = map['description'],

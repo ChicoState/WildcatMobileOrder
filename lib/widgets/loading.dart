@@ -3,8 +3,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Loading extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       color: Colors.grey[800],
       child: Center(
         child: SpinKitRotatingCircle(
@@ -13,5 +12,4 @@ class Loading extends StatelessWidget {
         ),
       ),
     );
-  }
 }

@@ -9,11 +9,10 @@ class OrderSummary extends StatelessWidget {
   final TextStyle style = TextStyle(fontSize: 20);
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
+  Widget build(BuildContext context) => Padding(
       padding: EdgeInsets.all(12),
       child: ListView.separated(
-        separatorBuilder: (BuildContext context, int index) => Divider(),
+        separatorBuilder: (context, idx) => Divider(),
         itemCount: snapshot['items'].length,
         itemBuilder: (context, idx) {
           String id = snapshot['items'][idx]['identifier'];
@@ -25,5 +24,4 @@ class OrderSummary extends StatelessWidget {
         },
       ),
     );
-  }
 }

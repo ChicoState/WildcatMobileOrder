@@ -4,13 +4,13 @@ import 'cart_model.dart';
 class CartRepository {
   const CartRepository();
 
-  Future<DocumentReference> addOrder(Cart currentCart, double price) async {
-    return await Firestore.instance
-        .collection('orders')
-        .add(currentCart.toDocument(price));
-  }
+  Future<DocumentReference> addOrder(Cart currentCart, double price) async =>
+      await Firestore.instance
+          .collection('orders')
+          .add(currentCart.toDocument(price));
 
-  Future<QuerySnapshot> getOrderHistory(String user) async {
-    return Firestore.instance.collectionGroup('orders').where('user', isEqualTo: user).getDocuments();
-  }
+  Future<QuerySnapshot> getOrderHistory(String user) async => Firestore.instance
+      .collectionGroup('orders')
+      .where('user', isEqualTo: user)
+      .getDocuments();
 }

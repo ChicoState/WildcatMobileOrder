@@ -8,7 +8,7 @@ class OrderFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int itemCount = 0;
+    var itemCount = 0;
     snapshot.data['items'].forEach((item) {
       itemCount += item['qty'];
     });
@@ -34,8 +34,9 @@ class OrderFooter extends StatelessWidget {
                       style: TextStyle(fontSize: 18, color: Colors.black),
                     ),
                     TextSpan(
-                      text:
-                          itemCount > 1 ? '$itemCount items' : '$itemCount item',
+                      text: itemCount > 1
+                          ? '$itemCount items'
+                          : '$itemCount item',
                       style: TextStyle(fontSize: 18, color: Colors.black),
                     ),
                     TextSpan(

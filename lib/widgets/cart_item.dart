@@ -1,8 +1,8 @@
-import 'package:WildcatMobileOrder/blocs/blocs.dart';
-import 'package:WildcatMobileOrder/repositories/repositories.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:transparent_image/transparent_image.dart';
+import '../blocs/blocs.dart';
+import '../repositories/repositories.dart';
 
 class CartTile extends StatelessWidget {
   final CartItem item;
@@ -12,7 +12,7 @@ class CartTile extends StatelessWidget {
   CartTile(this.item, this.idx, this.menu);
 
   void dismissItem(BuildContext context, MenuItem item) {
-    Cart updatedCart = (BlocProvider.of<CartBloc>(context).state as CartLoaded)
+    var updatedCart = (BlocProvider.of<CartBloc>(context).state as CartLoaded)
         .cart
         .deleteItem(item);
     BlocProvider.of<CartBloc>(context).add(CartUpdated(cart: updatedCart));
@@ -20,10 +20,9 @@ class CartTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final MenuItem menuItem = menu.items
+    final menuItem = menu.items
         .firstWhere((i) => i.identifier == item.identifier, orElse: null);
-    final Cart cart =
-        (BlocProvider.of<CartBloc>(context).state as CartLoaded).cart;
+    final cart = (BlocProvider.of<CartBloc>(context).state as CartLoaded).cart;
     return Dismissible(
       onDismissed: (_) => dismissItem(context, menuItem),
       key: ValueKey(item),
@@ -58,8 +57,10 @@ class CartTile extends StatelessWidget {
                             // textAlign: TextAlign.right,
                           ),
                           TextSpan(
-                            text:
-                                '\n\$${menuItem.price.toStringAsFixed(2)} x ${item.quantity}\n\$${(menuItem.price * item.quantity).toStringAsFixed(2)}',
+                            text: '\n\$${menuItem.price.toStringAsFixed(2)} x '
+                                '${item.quantity}\n'
+                                '\$${(menuItem.price * item.quantity)
+                                .toStringAsFixed(2)}',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,
