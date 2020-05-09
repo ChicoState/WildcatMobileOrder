@@ -7,18 +7,21 @@ class Cart {
   final List<CartItem> items;
   final String location;
   final String user;
+  final int count;
 
-  Cart(this.items, this.location, this.user);
+  Cart(this.items, this.location, this.user, this.count);
 
   @override
   String toString() =>
       '{ user: $user, location: $location, itemCount: ${items.length}';
 
-  Cart copyWith({List<CartItem> items, String location, String user}) {
+  Cart copyWith(
+      {List<CartItem> items, String location, String user, int count}) {
     return Cart(
       items ?? this.items,
       location ?? this.location,
       user ?? this.user,
+      count ?? this.count,
     );
   }
 
@@ -30,12 +33,14 @@ class Cart {
     List<CartItem> currentItems = this.items;
     int idx = currentItems.indexWhere((i) => i.identifier == item.identifier);
     if (idx != -1) {
+      int quantity = currentItems[idx].quantity;
       currentItems.removeAt(idx);
+      if (currentItems.length == 0) {
+        return copyWith(items: currentItems, location: '', count: 0);
+      }
+      return copyWith(items: currentItems, count: this.count - quantity);
     }
-    if (currentItems.length == 0) {
-      return copyWith(items: currentItems, location: '');
-    }
-    return copyWith(items: currentItems);
+    return copyWith();
   }
 
   Cart removeItem(MenuItem item) {
@@ -43,20 +48,22 @@ class Cart {
     int idx = currentItems.indexWhere((i) => i.identifier == item.identifier);
     if (idx != -1) {
       currentItems[idx] = currentItems[idx].decrementQuantity();
+      return copyWith(items: currentItems, count: this.count - 1);
     }
-    return copyWith(items: currentItems);
+    return copyWith();
   }
 
   Cart addItem(MenuItem item) {
     List<CartItem> currentItems = this.items;
     int idx = currentItems.indexWhere((i) => i.identifier == item.identifier);
+    int newCount = count + 1;
     if (idx != -1) {
       currentItems[idx] = currentItems[idx].incrementQuantity();
     } else {
       currentItems.add(CartItem.fromMenuItem(item));
     }
-    Cart newCart = copyWith(items: currentItems, location: item.location);
-    return newCart;
+    return copyWith(
+        items: currentItems, location: item.location, count: newCount);
   }
 
   /// Helper function to check if a menu item

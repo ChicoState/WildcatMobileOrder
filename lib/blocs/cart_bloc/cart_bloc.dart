@@ -20,13 +20,13 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       if (currentState is CartLoaded) {
         yield CartLoaded(cart: currentState.cart);
       } else {
-        Cart myCart = Cart(List<CartItem>(), '', user);
+        Cart myCart = Cart(List<CartItem>(), '', user, 0);
         yield CartLoaded(cart: myCart);
       }
     } else if (event is CartUpdated) {
       yield CartLoaded(cart: event.cart);
     } else if (event is CartReset) {
-      yield CartLoaded(cart: Cart(List<CartItem>(), '', user));
+      yield CartLoaded(cart: Cart(List<CartItem>(), '', user, 0));
     }
   }
 
