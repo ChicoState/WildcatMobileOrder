@@ -21,7 +21,8 @@ class ItemView extends StatelessWidget {
         BlocProvider.of<CartBloc>(context)
             .add(CartUpdated(cart: cart.addItem(item)));
       } else {
-        showDialog(context: context, child: ResetCartDialog(location, scaffoldKey));
+        showDialog(
+            context: context, child: ResetCartDialog(location, scaffoldKey));
       }
     }
   }
@@ -94,14 +95,17 @@ class ItemView extends StatelessWidget {
                                     color: Colors.black,
                                     shape: CircleBorder(),
                                   ),
-                                  child: IconButton(
-                                    color: Colors.white,
-                                    splashColor: Colors.redAccent,
-                                    icon: Icon(Icons.add_shopping_cart),
-                                    onPressed: () {
-                                      addItem(context, item);
-                                    },
-                                  ))),
+                                  child: BlocProvider.of<CartBloc>(context)
+                                          .state is CartLoaded
+                                      ? IconButton(
+                                          color: Colors.white,
+                                          splashColor: Colors.redAccent,
+                                          icon: Icon(Icons.add_shopping_cart),
+                                          onPressed: () {
+                                            addItem(context, item);
+                                          },
+                                        )
+                                      : Container())),
                         ),
                         Expanded(
                           child: Align(
