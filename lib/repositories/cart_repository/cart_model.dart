@@ -48,6 +48,10 @@ class Cart {
     int idx = currentItems.indexWhere((i) => i.identifier == item.identifier);
     if (idx != -1) {
       currentItems[idx] = currentItems[idx].decrementQuantity();
+      if (this.count == 1) {
+        return copyWith(
+            items: currentItems, count: this.count - 1, location: '');
+      }
       return copyWith(items: currentItems, count: this.count - 1);
     }
     return copyWith();
