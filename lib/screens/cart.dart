@@ -1,11 +1,9 @@
 import 'package:WildcatMobileOrder/blocs/blocs.dart';
 import 'package:WildcatMobileOrder/repositories/repositories.dart';
-import 'package:WildcatMobileOrder/shared/cart_item.dart';
-import 'package:WildcatMobileOrder/shared/loading.dart';
+import 'package:WildcatMobileOrder/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:transparent_image/transparent_image.dart';
+
 
 class CartView extends StatelessWidget {
   // builds the ListView that contains all the cart items
@@ -49,71 +47,19 @@ class CartView extends StatelessWidget {
           return state.cart.items.length == 0
               ? _emptyCart(context)
               : Container(
-                color: Colors.black,
-                child: Column(
-                  children: <Widget>[
-                    Flexible(
-                      flex: 5,
-                      child: _buildCartList(context, state, menus[idx]),
-                    ),
-                    Flexible(
-                      flex: 1,
-                      child: Card(
-                        color: Colors.grey[400],
-                        elevation: 10,
-                        borderOnForeground: false,
-                        child: Row(
-                          children: <Widget>[
-                            Column(
-                              children: <Widget>[
-                                RichText(
-                                  text: TextSpan(children: <TextSpan>[
-                                    TextSpan(
-                                      text:
-                                          'Total: ${menus[idx].calculateCartPrice(state.cart).toStringAsFixed(2)}',
-                                      style: TextStyle(
-                                          fontSize: 18, color: Colors.black),
-                                    ),
-                                    TextSpan(
-                                      text:
-                                          '\nLocation: ${menus[idx].location}',
-                                      style: TextStyle(
-                                          fontSize: 18, color: Colors.black),
-                                    ),
-                                  ]),
-                                ),
-                                Expanded(
-                                  child: Align(
-                                      alignment: Alignment.bottomCenter,
-                                      child: FlatButton(
-                                        color: Colors.red[900],
-                                        child: Text(
-                                            'Order from ${menus[idx].location}'),
-                                        onPressed: () {
-                                          // Navigator.push(context, route);
-                                        },
-                                      )),
-                                )
-                              ],
-                            )
-                          ],
-                        ),
+                  color: Colors.black,
+                  child: Column(
+                    children: <Widget>[
+                      Flexible(
+                        flex: 5,
+                        child: _buildCartList(context, state, menus[idx]),
                       ),
-                    )
-                  ],
-                )
-              );
-//          return Scaffold(
-//            appBar: AppBar(
-//              title: Row(
-//                children: <Widget>[
-//                  Icon(Icons.shopping_cart),
-//                  Text('Shopping Cart'),
-//                ],
-//              ),
-//            ),
-//
-//          );
+                      Flexible(
+                        flex: 1,
+                        child: CartFooter(state.cart, menus[idx]),
+                      )
+                    ],
+                  ));
         } else {
           return Loading();
         }

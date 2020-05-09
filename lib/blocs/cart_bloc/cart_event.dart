@@ -3,6 +3,9 @@ import 'package:equatable/equatable.dart';
 
 abstract class CartEvent extends Equatable {
   const CartEvent();
+
+  @override
+  List<Object> get props => [];
 }
 
 class LoadCart extends CartEvent {
@@ -27,4 +30,11 @@ class CartUpdated extends CartEvent {
 
   @override
   String toString() => 'CartUpdated { cart: $cart }';
+}
+
+class CartReset extends CartEvent {
+  const CartReset();
+
+  @override
+  String toString() => 'CartSubmitted';
 }

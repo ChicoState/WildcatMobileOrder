@@ -25,6 +25,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       }
     } else if (event is CartUpdated) {
       yield CartLoaded(cart: event.cart);
+    } else if (event is CartReset) {
+      yield CartLoaded(cart: Cart(List<CartItem>(), '', user));
     }
   }
 

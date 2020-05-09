@@ -1,6 +1,5 @@
 import 'package:WildcatMobileOrder/repositories/repositories.dart';
-import 'package:WildcatMobileOrder/shared/drawer.dart';
-import 'package:WildcatMobileOrder/shared/loading.dart';
+import 'package:WildcatMobileOrder/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:WildcatMobileOrder/screens/screens.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -83,7 +82,6 @@ class Landing extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    BlocProvider.of<CartBloc>(context).add(LoadCart(user));
     return Scaffold(
         backgroundColor: Colors.grey[800],
         drawer: drawer(context),

@@ -27,7 +27,7 @@ class MenuEntity {
     items.sort((a, b) => a.name.compareTo(b.name));
   }
 
-  double calculateCartPrice(Cart cart){
+  double calculateCartPrice(Cart cart) {
     double price = 0;
     cart.items.forEach((i) {
       price += getItemById(i.identifier).price * i.quantity;
@@ -62,6 +62,6 @@ class MenuItem {
         category = map['category'],
         price = map['price'],
         description = map['description'],
-        identifier = '${map['location']}-${map['name']}',
+        identifier = '$location-${map['name']}',
         img = NetworkImage(map['imgurl']);
 }

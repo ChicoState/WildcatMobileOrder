@@ -1,4 +1,4 @@
-import 'package:WildcatMobileOrder/shared/loading.dart';
+import 'package:WildcatMobileOrder/widgets/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,12 +44,13 @@ class MyApp extends StatelessWidget {
         BlocBuilder<AuthenticationBloc, AuthenticationState>(
             builder: (context, state) {
       if (state is Unauthenticated) {
-        return Login2(userRepository: userRepository);
+        return LoginPage(userRepository: userRepository);
       }
       if (state is Authenticated) {
         // start to load menus
         BlocProvider.of<MenuBloc>(context).add(LoadMenus());
         BlocProvider.of<CartBloc>(context).setUser(state.getEmail());
+        BlocProvider.of<CartBloc>(context).add(LoadCart(state.getEmail()));
         return Landing(state.getEmail());
       }
       return Loading();
