@@ -56,7 +56,6 @@ class Cart {
       currentItems.add(CartItem.fromMenuItem(item));
     }
     Cart newCart = copyWith(items: currentItems, location: item.location);
-    print(newCart.items.length);
     return newCart;
   }
 
@@ -111,7 +110,6 @@ class CartItem {
         name = json['name'];
 
   CartItem incrementQuantity() {
-    print('incrementing qty to ${this.quantity + 1} of ${this.identifier}');
     return CartItem(this.quantity + 1, this.identifier, this.name);
   }
 
