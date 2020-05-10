@@ -11,6 +11,10 @@ class Landing extends StatelessWidget {
 
   Landing(this.user);
 
+  String hoursSummary(MenuEntity menu) =>
+      'Mon-Thur: ${menu.openTime} - ${menu.closeTime}\n'
+      'Friday: ${menu.openTime} - ${menu.fcloseTime}';
+
   Widget _showLocations(BuildContext context) =>
       BlocBuilder<MenuBloc, MenuState>(builder: (context, state) {
         if (state is MenusLoading) {
@@ -59,8 +63,7 @@ class Landing extends StatelessWidget {
                       ),
                       isThreeLine: true,
                       subtitle: Text(
-                        'Mon-Thur: ${menuEntity.openTime} - ${menuEntity.closeTime}\n'
-                        'Friday: ${menuEntity.openTime} - ${menuEntity.fcloseTime}',
+                        hoursSummary(menuEntity),
                         style: TextStyle(color: Colors.black),
                       ),
                     ),
