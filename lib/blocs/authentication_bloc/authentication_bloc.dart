@@ -5,10 +5,12 @@ import 'package:meta/meta.dart';
 import '../../repositories/repositories.dart';
 import 'bloc.dart';
 
+/// Bloc responsible for authenticating and providing authentication state
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   final UserRepository _userRepository;
 
+  /// Constructor for AuthenticationBloc, requires a UserRepository
   AuthenticationBloc({@required UserRepository userRepository})
       : assert(userRepository != null),
         _userRepository = userRepository;

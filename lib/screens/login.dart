@@ -3,9 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/blocs.dart';
 import '../repositories/repositories.dart';
 
+/// Page that allows a user to login
 class LoginPage extends StatelessWidget {
   final UserRepository _userRepository;
 
+  /// Constructor for LoginPage, requires a UserRepository (provided by
+  /// AuthenticationBloc)
   LoginPage({Key key, @required UserRepository userRepository})
       : assert(userRepository != null),
         _userRepository = userRepository,

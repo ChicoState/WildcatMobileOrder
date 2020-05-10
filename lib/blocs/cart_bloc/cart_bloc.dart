@@ -4,7 +4,9 @@ import 'package:bloc/bloc.dart';
 import '../../repositories/repositories.dart';
 import './bloc.dart';
 
+/// Bloc that manages Cart events and states
 class CartBloc extends Bloc<CartEvent, CartState> {
+  /// Email of current user
   String user;
 
   @override
