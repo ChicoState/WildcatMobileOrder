@@ -1,129 +1,68 @@
-import 'package:WildcatMobileOrder/blocs/blocs.dart';
-import 'package:WildcatMobileOrder/repositories/repositories.dart';
-import 'package:WildcatMobileOrder/shared/cart_item.dart';
-import 'package:WildcatMobileOrder/shared/loading.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:transparent_image/transparent_image.dart';
+import 'package:flutter/material.dart';
+import '../blocs/blocs.dart';
+import '../repositories/repositories.dart';
+import '../widgets/widgets.dart';
 
 class CartView extends StatelessWidget {
   // builds the ListView that contains all the cart items
   Widget _buildCartList(
-      BuildContext context, CartLoaded state, MenuEntity menu) {
-    return Container(
-      color: Colors.grey[800],
-      child: ListView.builder(
-        shrinkWrap: false,
-        itemCount: state.cart.items.length,
-        itemBuilder: (context, idx) {
-          return CartTile(state.cart.items[idx], idx, menu);
-        },
-      ),
-    );
-  }
+          BuildContext context, CartLoaded state, MenuEntity menu) =>
+      Container(
+        color: Colors.grey[800],
+        child: ListView.builder(
+          shrinkWrap: false,
+          itemCount: state.cart.items.length,
+          itemBuilder: (context, idx) =>
+              CartTile(state.cart.items[idx], idx, menu),
+        ),
+      );
 
   // displays an empty cart
-  Widget _emptyCart(BuildContext context) {
-    return Container(
-      color: Colors.grey[800],
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Icon(Icons.shopping_cart, size: 40),
-            Text('Your cart is empty.')
-          ],
+  Widget _emptyCart(BuildContext context) => Container(
+        color: Colors.grey[800],
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Icon(Icons.shopping_cart, size: 40),
+              Text('Your cart is empty.')
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
-  Widget _buildCartPage(BuildContext context, List<MenuEntity> menus) {
-    return BlocBuilder<CartBloc, CartState>(
-      builder: (context, state) {
-        if (state is CartLoaded) {
-          final int idx =
-              menus.indexWhere((i) => i.location == state.cart.location);
-          return state.cart.items.length == 0
-              ? _emptyCart(context)
-              : Container(
-                color: Colors.black,
-                child: Column(
-                  children: <Widget>[
-                    Flexible(
-                      flex: 5,
-                      child: _buildCartList(context, state, menus[idx]),
-                    ),
-                    Flexible(
-                      flex: 1,
-                      child: Card(
-                        color: Colors.grey[400],
-                        elevation: 10,
-                        borderOnForeground: false,
-                        child: Row(
-                          children: <Widget>[
-                            Column(
-                              children: <Widget>[
-                                RichText(
-                                  text: TextSpan(children: <TextSpan>[
-                                    TextSpan(
-                                      text:
-                                          'Total: ${menus[idx].calculateCartPrice(state.cart).toStringAsFixed(2)}',
-                                      style: TextStyle(
-                                          fontSize: 18, color: Colors.black),
-                                    ),
-                                    TextSpan(
-                                      text:
-                                          '\nLocation: ${menus[idx].location}',
-                                      style: TextStyle(
-                                          fontSize: 18, color: Colors.black),
-                                    ),
-                                  ]),
-                                ),
-                                Expanded(
-                                  child: Align(
-                                      alignment: Alignment.bottomCenter,
-                                      child: FlatButton(
-                                        color: Colors.red[900],
-                                        child: Text(
-                                            'Order from ${menus[idx].location}'),
-                                        onPressed: () {
-                                          // Navigator.push(context, route);
-                                        },
-                                      )),
-                                )
-                              ],
-                            )
-                          ],
+  Widget _buildCartPage(BuildContext context, List<MenuEntity> menus) =>
+      BlocBuilder<CartBloc, CartState>(
+        builder: (context, state) {
+          if (state is CartLoaded) {
+            final idx =
+                menus.indexWhere((i) => i.location == state.cart.location);
+            return state.cart.items.length == 0
+                ? _emptyCart(context)
+                : Container(
+                    color: Colors.black,
+                    child: Column(
+                      children: <Widget>[
+                        Flexible(
+                          flex: 5,
+                          child: _buildCartList(context, state, menus[idx]),
                         ),
-                      ),
-                    )
-                  ],
-                )
-              );
-//          return Scaffold(
-//            appBar: AppBar(
-//              title: Row(
-//                children: <Widget>[
-//                  Icon(Icons.shopping_cart),
-//                  Text('Shopping Cart'),
-//                ],
-//              ),
-//            ),
-//
-//          );
-        } else {
-          return Loading();
-        }
-      },
-    );
-  }
+                        Flexible(
+                          flex: 1,
+                          child: CartFooter(state.cart, menus[idx]),
+                        )
+                      ],
+                    ));
+          } else {
+            return Loading();
+          }
+        },
+      );
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.red[900],
         title: Text('Shopping Cart'),
@@ -138,5 +77,4 @@ class CartView extends StatelessWidget {
         },
       ),
     );
-  }
 }

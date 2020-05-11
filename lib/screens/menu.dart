@@ -1,9 +1,9 @@
-import 'package:WildcatMobileOrder/blocs/blocs.dart';
-import 'package:WildcatMobileOrder/shared/cart_button.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
-import 'package:WildcatMobileOrder/repositories/repositories.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../blocs/blocs.dart';
+import '../repositories/repositories.dart';
+import '../widgets/widgets.dart';
 import 'screens.dart';
 
 class MenuView extends StatelessWidget {
@@ -13,49 +13,43 @@ class MenuView extends StatelessWidget {
 
   /// loadMenu
   /// location is the document name under the menus collection
-  Widget _loadMenu(BuildContext context, String location) {
-    return BlocBuilder<MenuBloc, MenuState>(
-      builder: (context, state) {
-      if (state is MenusLoaded) {
-        MenuEntity currentMenu = state.menus.firstWhere((menu) => 
-        menu.location == location);
-        return _buildCategoryList(context, currentMenu);
-      }
-      return CircularProgressIndicator();
-    });
-  }
+  Widget _loadMenu(BuildContext context, String location) =>
+      BlocBuilder<MenuBloc, MenuState>(builder: (context, state) {
+        if (state is MenusLoaded) {
+          var currentMenu =
+              state.menus.firstWhere((menu) => menu.location == location);
+          return _buildCategoryList(context, currentMenu);
+        }
+        return CircularProgressIndicator();
+      });
 
-  Widget _buildCategoryList(BuildContext context, MenuEntity menu) {
-    return Container(
-        color: Colors.grey[800],
-        child: ListView(
-          //shrinkWrap: true,
-          children: menu.categories.map((category) {
-            return ExpansionTile(
-              title: Text(
-                category,
-                style: TextStyle(color: Colors.white),
-              ),
-              children: <Widget>[
-                _buildMenuList(context, menu.getCategoryItems(category)),
-              ],
-            );
-          }).toList(),
-        ));
-  }
+  Widget _buildCategoryList(BuildContext context, MenuEntity menu) => Container(
+      color: Colors.grey[800],
+      child: ListView(
+        //shrinkWrap: true,
+        children: menu.categories
+            .map((category) => ExpansionTile(
+                  title: Text(
+                    category,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  children: <Widget>[
+                    _buildMenuList(context, menu.getCategoryItems(category)),
+                  ],
+                ))
+            .toList(),
+      ));
 
-  Widget _buildMenuList(BuildContext context, List<MenuItem> itemsList) {
-    return ListView(
-      //itemExtent: 100,
-      shrinkWrap: true,
-      children: itemsList.map((item) {
-        return _buildMenuListItem(context, item);
-      }).toList(),
-    );
-  }
+  Widget _buildMenuList(BuildContext context, List<MenuItem> itemsList) =>
+      ListView(
+        //itemExtent: 100,
+        shrinkWrap: true,
+        children:
+            itemsList.map((item) => _buildMenuListItem(context, item)).toList(),
+      );
 
   Widget _buildMenuListItem(BuildContext context, MenuItem item) {
-    final MaterialPageRoute route = MaterialPageRoute(
+    final route = MaterialPageRoute(
         builder: (context) => ItemView(item.location, item.identifier));
     // try to resolve image early
     var configuration = createLocalImageConfiguration(context);
@@ -92,7 +86,7 @@ class MenuView extends StatelessWidget {
                     ),
                     Spacer(),
                     Text(
-                      '\$' + item.price.toStringAsFixed(2),
+                      '\$ ${item.price.toStringAsFixed(2)}',
                       style: TextStyle(color: Colors.white),
                     ),
                   ],
@@ -106,13 +100,11 @@ class MenuView extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        floatingActionButton: CartButton(),
-        appBar: AppBar(
-          title: Text('$location'),
-          backgroundColor: Colors.red[900],
-        ),
-        body: _loadMenu(context, this.location));
-  }
+  Widget build(BuildContext context) => Scaffold(
+      floatingActionButton: CartButton(),
+      appBar: AppBar(
+        title: Text('$location'),
+        backgroundColor: Colors.red[900],
+      ),
+      body: _loadMenu(context, location));
 }

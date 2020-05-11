@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:WildcatMobileOrder/repositories/repositories.dart';
-import 'package:WildcatMobileOrder/blocs/blocs.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../blocs/blocs.dart';
+import '../repositories/repositories.dart';
 
-class Login2 extends StatelessWidget {
+/// Page that allows a user to login
+class LoginPage extends StatelessWidget {
   final UserRepository _userRepository;
 
-  Login2({Key key, @required UserRepository userRepository})
+  /// Constructor for LoginPage, requires a UserRepository (provided by
+  /// AuthenticationBloc)
+  LoginPage({Key key, @required UserRepository userRepository})
       : assert(userRepository != null),
         _userRepository = userRepository,
         super(key: key);
@@ -21,8 +24,7 @@ class Login2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AuthenticationBloc auth =
-        BlocProvider.of<AuthenticationBloc>(context);
+    final auth = BlocProvider.of<AuthenticationBloc>(context);
     return Scaffold(
         backgroundColor: Colors.grey[800],
         appBar: AppBar(

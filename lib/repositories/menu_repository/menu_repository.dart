@@ -1,17 +1,13 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:WildcatMobileOrder/repositories/repositories.dart';
+import '../repositories.dart';
 
 class MenuRepository {
-  final Firestore firestore;
+  final Firestore firestore = Firestore.instance;
 
-  const MenuRepository(this.firestore);
-
-  Stream<List<MenuEntity>> getMenus() {
-    return firestore.collection('menus').snapshots().map((snapshots) {
-      return snapshots.documents.map((snapshot) {
-        return MenuEntity.fromSnapshot(snapshot);
-      }).toList();
-    });
-  }
+  Stream<List<MenuEntity>> getMenus() => firestore
+      .collection('menus')
+      .snapshots()
+      .map((snapshots) => snapshots.documents
+          .map((snapshot) => MenuEntity.fromSnapshot(snapshot))
+          .toList());
 }

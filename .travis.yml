@@ -3,28 +3,26 @@ os:
 sudo: false
 addons:
   apt:
-    # Flutter depends on /usr/lib/x86_64-linux-gnu/libstdc++.so.6 version GLIBCXX_3.4.18
     sources:
-      - ubuntu-toolchain-r-test # if we don't specify this, the libstdc++6 we get is the wrong version
+      - ubuntu-toolchain-r-test
     packages:
       - libstdc++6
-      - fonts-droid-fallback
+git:
+  depth: 3
+cache:
+  directories:
+    - $HOME/.pub-cache
 before_script:
-  - git clone https://github.com/flutter/flutter.git -b beta
+
+  - git clone https://github.com/flutter/flutter.git -b master
+
   - ./flutter/bin/flutter doctor
   - gem install coveralls-lcov
-#commented out in order to get a good build pre testing
-
-# safelist
+script:
+  - ./flutter/bin/flutter test --coverage
+after_success:
+  - coveralls-lcov coverage/lcov.info
 branches:
   only:
     - master
     - testBench
-
-# script:
-  # - ./flutter/bin/flutter test --coverage test/*
-# after_success:
-  # - coveralls-lcov coverage/lcov.info
-cache:
-  directories:
-    - $HOME/.pub-cache/

@@ -1,14 +1,16 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:WildcatMobileOrder/repositories/repositories.dart';
+
+import '../../repositories/repositories.dart';
 import 'bloc.dart';
 
-
+/// Bloc responsible for authenticating and providing authentication state
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   final UserRepository _userRepository;
 
+  /// Constructor for AuthenticationBloc, requires a UserRepository
   AuthenticationBloc({@required UserRepository userRepository})
       : assert(userRepository != null),
         _userRepository = userRepository;
@@ -18,8 +20,8 @@ class AuthenticationBloc
 
   @override
   Stream<AuthenticationState> mapEventToState(
-      AuthenticationEvent event,
-      ) async* {
+    AuthenticationEvent event,
+  ) async* {
     if (event is AppStarted) {
       yield* _mapAppStartedToState();
     } else if (event is LoggedIn) {
@@ -38,7 +40,7 @@ class AuthenticationBloc
       } else {
         yield Unauthenticated();
       }
-    } catch (_) {
+    } on Exception catch (_) {
       yield Unauthenticated();
     }
   }
