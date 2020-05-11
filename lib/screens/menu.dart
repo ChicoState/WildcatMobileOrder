@@ -23,7 +23,7 @@ class MenuView extends StatelessWidget {
         return CircularProgressIndicator();
       });
 
-  Widget _buildCategoryList(BuildContext context, MenuEntity menu) => Container(
+  Widget _buildCategoryList(BuildContext context, Menu menu) => Container(
       color: Colors.grey[800],
       child: ListView(
         //shrinkWrap: true,

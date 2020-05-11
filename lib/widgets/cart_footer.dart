@@ -6,7 +6,7 @@ import '../screens/order_confirmation.dart';
 
 class CartFooter extends StatelessWidget {
   final Cart cart;
-  final MenuEntity menu;
+  final Menu menu;
   final CartRepository cartRepo = CartRepository();
 
   void makeOrder(BuildContext context) async {

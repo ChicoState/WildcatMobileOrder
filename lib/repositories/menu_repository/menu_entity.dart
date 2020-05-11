@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../cart_repository/cart_model.dart';
 
 
-class MenuEntity {
+class Menu {
   final String location;
   final String closeTime;
   final String fcloseTime;
@@ -12,7 +12,7 @@ class MenuEntity {
   final List<String> categories;
   final List<MenuItem> items;
 
-  MenuEntity.fromSnapshot(DocumentSnapshot snapshot)
+  Menu.fromSnapshot(DocumentSnapshot snapshot)
       : location = snapshot.data['name'],
         items = snapshot.data['items'].map<MenuItem>((dynamic item) =>
             MenuItem.fromMap(item, snapshot.data['name'])

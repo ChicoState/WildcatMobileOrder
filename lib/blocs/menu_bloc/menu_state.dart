@@ -11,7 +11,7 @@ abstract class MenuState extends Equatable {
 class MenusLoading extends MenuState {}
 
 class MenusLoaded extends MenuState {
-  final List<MenuEntity> menus;
+  final List<Menu> menus;
 
   const MenusLoaded([this.menus = const []]);
 

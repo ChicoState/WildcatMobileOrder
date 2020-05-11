@@ -11,7 +11,7 @@ abstract class MenuEvent extends Equatable {
 class LoadMenus extends MenuEvent {}
 
 class MenusUpdated extends MenuEvent {
-  final List<MenuEntity> menus;
+  final List<Menu> menus;
 
   const MenusUpdated(this.menus);
 

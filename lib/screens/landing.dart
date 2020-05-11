@@ -11,7 +11,7 @@ class Landing extends StatelessWidget {
 
   Landing(this.user);
 
-  String hoursSummary(MenuEntity menu) =>
+  String hoursSummary(Menu menu) =>
       'Mon-Thur: ${menu.openTime} - ${menu.closeTime}\n'
       'Friday: ${menu.openTime} - ${menu.fcloseTime}';
 
@@ -31,7 +31,7 @@ class Landing extends StatelessWidget {
         }
       });
 
-  Widget _buildLocationCards(BuildContext context, MenuEntity menuEntity) {
+  Widget _buildLocationCards(BuildContext context, Menu menuEntity) {
     // build the route for each card
     final route = MaterialPageRoute(
       builder: (context) => MenuView(

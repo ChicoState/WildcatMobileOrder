@@ -4,10 +4,10 @@ import '../repositories.dart';
 class MenuRepository {
   final Firestore firestore = Firestore.instance;
 
-  Stream<List<MenuEntity>> getMenus() => firestore
+  Stream<List<Menu>> getMenus() => firestore
       .collection('menus')
       .snapshots()
       .map((snapshots) => snapshots.documents
-          .map((snapshot) => MenuEntity.fromSnapshot(snapshot))
+          .map((snapshot) => Menu.fromSnapshot(snapshot))
           .toList());
 }

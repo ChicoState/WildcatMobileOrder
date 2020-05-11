@@ -7,7 +7,7 @@ import '../repositories/repositories.dart';
 class CartTile extends StatelessWidget {
   final CartItem item;
   final int idx;
-  final MenuEntity menu;
+  final Menu menu;
 
   CartTile(this.item, this.idx, this.menu);
 
