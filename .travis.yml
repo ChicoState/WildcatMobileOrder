@@ -13,7 +13,9 @@ cache:
   directories:
     - $HOME/.pub-cache
 before_script:
+
   - git clone https://github.com/flutter/flutter.git -b master
+
   - ./flutter/bin/flutter doctor
   - gem install coveralls-lcov
 script:
@@ -24,4 +26,3 @@ branches:
   only:
     - master
     - testBench
-
