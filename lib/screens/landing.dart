@@ -6,11 +6,15 @@ import '../repositories/repositories.dart';
 import '../widgets/widgets.dart';
 import 'screens.dart';
 
+/// Default screen after authentication, displays locations
 class Landing extends StatelessWidget {
+  /// Email of authenticated user
   final String user;
 
+  /// Default constructor for Landing
   Landing(this.user);
 
+  /// Provides an hours summary string from a Menu object
   String hoursSummary(Menu menu) =>
       'Mon-Thur: ${menu.openTime} - ${menu.closeTime}\n'
       'Friday: ${menu.openTime} - ${menu.fcloseTime}';

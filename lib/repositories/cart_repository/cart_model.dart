@@ -1,17 +1,20 @@
-import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
 import '../menu_repository/menu_entity.dart';
 
 /// Represents the current cart of a user
 class Cart {
+  /// List of CartItem
   final List<CartItem> items;
+
+  /// Location of current cart
   final String location;
+
+  /// Email of logged in user
   final String user;
-  final int count;
 
   /// Default constructor for Cart
-  Cart(this.items, this.location, this.user, this.count);
+  Cart(this.items, this.location, this.user);
 
   @override
   String toString() =>
@@ -24,7 +27,6 @@ class Cart {
         items ?? this.items,
         location ?? this.location,
         user ?? this.user,
-        count ?? this.count,
       );
 
   /// Check if the cart is empty or not
@@ -35,14 +37,22 @@ class Cart {
     var currentItems = items;
     var idx = currentItems.indexWhere((i) => i.identifier == item.identifier);
     if (idx != -1) {
-      var quantity = currentItems[idx].quantity;
       currentItems.removeAt(idx);
       if (currentItems.length == 0) {
         return copyWith(items: currentItems, location: '', count: 0);
       }
-      return copyWith(items: currentItems, count: count - quantity);
+      return copyWith(items: currentItems);
     }
     return copyWith();
+  }
+
+  /// Returns total quantity of all items in cart
+  int getCount() {
+    var newCount = 0;
+    for (var i in items) {
+      newCount += i.quantity;
+    }
+    return newCount;
   }
 
   /// Removes one item from the cart
@@ -51,10 +61,10 @@ class Cart {
     var idx = currentItems.indexWhere((i) => i.identifier == item.identifier);
     if (idx != -1) {
       currentItems[idx] = currentItems[idx].decrementQuantity();
-      if (count == 1) {
-        return copyWith(items: currentItems, count: count - 1, location: '');
+      if (currentItems.length == 1 && currentItems[idx].quantity == 0) {
+        return copyWith(items: <CartItem>[], location: '');
       }
-      return copyWith(items: currentItems, count: count - 1);
+      return copyWith(items: currentItems);
     }
     return copyWith();
   }
@@ -63,14 +73,12 @@ class Cart {
   Cart addItem(MenuItem item) {
     var currentItems = items;
     var idx = currentItems.indexWhere((i) => i.identifier == item.identifier);
-    var newCount = count + 1;
     if (idx != -1) {
       currentItems[idx] = currentItems[idx].incrementQuantity();
     } else {
       currentItems.add(CartItem.fromMenuItem(item));
     }
-    return copyWith(
-        items: currentItems, location: item.location, count: newCount);
+    return copyWith(items: currentItems, location: item.location);
   }
 
   /// Helper function to check if a menu item
@@ -88,19 +96,17 @@ class Cart {
         'price': price,
         'ordertime': Timestamp.now(),
       };
-
-  /// Serializes Cart object into Json string for persistence
-  Map<String, dynamic> toJson() => <String, dynamic>{
-        'items': jsonEncode(items),
-        'user': user,
-        'location': location,
-      };
 }
 
 /// Represents an item & quantity in a cart
 class CartItem {
+  /// Quantity of the item in the cart
   final int quantity;
+
+  /// Identifier of the MenuItem
   final String identifier;
+
+  /// Name of the item
   final String name;
 
   /// Default constructor for CartItem
@@ -119,12 +125,6 @@ class CartItem {
         'name': name,
       };
 
-  /// Construct a CartItem from a Firestore document
-  CartItem.fromJson(Map<String, dynamic> json)
-      : identifier = json['identifier'],
-        quantity = json['qty'],
-        name = json['name'];
-
   /// Increases the quantity of an item by 1
   CartItem incrementQuantity() => CartItem(quantity + 1, identifier, name);
 
@@ -136,11 +136,4 @@ class CartItem {
       return CartItem(quantity - 1, identifier, name);
     }
   }
-
-  /// Returns a modified CartItem
-  CartItem copyWith({int quantity, String identifier, String name}) => CartItem(
-        quantity ?? this.quantity,
-        identifier ?? this.identifier,
-        name ?? this.name,
-      );
 }

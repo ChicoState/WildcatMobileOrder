@@ -5,14 +5,20 @@ import '../blocs/blocs.dart';
 import '../repositories/menu_repository/menu_entity.dart';
 import '../widgets/widgets.dart';
 
+/// Screen to view an individual item
 class ItemView extends StatelessWidget {
+  /// Location to which the item belongs to
   final String location;
+  /// Identifier of the item to display
   final String id;
-
+  /// Provides access to scaffold for ResetUserDialog
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
+  /// Default constructor for ItemView
   ItemView(this.location, this.id);
 
+  /// Checks if an item can be added to cart, and responds accordingly
+  /// Either adds an item, or prompts to reset cart if location mismatch
   void addItem(BuildContext context, MenuItem item) {
     if (BlocProvider.of<CartBloc>(context).state is CartLoaded) {
       var cart = (BlocProvider.of<CartBloc>(context).state as CartLoaded).cart;

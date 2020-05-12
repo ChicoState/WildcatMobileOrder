@@ -6,9 +6,12 @@ import '../repositories/repositories.dart';
 import '../widgets/widgets.dart';
 import 'screens.dart';
 
+/// Screen to view a particular locations menu
 class MenuView extends StatelessWidget {
+  /// Name of location's menu to display
   final String location;
 
+  /// Default constructor for MenuView
   MenuView({this.location});
 
   /// loadMenu
@@ -42,7 +45,6 @@ class MenuView extends StatelessWidget {
 
   Widget _buildMenuList(BuildContext context, List<MenuItem> itemsList) =>
       ListView(
-        //itemExtent: 100,
         shrinkWrap: true,
         children:
             itemsList.map((item) => _buildMenuListItem(context, item)).toList(),

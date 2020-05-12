@@ -4,19 +4,31 @@ import 'package:transparent_image/transparent_image.dart';
 import '../blocs/blocs.dart';
 import '../repositories/repositories.dart';
 
+/// Widget to display a CartItem on the Cart page
 class CartTile extends StatelessWidget {
+  /// Object representing the CartItem
   final CartItem item;
+
+  /// Index in the list of items
   final int idx;
+
+  /// Menu that the tile belongs to
   final Menu menu;
 
+  /// Default constructor for CartTile
   CartTile(this.item, this.idx, this.menu);
 
+  /// Dismisses (removes) an item from the cart
   void dismissItem(BuildContext context, MenuItem item) {
     var updatedCart = (BlocProvider.of<CartBloc>(context).state as CartLoaded)
         .cart
         .deleteItem(item);
     BlocProvider.of<CartBloc>(context).add(CartUpdated(cart: updatedCart));
   }
+
+  /// Returns string representation of price
+  String getPriceString(MenuItem item, int qty) =>
+      '\$${(item.price * qty).toStringAsFixed(2)}';
 
   @override
   Widget build(BuildContext context) {
@@ -59,8 +71,7 @@ class CartTile extends StatelessWidget {
                           TextSpan(
                             text: '\n\$${menuItem.price.toStringAsFixed(2)} x '
                                 '${item.quantity}\n'
-                                '\$${(menuItem.price * item.quantity)
-                                .toStringAsFixed(2)}',
+                                '${getPriceString(menuItem, item.quantity)}',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,

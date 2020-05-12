@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../blocs/blocs.dart';
 import '../screens/screens.dart';
 
+/// Drawer to provide to all scaffolds where necessary
 Drawer drawer(BuildContext context) {
   Widget loggedInDrawer(FirebaseUser user) => Container(
       color: Colors.grey[850],

@@ -2,12 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/blocs.dart';
 
+/// Dialog screen prompting a cart reset
 class ResetCartDialog extends StatelessWidget {
+  /// New location that doesn't match current cart's location
   final String location;
+
+  /// Allows access to scaffold to display a snack bar on reset
   final GlobalKey<ScaffoldState> scaffoldKey;
 
+  /// Default constructor for ResetCartDialog
   ResetCartDialog(this.location, this.scaffoldKey);
 
+  /// Scack bar displayed when cart is reset
   final SnackBar snackBar =
       SnackBar(content: Text('Cart reset, try to add the item again'));
 
@@ -18,10 +24,9 @@ class ResetCartDialog extends StatelessWidget {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text(
-                    'You currently have items in your cart from a different '
-                      'location. \nWould you like to empty your cart to add an '
-                      'item from $location?'),
+                Text('You currently have items in your cart from a different '
+                    'location. \nWould you like to empty your cart to add an '
+                    'item from $location?'),
               ],
             ),
           ),

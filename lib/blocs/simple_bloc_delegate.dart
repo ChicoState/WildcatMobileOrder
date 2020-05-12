@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 
+/// Simple delegate to provide debugging information relating to any bloc
 class SimpleBlocDelegate extends BlocDelegate {
   @override
   void onEvent(Bloc bloc, Object event) {

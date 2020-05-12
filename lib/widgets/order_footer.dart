@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+/// Widget to display at then bottom of an order summary
 class OrderFooter extends StatelessWidget {
+  /// DocumentSnapshot of the order
   final DocumentSnapshot snapshot;
 
+  /// Default constructor for OrderFooter
   OrderFooter(this.snapshot);
 
   @override

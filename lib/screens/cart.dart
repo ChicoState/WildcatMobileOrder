@@ -4,6 +4,7 @@ import '../blocs/blocs.dart';
 import '../repositories/repositories.dart';
 import '../widgets/widgets.dart';
 
+/// Screen to display the current cart
 class CartView extends StatelessWidget {
   // builds the ListView that contains all the cart items
   Widget _buildCartList(

@@ -15,14 +15,20 @@ void main() {
   runApp(MyApp(_userRepository, _menuRepository));
 }
 
+/// Theme data to provide for all screens
 final ThemeData td = ThemeData(
   primaryColor: Colors.red[800],
 );
 
+/// Root widget of the app
 class MyApp extends StatelessWidget {
+  /// Repository to provide for authentication
   final UserRepository userRepository;
+
+  /// Repository to provide for menu loading
   final MenuRepository menuRepository;
 
+  /// Default constructor requiring a UserRepository and a MenuRepository
   MyApp(this.userRepository, this.menuRepository);
 
   @override

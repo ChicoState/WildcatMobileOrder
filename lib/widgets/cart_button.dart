@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/blocs.dart';
 import '../screens/cart.dart';
 
+/// Floating action button for the cart
 class CartButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => BlocBuilder<CartBloc, CartState>(
@@ -11,7 +12,7 @@ class CartButton extends StatelessWidget {
           if (state is CartLoaded) {
             return FloatingActionButton(
               child: Badge(
-                badgeContent: Text(state.cart.count.toString()),
+                badgeContent: Text(state.cart.getCount().toString()),
                 elevation: 10,
                 position: BadgePosition.topRight(right: -22, top: -22),
                 child: Icon(Icons.shopping_cart),
