@@ -168,7 +168,6 @@ void main() {
     });
     test('toJson() method', () {
       final cartItem = CartItem.fromMenuItem(menuItem);
-      print(cartItem.toJson());
       expect(cartItem.toJson(), {
         'identifier': 'test-location-test-item',
         'qty': 1,
@@ -177,7 +176,6 @@ void main() {
     });
     test('toJson() method additional quantity', () {
       final cartItem = CartItem.fromMenuItem(menuItem).incrementQuantity();
-      print(cartItem.toJson());
       expect(cartItem.toJson(), {
         'identifier': 'test-location-test-item',
         'qty': 2,
