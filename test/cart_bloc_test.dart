@@ -7,6 +7,8 @@ import 'package:flutter_test/flutter_test.dart';
 class MockCartBloc extends MockBloc<CartEvent,CartState> implements CartBloc {}
 
 void main () {
+  final mockCart = MockCartBloc();
+
   group('CartBlocTesting', () {
     blocTest(
       'emits [] when nothing is added',
@@ -18,7 +20,8 @@ void main () {
       'emits [1] when CounterEvent.increment is added',
       build: () async => CartBloc(),
       act: (bloc) => bloc.add(CartEvent),
-      expect: [1],
+      skip: 0,
+      expect: [0, 1],
     );
   });
 }
