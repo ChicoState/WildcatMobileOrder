@@ -1,27 +1,31 @@
-import 'package:WildcatMobileOrder/blocs/cart_bloc/bloc.dart';
-import 'package:WildcatMobileOrder/repositories/cart_repository/cart_repository.dart';
+import 'package:WildcatMobileOrder/blocs/cart_bloc/cart_bloc.dart';
+import 'package:WildcatMobileOrder/blocs/cart_bloc/cart_event.dart';
+import 'package:WildcatMobileOrder/blocs/cart_bloc/cart_state.dart';
+import 'package:WildcatMobileOrder/repositories/repositories.dart';
 import 'package:bloc_test/bloc_test.dart';
-import 'package:mockito/mockito.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:WildcatMobileOrder/main.dart';
 
-class MockCartBloc extends MockBloc<CartEvent,CartState> implements CartBloc {}
 
-void main () {
-  final mockCart = MockCartBloc();
+class MockCartBloc extends MockBloc<CartEvent, CartState>
+    implements CartBloc {}
 
-  group('CartBlocTesting', () {
-    blocTest(
-      'emits [] when nothing is added',
-      build: () async => CartBloc(),
-      expect: [],
-    );
+void main() {
+  MockCartBloc mockCartBloc;
 
-    blocTest(
-      'emits [1] when CounterEvent.increment is added',
-      build: () async => CartBloc(),
-      act: (bloc) => bloc.add(CartEvent),
-      skip: 0,
-      expect: [0, 1],
-    );
+  setUp(() {
+    mockCartBloc = MockCartBloc();
   });
+  test('Example mocked BLoC test', () {
+  whenListen(
+    mockCartBloc,
+    Stream.fromIterable([CartLoading, CartLoaded()]),
+  );
+
+  expectLater(
+    mockCartBloc,
+    emitsInOrder([CartLoading(), CartLoaded()]),
+  );
+});
+  //TODO: Add test
 }
