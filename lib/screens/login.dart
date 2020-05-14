@@ -22,6 +22,40 @@ class LoginPage extends StatelessWidget {
     });
   }
 
+  /// Login button
+  Widget _loginButton(BuildContext context, AuthenticationBloc auth) =>
+      //* Outlined button for google sign in option
+      OutlineButton(
+        splashColor: Colors.white,
+        onPressed: () {
+          _handleSignIn(auth);
+        },
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+        highlightElevation: 0,
+        borderSide: BorderSide(color: Colors.white),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Image(
+                  image: AssetImage("graphics/CSUCHICO-Seal-Color.png"),
+                  height: 35.0),
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Text('CSU Chico Gmail',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                    )),
+              ),
+            ],
+          ),
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     final auth = BlocProvider.of<AuthenticationBloc>(context);
@@ -54,39 +88,7 @@ class LoginPage extends StatelessWidget {
                 ),
                 Flexible(
                   flex: 2,
-                  child: OutlineButton(
-                    //* Outlined button for google sign in option
-                    splashColor: Colors.white,
-                    onPressed: () {
-                      _handleSignIn(auth);
-                    },
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(40)),
-                    highlightElevation: 0,
-                    borderSide: BorderSide(color: Colors.white),
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Image(
-                              image: AssetImage(
-                                  "graphics/CSUCHICO-Seal-Color.png"),
-                              height: 35.0),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text('CSU Chico Gmail',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.white,
-                                )),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  child: _loginButton(context, auth),
                 ),
               ],
             ),

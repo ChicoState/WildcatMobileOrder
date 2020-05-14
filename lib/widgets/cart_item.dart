@@ -30,6 +30,49 @@ class CartTile extends StatelessWidget {
   String getPriceString(MenuItem item, int qty) =>
       '\$${(item.price * qty).toStringAsFixed(2)}';
 
+  Widget _cartItemSummary(BuildContext context, MenuItem item, int qty) =>
+      Container(
+        child: RichText(
+          text: TextSpan(
+            children: <TextSpan>[
+              TextSpan(
+                text: item.name,
+                style: TextStyle(fontSize: 22, color: Colors.white),
+              ),
+              TextSpan(
+                text: '\n\$${item.price.toStringAsFixed(2)} x '
+                    '$qty\n'
+                    '${getPriceString(item, qty)}',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+
+  Widget _itemQuantityButtons(BuildContext context, MenuItem item, Cart cart) =>
+      Column(
+        children: <Widget>[
+          IconButton(
+              icon: Icon(Icons.add),
+              color: Colors.white,
+              onPressed: () {
+                BlocProvider.of<CartBloc>(context)
+                    .add(CartUpdated(cart: cart.addItem(item)));
+              }),
+          IconButton(
+              icon: Icon(Icons.remove),
+              color: Colors.white,
+              onPressed: () {
+                BlocProvider.of<CartBloc>(context)
+                    .add(CartUpdated(cart: cart.removeItem(item)));
+              })
+        ],
+      );
+
   @override
   Widget build(BuildContext context) {
     final menuItem = menu.items
@@ -59,48 +102,10 @@ class CartTile extends StatelessWidget {
                 Spacer(),
                 Flexible(
                   flex: 6,
-                  child: Container(
-                    child: RichText(
-                      text: TextSpan(
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: menuItem.name,
-                            style: TextStyle(fontSize: 22, color: Colors.white),
-                            // textAlign: TextAlign.right,
-                          ),
-                          TextSpan(
-                            text: '\n\$${menuItem.price.toStringAsFixed(2)} x '
-                                '${item.quantity}\n'
-                                '${getPriceString(menuItem, item.quantity)}',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
+                  child: _cartItemSummary(context, menuItem, item.quantity),
                 ),
                 Spacer(),
-                Column(
-                  children: <Widget>[
-                    IconButton(
-                        icon: Icon(Icons.add),
-                        color: Colors.white,
-                        onPressed: () {
-                          BlocProvider.of<CartBloc>(context)
-                              .add(CartUpdated(cart: cart.addItem(menuItem)));
-                        }),
-                    IconButton(
-                        icon: Icon(Icons.remove),
-                        color: Colors.white,
-                        onPressed: () {
-                          BlocProvider.of<CartBloc>(context).add(
-                              CartUpdated(cart: cart.removeItem(menuItem)));
-                        })
-                  ],
-                )
+                _itemQuantityButtons(context, menuItem, cart)
               ],
             ),
           )),

@@ -4,33 +4,48 @@ import 'package:flutter/material.dart';
 import '../blocs/blocs.dart';
 import '../screens/screens.dart';
 
-/// Drawer to provide to all scaffolds where necessary
-Drawer drawer(BuildContext context) {
-  Widget loggedInDrawer(FirebaseUser user) => Container(
+/// Drawer to to display user information and navigation buttons
+class UserDrawer extends StatelessWidget {
+  Widget _defaultDrawer() => ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          DrawerHeader(
+            child: Text('Login to Wildcat Mobile Order'),
+            decoration: BoxDecoration(
+              color: Colors.redAccent,
+            ),
+          ),
+        ],
+      );
+
+  Widget _accountDrawerHeader(BuildContext context, FirebaseUser user) =>
+      UserAccountsDrawerHeader(
+        decoration: BoxDecoration(
+          color: Colors.red[900],
+        ),
+        accountEmail: Text(
+          user.email,
+          style: TextStyle(
+            fontSize: 15,
+          ),
+        ),
+        accountName: Text(
+          user.displayName,
+          style: TextStyle(
+            fontSize: 18,
+          ),
+        ),
+        currentAccountPicture: CircleAvatar(
+          backgroundImage: NetworkImage(user.photoUrl),
+        ),
+      );
+
+  Widget _loggedInDrawer(BuildContext context, FirebaseUser user) => Container(
       color: Colors.grey[850],
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          UserAccountsDrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.red[900],
-            ),
-            accountEmail: Text(
-              user.email,
-              style: TextStyle(
-                fontSize: 15,
-              ),
-            ),
-            accountName: Text(
-              user.displayName,
-              style: TextStyle(
-                fontSize: 18,
-              ),
-            ),
-            currentAccountPicture: CircleAvatar(
-              backgroundImage: NetworkImage(user.photoUrl),
-            ),
-          ),
+          _accountDrawerHeader(context, user),
           Container(
             decoration: BoxDecoration(
               border: Border(
@@ -71,23 +86,15 @@ Drawer drawer(BuildContext context) {
         ],
       ));
 
-  Widget defaultDrawer() => ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          DrawerHeader(
-            child: Text('Login to Wildcat Mobile Order'),
-            decoration: BoxDecoration(
-              color: Colors.redAccent,
-            ),
-          ),
-        ],
+  @override
+  Widget build(BuildContext context) => Drawer(
+        child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+          builder: (context, state) {
+            if (state is Authenticated) {
+              return _loggedInDrawer(context, state.user);
+            }
+            return _defaultDrawer();
+          },
+        ),
       );
-
-  return Drawer(child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-      builder: (context, state) {
-    if (state is Authenticated) {
-      return loggedInDrawer(state.user);
-    }
-    return defaultDrawer();
-  }));
 }

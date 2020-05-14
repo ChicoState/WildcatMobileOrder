@@ -89,7 +89,7 @@ class Landing extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
       backgroundColor: Colors.grey[800],
-      drawer: drawer(context),
+      drawer: UserDrawer(),
       appBar: AppBar(
         backgroundColor: Colors.red[900],
         title: Text('Select a location'),
