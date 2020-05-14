@@ -16,16 +16,16 @@ void main() {
   setUp(() {
     mockCartBloc = MockCartBloc();
   });
-  test('Example mocked BLoC test', () {
-  whenListen(
-    mockCartBloc,
-    Stream.fromIterable([CartLoading, CartLoaded()]),
-  );
+  // test('Example mocked BLoC test', () {
+  // whenListen(
+  //   mockCartBloc,
+  //   Stream.fromIterable([CartLoading, CartLoaded()]),
+  // );
 
-  expectLater(
-    mockCartBloc,
-    emitsInOrder([CartLoading(), CartLoaded()]),
-  );
-});
+//   expectLater(
+//     mockCartBloc,
+//     emitsInOrder([CartLoading(), CartLoaded()]),
+//   );
+// });
   //TODO: Add test
 }
