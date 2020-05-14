@@ -12,9 +12,12 @@ class OrderFooter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var itemCount = 0;
-    snapshot.data['items'].forEach((item) {
-      itemCount += item['qty'];
-    });
+    for (var i in snapshot.data['items']) {
+      itemCount += i['qty'];
+    }
+//    snapshot.data['items'].forEach((item) {
+//      itemCount += item['qty'];
+//    });
     DateTime orderTime = snapshot['ordertime'].toDate();
     return Card(
       color: Colors.grey[400],

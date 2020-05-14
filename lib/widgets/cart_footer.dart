@@ -19,8 +19,10 @@ class CartFooter extends StatelessWidget {
   void makeOrder(BuildContext context) async {
     var price = menu.calculateCartPrice(cart);
     var order = await cartRepo.addOrder(cart, price);
-    Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (context) => OrderConfirmation(order)));
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute<void>(
+            builder: (context) => OrderConfirmation(order)));
   }
 
   /// Default constructor for CartFooter

@@ -1,11 +1,8 @@
 import 'package:WildcatMobileOrder/repositories/repositories.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:WildcatMobileOrder/main.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  final userRepository = UserRepository();
-  final menuRepository = MenuRepository();
   final testMenuItem = {
     'name': 'test-item',
     'category': 'test-category',

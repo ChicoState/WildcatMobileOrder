@@ -37,7 +37,7 @@ class Landing extends StatelessWidget {
 
   Widget _buildLocationCards(BuildContext context, Menu menuEntity) {
     // build the route for each card
-    final route = MaterialPageRoute(
+    final route = MaterialPageRoute<void>(
       builder: (context) => MenuView(
         location: menuEntity.location,
       ),

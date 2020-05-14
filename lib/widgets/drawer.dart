@@ -46,7 +46,7 @@ Drawer drawer(BuildContext context) {
                 Navigator.pop(context);
                 Navigator.push(
                     context,
-                    MaterialPageRoute(
+                    MaterialPageRoute<void>(
                         builder: (context) => Landing(user.email)));
               },
             ),

@@ -51,7 +51,7 @@ class MenuView extends StatelessWidget {
       );
 
   Widget _buildMenuListItem(BuildContext context, MenuItem item) {
-    final route = MaterialPageRoute(
+    final route = MaterialPageRoute<void>(
         builder: (context) => ItemView(item.location, item.identifier));
     // try to resolve image early
     var configuration = createLocalImageConfiguration(context);

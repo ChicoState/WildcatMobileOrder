@@ -20,7 +20,7 @@ class CartButton extends StatelessWidget {
               backgroundColor: Colors.red,
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => CartView()));
+                    MaterialPageRoute<void>(builder: (context) => CartView()));
               },
             );
           }
