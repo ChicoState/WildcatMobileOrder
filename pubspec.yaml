@@ -36,6 +36,7 @@ dependencies:
   uuid: ^2.0.4
   flare_flutter: ^2.0.3
   bloc_test: ^5.1.0
+  mockito: ^4.1.1
 
 dev_dependencies:
   pedantic: ^1.0.0
