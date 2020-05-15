@@ -1,4 +1,3 @@
-language: dart
 os:
   - linux
 sudo: false
@@ -17,15 +16,8 @@ before_script:
   - git clone https://github.com/flutter/flutter.git -b master
   - ./flutter/bin/flutter doctor
   - gem install coveralls-lcov
-
-matrix:
-  include:
-    - name: Test
-      env: COMMAND="test --coverage"
-    - name: Analyze
-      env: COMMAND="analyze"
 script:
-  - ./flutter/bin/flutter $COMMAND
+  - ./flutter/bin/flutter test --coverage
 after_success:
   - coveralls-lcov coverage/lcov.info
 branches:
