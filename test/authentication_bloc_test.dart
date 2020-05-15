@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:WildcatMobileOrder/blocs/blocs.dart';
 import 'package:WildcatMobileOrder/repositories/repositories.dart';
 import 'package:bloc_test/bloc_test.dart';
@@ -51,6 +53,16 @@ void main() {
 
       authenticationBloc.add(AppStarted());
     });
+    test('automatic sign in', () async {
+      final user = await userRepository.signInWithGoogle();
+      authenticationBloc.add(AppStarted());
+      expectLater(
+          authenticationBloc,
+          emitsInOrder(<AuthenticationState>[
+            Uninitialized(),
+            Authenticated(user),
+          ]));
+    });
   });
 
   group('UserRepository', () {
@@ -88,16 +100,22 @@ void main() {
       authenticationBloc.add(LoggedIn());
     });
 
-//    blocTest(
-//      'Returns authenticated on ',
-//      build: () async {
-//        await userRepository.signInWithGoogle();
-//        return authenticationBloc;
-//      },
-//      act: (authenticationBloc) => bloc.add(LoggedIn()),
-//      expect: [
-//        Authenticated(),
-//      ],
-//    );
+    test('emits [unauthenticated] after LoggedOut', () async {
+      authenticationBloc.add(LoggedOut());
+      await emitsExactly<AuthenticationBloc, AuthenticationState>(
+          authenticationBloc, <AuthenticationState>[Unauthenticated()]);
+    });
+    test('LoggedOut event actually triggers log out', () async {
+      final user = await userRepository.signInWithGoogle();
+      authenticationBloc.add(LoggedIn());
+      authenticationBloc.add(LoggedOut());
+      expectLater(
+          authenticationBloc,
+          emitsInOrder(<AuthenticationState>[
+            Uninitialized(),
+            Authenticated(user),
+            Unauthenticated(),
+          ]));
+    });
   });
 }
