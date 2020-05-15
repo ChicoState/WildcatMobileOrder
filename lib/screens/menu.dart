@@ -50,9 +50,12 @@ class MenuView extends StatelessWidget {
             itemsList.map((item) => _buildMenuListItem(context, item)).toList(),
       );
 
+  void _navigateToMenuItem(BuildContext context, MenuItem item) {
+    Navigator.of(context).push(MaterialPageRoute<void>(
+        builder: (context) => ItemView(item.location, item.identifier)));
+  }
+
   Widget _buildMenuListItem(BuildContext context, MenuItem item) {
-    final route = MaterialPageRoute<void>(
-        builder: (context) => ItemView(item.location, item.identifier));
     // try to resolve image early
     var configuration = createLocalImageConfiguration(context);
     item.img.resolve(configuration);
@@ -63,7 +66,7 @@ class MenuView extends StatelessWidget {
         elevation: 10,
         child: InkWell(
             onTap: () {
-              Navigator.push(context, route);
+              _navigateToMenuItem(context, item);
             },
             child: ListTile(
                 dense: false,

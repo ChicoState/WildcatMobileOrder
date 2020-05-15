@@ -6,6 +6,11 @@ import '../screens/cart.dart';
 
 /// Floating action button for the cart
 class CartButton extends StatelessWidget {
+  void _navigateToCart(BuildContext context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute<void>(builder: (context) => CartView()));
+  }
+
   @override
   Widget build(BuildContext context) => BlocBuilder<CartBloc, CartState>(
         builder: (context, state) {
@@ -19,8 +24,7 @@ class CartButton extends StatelessWidget {
               ),
               backgroundColor: Colors.red,
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute<void>(builder: (context) => CartView()));
+                _navigateToCart(context);
               },
             );
           }
