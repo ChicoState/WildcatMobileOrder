@@ -3,9 +3,9 @@ include: package:effective_dart/analysis_options.yaml
 analyzer:
   exclude:
     - [build/**]
-    - bin/cache/**
-    - flutter/bin/cache/**
-    - lib/exclude_me/*.exclude.dart
+    - 'bin/cache/**'
+    - 'lib/i18n/stock_messages_*.dart'
+    - 'lib/src/http/**'
   strong-mode:
     implicit-dynamic: false
 
