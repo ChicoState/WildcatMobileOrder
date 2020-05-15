@@ -113,7 +113,7 @@ void main() {
     test('getCount() one item, multiple quantity', () {
       final cart = Cart(<CartItem>[], '', 'test@user.com').addItem(menuItem);
       final newCart = cart.addItem(menuItem);
-      expect(cart.getCount(), 2);
+      expect(newCart.getCount(), 2);
     });
     test('getCount() multiple items', () {
       final cart = Cart(<CartItem>[], '', 'test@user.com').addItem(menuItem);

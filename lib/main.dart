@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,7 +14,7 @@ void main() {
   BlocSupervisor.delegate = SimpleBlocDelegate();
   final _userRepository = UserRepository(
       firebaseAuth: FirebaseAuth.instance, googleSignIn: GoogleSignIn());
-  final _menuRepository = MenuRepository();
+  final _menuRepository = MenuRepository(Firestore.instance);
 
   runApp(MyApp(_userRepository, _menuRepository));
 }

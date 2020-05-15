@@ -1,10 +1,8 @@
 import 'package:WildcatMobileOrder/blocs/cart_bloc/cart_bloc.dart';
 import 'package:WildcatMobileOrder/blocs/cart_bloc/cart_event.dart';
 import 'package:WildcatMobileOrder/blocs/cart_bloc/cart_state.dart';
-import 'package:WildcatMobileOrder/repositories/repositories.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:WildcatMobileOrder/main.dart';
 
 
 class MockCartBloc extends MockBloc<CartEvent, CartState>

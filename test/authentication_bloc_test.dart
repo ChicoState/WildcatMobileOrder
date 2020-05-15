@@ -1,22 +1,17 @@
-import 'dart:math';
-
 import 'package:WildcatMobileOrder/blocs/blocs.dart';
 import 'package:WildcatMobileOrder/repositories/repositories.dart';
 import 'package:bloc_test/bloc_test.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mockito/mockito.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:google_sign_in_mocks/google_sign_in_mocks.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class MockUserRepository extends Mock implements UserRepository {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   AuthenticationBloc authenticationBloc;
-  //Using mockito to create a mock user repo object to work with
+  // Using mockito to create a mock user repo object to work with
   UserRepository userRepository;
 
   setUp(() {
