@@ -25,14 +25,7 @@ class Authenticated extends AuthenticationState {
   List<Object> get props => [user];
 
   @override
-  String toString() => 'Authenticated { email : $getEmail }';
-
-  /// Returns the email of the current FirebaseUser
-  String getEmail() => user.email;
-
-  /// Returns the FirebaseUser object of the current user
-  FirebaseUser getUser() => user;
-
+  String toString() => 'Authenticated { email : ${user.email} }';
 }
 
 /// Represents an Unauthenticated state

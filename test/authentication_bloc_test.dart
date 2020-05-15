@@ -74,7 +74,7 @@ void main() {
     });
   });
 
-  group('LoggedIn', () {
+  group('Authenticated', () {
     test('emits [uninitialized, authenticated] when login successful',
         () async {
       final user = await userRepository.signInWithGoogle();

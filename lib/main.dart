@@ -56,9 +56,9 @@ class MyApp extends StatelessWidget {
           if (state is Authenticated) {
             // start to load menus
             BlocProvider.of<MenuBloc>(context).add(LoadMenus());
-            BlocProvider.of<CartBloc>(context).user = state.getEmail();
-            BlocProvider.of<CartBloc>(context).add(LoadCart(state.getEmail()));
-            return Landing(state.getEmail());
+            BlocProvider.of<CartBloc>(context).user = state.user.email;
+            BlocProvider.of<CartBloc>(context).add(LoadCart(state.user.email));
+            return Landing(state.user.email);
           }
           return Loading();
         })),
