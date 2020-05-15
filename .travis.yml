@@ -22,7 +22,7 @@ matrix:
     - name: Test
       env: COMMAND="test --coverage"
     - name: Analyze
-      env: COMMAND="analyze --current-package"
+      env: COMMAND="analyze --no-current-package lib"
 script:
   - ./flutter/bin/flutter $COMMAND
 after_success:
