@@ -9,10 +9,10 @@ class MockCartBloc extends MockBloc<CartEvent, CartState>
     implements CartBloc {}
 
 void main() {
-  MockCartBloc mockCartBloc;
+  //MockCartBloc mockCartBloc;
 
   setUp(() {
-    mockCartBloc = MockCartBloc();
+    //mockCartBloc = MockCartBloc();
   });
   // test('Example mocked BLoC test', () {
   // whenListen(
