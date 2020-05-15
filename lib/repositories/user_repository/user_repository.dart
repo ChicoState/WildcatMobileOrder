@@ -10,7 +10,9 @@ class UserRepository {
   /// Default UserRepository constructor, requires FirebaseAuth and
   /// GoogleSignIn objects
   UserRepository({FirebaseAuth firebaseAuth, GoogleSignIn googleSignIn})
-      : _firebaseAuth = firebaseAuth,
+      : assert(firebaseAuth != null),
+        assert(googleSignIn != null),
+        _firebaseAuth = firebaseAuth,
         _googleSignIn = googleSignIn;
 
   /// Allows a user to sign in with Google (GMail) [default]
@@ -26,7 +28,10 @@ class UserRepository {
   }
 
   /// Signs out and un-authenticates a user
-  Future<void> signOut() async => await _firebaseAuth.signOut();
+  Future<void> signOut() async {
+    await _googleSignIn.signOut();
+    await _firebaseAuth.signOut();
+  }
 
   /// Returns current sign in status
   Future<bool> isSignedIn() async {

@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'blocs/blocs.dart';
 import 'repositories/repositories.dart';
 import 'screens/screens.dart';
@@ -9,7 +11,8 @@ import 'widgets/widgets.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   BlocSupervisor.delegate = SimpleBlocDelegate();
-  final _userRepository = UserRepository();
+  final _userRepository = UserRepository(
+      firebaseAuth: FirebaseAuth.instance, googleSignIn: GoogleSignIn());
   final _menuRepository = MenuRepository();
 
   runApp(MyApp(_userRepository, _menuRepository));
