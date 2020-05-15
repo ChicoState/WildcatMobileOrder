@@ -3,8 +3,9 @@ include: package:effective_dart/analysis_options.yaml
 analyzer:
   exclude:
     - [build/**]
-    - "bin/cache/**"
-    - "flutter/bin/cache/**"
+    - bin/cache/**
+    - flutter/bin/cache/**
+    - lib/exclude_me/*.exclude.dart
   strong-mode:
     implicit-dynamic: false
 
