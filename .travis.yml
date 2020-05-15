@@ -21,7 +21,7 @@ matrix:
   include:
     - name: Test
       env: COMMAND="test --coverage"
-    - name: Analuze
+    - name: Analyze
       env: COMMAND="analyze"
 script:
   - ./flutter/bin/flutter $COMMAND
