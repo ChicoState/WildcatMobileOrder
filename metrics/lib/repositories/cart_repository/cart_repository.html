@@ -1,0 +1,37 @@
+<html lang="en"><head><title>Metrics report for lib\repositories\cart_repository\cart_repository.dart</title><meta charset="utf-8"><link rel="stylesheet" href="..\..\..\base.css"></head><body><h1 class="metric-header"><a href="..\..\..\index.html">All files</a><span> : </span><a href="index.html">lib\repositories\cart_repository</a><span>/cart_repository.dart</span></h1><div class="metrics-total"><span class="metrics-total__label">Cyclomatic complexity : </span><span class="metrics-total__count">2</span></div><div class="metrics-total"><span class="metrics-total__label">Lines of code : </span><span class="metrics-total__count">8</span></div><div class="metrics-total"><span class="metrics-total__label">Maintainability index : </span><span class="metrics-total__count">77</span></div><div class="metrics-total"><span class="metrics-total__label">Number of Arguments : </span><span class="metrics-total__count">2</span></div><pre><table class="metrics-source-code"><thead class="metrics-source-code__header"><tr><td class="metrics-source-code__number-lines"></td><td class="metrics-source-code__complexity">Complexity</td><td class="metrics-source-code__code">Source code</td></tr></thead><tbody class="metrics-source-code__body"><tr><td class="metrics-source-code__number-lines"><a name="L1"></a><a href="#L1">1</a><br><a name="L2"></a><a href="#L2">2</a><br><a name="L3"></a><a href="#L3">3</a><br><a name="L4"></a><a href="#L4">4</a><br><a name="L5"></a><a href="#L5">5</a><br><a name="L6"></a><a href="#L6">6</a><br><a name="L7"></a><a href="#L7">7</a><br><a name="L8"></a><a href="#L8">8</a><br><a name="L9"></a><a href="#L9">9</a><br><a name="L10"></a><a href="#L10">10</a><br><a name="L11"></a><a href="#L11">11</a><br><a name="L12"></a><a href="#L12">12</a><br><a name="L13"></a><a href="#L13">13</a><br><a name="L14"></a><a href="#L14">14</a><br><a name="L15"></a><a href="#L15">15</a><br><a name="L16"></a><a href="#L16">16</a><br><a name="L17"></a><a href="#L17">17</a><br><a name="L18"></a><a href="#L18">18</a><br><a name="L19"></a><a href="#L19">19</a><br><a name="L20"></a><a href="#L20">20</a><br></td><td class="metrics-source-code__complexity"><div class="metrics-source-code__text">&nbsp;</div><div class="metrics-source-code__text">&nbsp;</div><div class="metrics-source-code__text">&nbsp;</div><div class="metrics-source-code__text">&nbsp;</div><div class="metrics-source-code__text">&nbsp;</div><div class="metrics-source-code__text">&nbsp;</div><div class="metrics-source-code__text">&nbsp;</div><div class="metrics-source-code__text">&nbsp;</div><div class="metrics-source-code__text">&nbsp;</div><div class="metrics-source-code__text metrics-source-code__text--with-icon metrics-source-code__text--normal-complexity" title="Function stats:
+cyclomatic complexity: 1
+cyclomatic complexity violation level: none
+lines of code: 4
+lines of code violation level: none
+maintainability index: 77.06792481406343
+maintainability index violation level: none
+number of arguments: 2
+number of arguments violation level: none">ⓘ</div><div class="metrics-source-code__text metrics-source-code__text--normal-complexity">&nbsp;</div><div class="metrics-source-code__text metrics-source-code__text--normal-complexity">&nbsp;</div><div class="metrics-source-code__text metrics-source-code__text--normal-complexity">&nbsp;</div><div class="metrics-source-code__text">&nbsp;</div><div class="metrics-source-code__text">&nbsp;</div><div class="metrics-source-code__text metrics-source-code__text--with-icon metrics-source-code__text--normal-complexity" title="Function stats:
+cyclomatic complexity: 1
+cyclomatic complexity violation level: none
+lines of code: 4
+lines of code violation level: none
+maintainability index: 77.67581074429151
+maintainability index violation level: none
+number of arguments: 1
+number of arguments violation level: none">ⓘ</div><div class="metrics-source-code__text metrics-source-code__text--normal-complexity">&nbsp;</div><div class="metrics-source-code__text metrics-source-code__text--normal-complexity">&nbsp;</div><div class="metrics-source-code__text metrics-source-code__text--normal-complexity">&nbsp;</div><div class="metrics-source-code__text">&nbsp;</div></td><td class="metrics-source-code__code"><pre class="prettyprint lang-dart">import 'package:cloud_firestore/cloud_firestore.dart';
+import 'cart_model.dart';
+
+/// Allows access to Firebase to submit orders from cart
+class CartRepository {
+  /// Default constructor for CartRepository
+  const CartRepository();
+
+  /// Adds an order to Firebase
+  Future&lt;DocumentReference&gt; addOrder(Cart currentCart, double price) async =&gt;
+      await Firestore.instance
+          .collection('orders')
+          .add(currentCart.toDocument(price));
+
+  /// Queries for a user's order history (all previous orders)
+  Future&lt;QuerySnapshot&gt; getOrderHistory(String user) async =&gt; Firestore.instance
+      .collectionGroup('orders')
+      .where('user', isEqualTo: user)
+      .getDocuments();
+}
+</pre></td></tr></tbody></table></pre><script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.min.js"></script><script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/lang-dart.min.js"></script></body></html>
