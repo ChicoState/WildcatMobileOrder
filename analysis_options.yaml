@@ -4,6 +4,7 @@ analyzer:
   exclude:
     - [build/**]
     - "bin/cache/**"
+    - "flutter/bin/cache/**"
   strong-mode:
     implicit-dynamic: false
 
