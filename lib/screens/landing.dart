@@ -6,12 +6,16 @@ import '../repositories/repositories.dart';
 import '../widgets/widgets.dart';
 import 'screens.dart';
 
+/// Default screen after authentication, displays locations
 class Landing extends StatelessWidget {
+  /// Email of authenticated user
   final String user;
 
+  /// Default constructor for Landing
   Landing(this.user);
 
-  String hoursSummary(MenuEntity menu) =>
+  /// Provides an hours summary string from a Menu object
+  String hoursSummary(Menu menu) =>
       'Mon-Thur: ${menu.openTime} - ${menu.closeTime}\n'
       'Friday: ${menu.openTime} - ${menu.fcloseTime}';
 
@@ -31,61 +35,58 @@ class Landing extends StatelessWidget {
         }
       });
 
-  Widget _buildLocationCards(BuildContext context, MenuEntity menuEntity) {
-    // build the route for each card
-    final route = MaterialPageRoute(
-      builder: (context) => MenuView(
-        location: menuEntity.location,
-      ),
-    );
-    return Padding(
-        key: ValueKey(menuEntity.location),
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-        child: Card(
-            color: Colors.grey[400],
-            child: InkWell(
-                splashColor: Colors.redAccent,
-                onTap: () {
-                  Navigator.push(context, route);
-                },
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    ListTile(
-                      leading: FractionallySizedBox(
-                        widthFactor: 0.5,
-                        heightFactor: 1.0,
-                        child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: FadeInImage(
-                                placeholder: MemoryImage(kTransparentImage),
-                                image: menuEntity.img)),
-                      ),
-                      isThreeLine: true,
-                      subtitle: Text(
-                        hoursSummary(menuEntity),
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
-                    ButtonBar(
-                      children: <Widget>[
-                        FlatButton(
-                          color: Colors.red[900],
-                          child: Text('Order from ${menuEntity.location}'),
-                          onPressed: () {
-                            Navigator.push(context, route);
-                          },
-                        )
-                      ],
-                    )
-                  ],
-                ))));
+  void _navigateToLocation(BuildContext context, Menu menu) {
+    Navigator.of(context).push(MaterialPageRoute<void>(
+        builder: (context) => MenuView(location: menu.location)));
   }
+
+  Widget _buildLocationCards(BuildContext context, Menu menu) => Padding(
+      key: ValueKey(menu.location),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: Card(
+          color: Colors.grey[400],
+          child: InkWell(
+              splashColor: Colors.redAccent,
+              onTap: () {
+                _navigateToLocation(context, menu);
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  ListTile(
+                    leading: FractionallySizedBox(
+                      widthFactor: 0.5,
+                      heightFactor: 1.0,
+                      child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: FadeInImage(
+                              placeholder: MemoryImage(kTransparentImage),
+                              image: menu.img)),
+                    ),
+                    isThreeLine: true,
+                    subtitle: Text(
+                      hoursSummary(menu),
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                  ButtonBar(
+                    children: <Widget>[
+                      FlatButton(
+                        color: Colors.red[900],
+                        child: Text('Order from ${menu.location}'),
+                        onPressed: () {
+                          _navigateToLocation(context, menu);
+                        },
+                      )
+                    ],
+                  )
+                ],
+              ))));
 
   @override
   Widget build(BuildContext context) => Scaffold(
       backgroundColor: Colors.grey[800],
-      drawer: drawer(context),
+      drawer: UserDrawer(),
       appBar: AppBar(
         backgroundColor: Colors.red[900],
         title: Text('Select a location'),

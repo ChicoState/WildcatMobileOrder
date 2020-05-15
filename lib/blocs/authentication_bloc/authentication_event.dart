@@ -1,10 +1,5 @@
-import 'package:equatable/equatable.dart';
-
 /// AuthenticationEvent's for AuthenticationBloc
-abstract class AuthenticationEvent extends Equatable {
-  @override
-  List<Object> get props => [];
-}
+abstract class AuthenticationEvent {}
 
 /// Event when app is started
 class AppStarted extends AuthenticationEvent {}

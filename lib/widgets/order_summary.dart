@@ -1,11 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+/// Screen to display a submitted order's summary
 class OrderSummary extends StatelessWidget {
+  /// DocumentSnapshot of submitted order
   final DocumentSnapshot snapshot;
 
+  /// Default constructor for OrderSummary
   OrderSummary(this.snapshot);
 
+  /// Style used to display text
   final TextStyle style = TextStyle(fontSize: 20);
 
   @override

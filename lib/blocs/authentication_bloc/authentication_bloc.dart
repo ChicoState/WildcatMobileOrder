@@ -12,8 +12,7 @@ class AuthenticationBloc
 
   /// Constructor for AuthenticationBloc, requires a UserRepository
   AuthenticationBloc({@required UserRepository userRepository})
-      : assert(userRepository != null),
-        _userRepository = userRepository;
+      : _userRepository = userRepository;
 
   @override
   AuthenticationState get initialState => Uninitialized();
@@ -32,15 +31,11 @@ class AuthenticationBloc
   }
 
   Stream<AuthenticationState> _mapAppStartedToState() async* {
-    try {
-      final isSignedIn = await _userRepository.isSignedIn();
-      if (isSignedIn) {
-        final user = await _userRepository.getUser();
-        yield Authenticated(user);
-      } else {
-        yield Unauthenticated();
-      }
-    } on Exception catch (_) {
+    final isSignedIn = await _userRepository.isSignedIn();
+    if (isSignedIn) {
+      final user = await _userRepository.getUser();
+      yield Authenticated(user);
+    } else {
       yield Unauthenticated();
     }
   }

@@ -4,10 +4,11 @@ import '../blocs/blocs.dart';
 import '../repositories/repositories.dart';
 import '../widgets/widgets.dart';
 
+/// Screen to display the current cart
 class CartView extends StatelessWidget {
   // builds the ListView that contains all the cart items
   Widget _buildCartList(
-          BuildContext context, CartLoaded state, MenuEntity menu) =>
+          BuildContext context, CartLoaded state, Menu menu) =>
       Container(
         color: Colors.grey[800],
         child: ListView.builder(
@@ -33,7 +34,7 @@ class CartView extends StatelessWidget {
         ),
       );
 
-  Widget _buildCartPage(BuildContext context, List<MenuEntity> menus) =>
+  Widget _buildCartPage(BuildContext context, List<Menu> menus) =>
       BlocBuilder<CartBloc, CartState>(
         builder: (context, state) {
           if (state is CartLoaded) {

@@ -5,10 +5,12 @@ import 'package:meta/meta.dart';
 import '../../repositories/repositories.dart';
 import './bloc.dart';
 
+/// Manages updating price and menu information dynamically
 class MenuBloc extends Bloc<MenuEvent, MenuState> {
   final MenuRepository _menuRepository;
   StreamSubscription _menuSubscription;
 
+  /// Default constructor for MenuBloc, requires a MenuRepository
   MenuBloc({@required MenuRepository menuRepository})
       : assert(menuRepository != null),
         _menuRepository = menuRepository;

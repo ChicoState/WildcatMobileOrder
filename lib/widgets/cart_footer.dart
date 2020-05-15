@@ -4,20 +4,31 @@ import '../repositories/cart_repository/cart_repository.dart';
 import '../repositories/menu_repository/menu_entity.dart';
 import '../screens/order_confirmation.dart';
 
+/// Widget to display at the bottom of a cart
 class CartFooter extends StatelessWidget {
+  /// Cart object to display data
   final Cart cart;
-  final MenuEntity menu;
+
+  /// Menu belonging to Cart's location
+  final Menu menu;
+
+  /// CartRepository to submit cart data to
   final CartRepository cartRepo = CartRepository();
 
+  /// Submits an order to Firebase
   void makeOrder(BuildContext context) async {
     var price = menu.calculateCartPrice(cart);
     var order = await cartRepo.addOrder(cart, price);
-    Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (context) => OrderConfirmation(order)));
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute<void>(
+            builder: (context) => OrderConfirmation(order)));
   }
 
+  /// Default constructor for CartFooter
   CartFooter(this.cart, this.menu);
 
+  /// Returns cart price with proper price format
   String getCartPrice() => menu.calculateCartPrice(cart).toStringAsFixed(2);
 
   @override
@@ -32,8 +43,7 @@ class CartFooter extends StatelessWidget {
                 RichText(
                   text: TextSpan(children: <TextSpan>[
                     TextSpan(
-                      text:
-                          'Total: \$${getCartPrice()}',
+                      text: 'Total: \$${getCartPrice()}',
                       style: TextStyle(fontSize: 18, color: Colors.black),
                     ),
                     TextSpan(

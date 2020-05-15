@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+/// Widget to display at then bottom of an order summary
 class OrderFooter extends StatelessWidget {
+  /// DocumentSnapshot of the order
   final DocumentSnapshot snapshot;
 
+  /// Default constructor for OrderFooter
   OrderFooter(this.snapshot);
 
   @override
   Widget build(BuildContext context) {
     var itemCount = 0;
-    snapshot.data['items'].forEach((item) {
-      itemCount += item['qty'];
-    });
+    for (var i in snapshot.data['items']) {
+      itemCount += i['qty'];
+    }
+//    snapshot.data['items'].forEach((item) {
+//      itemCount += item['qty'];
+//    });
     DateTime orderTime = snapshot['ordertime'].toDate();
     return Card(
       color: Colors.grey[400],

@@ -6,9 +6,12 @@ import '../repositories/repositories.dart';
 import '../widgets/widgets.dart';
 import 'screens.dart';
 
+/// Screen to view a particular locations menu
 class MenuView extends StatelessWidget {
+  /// Name of location's menu to display
   final String location;
 
+  /// Default constructor for MenuView
   MenuView({this.location});
 
   /// loadMenu
@@ -23,7 +26,7 @@ class MenuView extends StatelessWidget {
         return CircularProgressIndicator();
       });
 
-  Widget _buildCategoryList(BuildContext context, MenuEntity menu) => Container(
+  Widget _buildCategoryList(BuildContext context, Menu menu) => Container(
       color: Colors.grey[800],
       child: ListView(
         //shrinkWrap: true,
@@ -42,15 +45,17 @@ class MenuView extends StatelessWidget {
 
   Widget _buildMenuList(BuildContext context, List<MenuItem> itemsList) =>
       ListView(
-        //itemExtent: 100,
         shrinkWrap: true,
         children:
             itemsList.map((item) => _buildMenuListItem(context, item)).toList(),
       );
 
+  void _navigateToMenuItem(BuildContext context, MenuItem item) {
+    Navigator.of(context).push(MaterialPageRoute<void>(
+        builder: (context) => ItemView(item.location, item.identifier)));
+  }
+
   Widget _buildMenuListItem(BuildContext context, MenuItem item) {
-    final route = MaterialPageRoute(
-        builder: (context) => ItemView(item.location, item.identifier));
     // try to resolve image early
     var configuration = createLocalImageConfiguration(context);
     item.img.resolve(configuration);
@@ -61,7 +66,7 @@ class MenuView extends StatelessWidget {
         elevation: 10,
         child: InkWell(
             onTap: () {
-              Navigator.push(context, route);
+              _navigateToMenuItem(context, item);
             },
             child: ListTile(
                 dense: false,

@@ -7,11 +7,15 @@ import '../widgets/loading.dart';
 import '../widgets/order_footer.dart';
 import '../widgets/order_summary.dart';
 
+/// Screen to display after ordering
 class OrderConfirmation extends StatelessWidget {
+  /// Reference to order of Firebase
   final DocumentReference order;
 
+  /// Default constructor for OrderConfirmation
   OrderConfirmation(this.order);
 
+  /// Returns a string of order metadata
   String orderInformation(DateTime date, String orderId) =>
       '${date.toString()}\nID: $orderId';
 
